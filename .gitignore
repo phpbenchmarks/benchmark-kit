@@ -1,1 +1,5 @@
-.idea/
+/.idea/
+
+/framework/helloWorld/docker/.env
+/framework/helloWorld/docker/.phpbenchmarks
+!/framework/helloWorld/docker/.phpbenchmarks/.gitkeep

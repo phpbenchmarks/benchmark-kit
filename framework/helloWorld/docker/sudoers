@@ -1,0 +1,6 @@
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service nginx start
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php5.6-fpm start
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.0-fpm start
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.1-fpm start
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.2-fpm start
+phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm start
