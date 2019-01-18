@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 
-INSTALLATION_PATH=/dev/null
-VALIDATE_CONFIGURATION=true
-VALIDATE_CODE=true
+CONFIG_PATH=$(dirname $0)/.phpbenchmarks
 
 source docker/.env
 source ../../common.sh
 
-CONFIG_PATH=$(dirname $0)/docker/.phpbenchmarks
-
 if [ $VALIDATE_CONFIGURATION == true ]; then
     echoTitle "Validate configuration from $INSTALLATION_PATH"
 
-    copyConfig "$INSTALLATION_PATH" "$CONFIG_PATH"
+    copyConfig
 
-    validateConfigFileExists "$INSTALLATION_PATH" "$CONFIG_PATH" "sudoers"
-    validateConfigFileExists "$INSTALLATION_PATH" "$CONFIG_PATH" "response.txt"
+    validateConfigFileExists "configuration.sh"
+    source ".phpbenchmarks/configuration.sh"
+    validateCommonConfigExists
 
-    validateVhost "$INSTALLATION_PATH" "$CONFIG_PATH"
+    validateConfigFileExists "vhost.conf"
+    validateVhost
+
+    validateConfigFileExists "sudoers"
+
+    validateConfigFileExists "responseBody.txt"
+
+    validateComposerFiles "hello-world"
 
     echoOk
 fi

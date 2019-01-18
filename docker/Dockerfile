@@ -30,7 +30,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # install git alone, or it will ask some geographical configs, I don't know why
 RUN apt-get install -y git
 
-# create user with same name as host user name
-ARG DOCKER_UID
-RUN useradd -ms /bin/bash --uid ${DOCKER_UID} phpbenchmarks \
-    && usermod -a -G www-data phpbenchmarks
+# add commands to sudoers
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service nginx start" > /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php5.6-fpm start" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.0-fpm start" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.1-fpm start" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.2-fpm start" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm start" >> /etc/sudoers.d/phpbenchmarks
+
+# we have some commands to do in /etc/nginx/sites-enabled with phpbenchmarks user
+# so instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
+# change this dir credentials to 777
+RUN chmod 777 /etc/nginx/sites-enabled
+
+COPY validate.sh /var/phpbenchmarks/validate.sh
