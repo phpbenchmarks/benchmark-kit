@@ -38,9 +38,12 @@ RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.1-fpm start" 
 RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.2-fpm start" >> /etc/sudoers.d/phpbenchmarks
 RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm start" >> /etc/sudoers.d/phpbenchmarks
 
-# we have some commands to do in /etc/nginx/sites-enabled with phpbenchmarks user
+# we have some commands to do in this dir with phpbenchmarks user
 # so instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
 # change this dir credentials to 777
 RUN chmod 777 /etc/nginx/sites-enabled
 
 COPY validate.sh /var/phpbenchmarks/validate.sh
+
+COPY cli/ /var/phpbenchmarks/cli/
+RUN cd /var/phpbenchmarks/cli && composer update

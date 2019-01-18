@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use App\{
+    Command\ValidateComposerLockCommand,
+    Command\ValidateComposerJsonCommand
+};
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new ValidateComposerJsonCommand());
+$application->add(new ValidateComposerLockCommand());
+$application->run();

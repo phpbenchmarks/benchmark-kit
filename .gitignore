@@ -1,5 +1,10 @@
 /.idea/
 
-/framework/helloWorld/docker/.env
-/framework/helloWorld/.phpbenchmarks
-!/framework/helloWorld/.phpbenchmarks/.gitkeep
+/docker/composerUpdate/.env
+/docker/composerUpdate/common.sh
+/docker/composerUpdate/componentFiles/.phpbenchmarks
+!/docker/composerUpdate/componentFiles/.phpbenchmarks/.gitkeep
+
+/validation/framework/helloWorld/docker/.env
+/validation/framework/helloWorld/componentFiles/
+!/framework/helloWorld/componentFiles/.phpbenchmarks/.gitkeep

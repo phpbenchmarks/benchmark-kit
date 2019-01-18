@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONFIG_PATH=$(dirname $0)/.phpbenchmarks
+CONFIGURATION_PATH=$(dirname $0)/.phpbenchmarks
 
 source docker/.env
 source ../../common.sh
@@ -10,18 +10,16 @@ if [ $VALIDATE_CONFIGURATION == true ]; then
 
     copyConfig
 
-    validateConfigFileExists "configuration.sh"
+    assertConfigFileExists "configuration.sh"
     source ".phpbenchmarks/configuration.sh"
-    validateCommonConfigExists
+    assertCommonConfiguration
 
-    validateConfigFileExists "vhost.conf"
+    assertConfigFileExists "vhost.conf"
     validateVhost
 
-    validateConfigFileExists "sudoers"
+    assertConfigFileExists "sudoers"
 
-    validateConfigFileExists "responseBody.txt"
-
-    validateComposerFiles "hello-world"
+    assertConfigFileExists "responseBody.txt"
 
     echoOk
 fi

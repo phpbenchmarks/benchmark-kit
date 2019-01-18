@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+    phpbenchmarks_composer_update:
+        container_name: phpbenchmarks_composer_update
+        tty: true
+        build:
+            context: .
+            args:
+                DOCKER_UID: ${DOCKER_UID}
+        volumes:
+            - ${INSTALLATION_PATH}:/var/www/phpbenchmarks

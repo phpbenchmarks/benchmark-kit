@@ -70,6 +70,14 @@ function startNginx {
     [ $? != "0" ] && validationFailedExit "Error while starting nginx."
 }
 
+function validateBodies {
+    [ "$PHPBENCHMARKS_PHP_5_6_ENABLED" == "true" ] && validateBody "5.6" "$PHPBENCHMARKS_URL"
+    [ "$PHPBENCHMARKS_PHP_7_0_ENABLED" == "true" ] && validateBody "7.0" "$PHPBENCHMARKS_URL"
+    [ "$PHPBENCHMARKS_PHP_7_1_ENABLED" == "true" ] && validateBody "7.1" "$PHPBENCHMARKS_URL"
+    [ "$PHPBENCHMARKS_PHP_7_2_ENABLED" == "true" ] && validateBody "7.2" "$PHPBENCHMARKS_URL"
+    [ "$PHPBENCHMARKS_PHP_7_3_ENABLED" == "true" ] && validateBody "7.3" "$PHPBENCHMARKS_URL"
+}
+
 function validateBody {
     local phpVersion=$1
     local benchmarkUrl="http://php${phpVersion//.}.benchmark.loc$2"
@@ -121,11 +129,31 @@ function validateBody {
     cd - &>/dev/null
 }
 
+function configurePhpCli {
+    local componentConfigurationPath='/var/phpbenchmarks/cli/ComponentConfiguration.php'
+    sed -i -e "s/____PHPBENCHMARKS_PHP_5_6_ENABLED____/$PHPBENCHMARKS_PHP_5_6_ENABLED/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_PHP_7_0_ENABLED____/$PHPBENCHMARKS_PHP_7_0_ENABLED/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_PHP_7_1_ENABLED____/$PHPBENCHMARKS_PHP_7_1_ENABLED/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_PHP_7_2_ENABLED____/$PHPBENCHMARKS_PHP_7_2_ENABLED/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_PHP_7_3_ENABLED____/$PHPBENCHMARKS_PHP_7_3_ENABLED/g" $componentConfigurationPath
+
+    sed -i -e "s~____PHPBENCHMARKS_URL____~$PHPBENCHMARKS_URL~g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG/g" $componentConfigurationPath
+
+    sed -i -e "s/____PHPBENCHMARKS_MAIN_REPOSITORY____/$PHPBENCHMARKS_MAIN_REPOSITORY/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_VERSION_MAJOR____/$PHPBENCHMARKS_VERSION_MAJOR/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_VERSION_MINOR____/$PHPBENCHMARKS_VERSION_MINOR/g" $componentConfigurationPath
+    sed -i -e "s/____PHPBENCHMARKS_VERSION_BUGFIX____/$PHPBENCHMARKS_VERSION_BUGFIX/g" $componentConfigurationPath
+}
+
+function validateComposerJson {
+    echoTitle "Validate composer.json"
+    cd /var/phpbenchmarks/cli
+    php console phpbenchmarks:validate:composerjson
+    [ $? != "0" ] && exit 1;
+    cd -
+}
+
 createVhosts
 startNginx
-
-[ "$PHPBENCHMARKS_PHP_5_6_ENABLED" == "true" ] && validateBody "5.6" "$PHPBENCHMARKS_URL"
-[ "$PHPBENCHMARKS_PHP_7_0_ENABLED" == "true" ] && validateBody "7.0" "$PHPBENCHMARKS_URL"
-[ "$PHPBENCHMARKS_PHP_7_1_ENABLED" == "true" ] && validateBody "7.1" "$PHPBENCHMARKS_URL"
-[ "$PHPBENCHMARKS_PHP_7_2_ENABLED" == "true" ] && validateBody "7.2" "$PHPBENCHMARKS_URL"
-[ "$PHPBENCHMARKS_PHP_7_3_ENABLED" == "true" ] && validateBody "7.3" "$PHPBENCHMARKS_URL"
+configurePhpCli
