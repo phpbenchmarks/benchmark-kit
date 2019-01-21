@@ -44,6 +44,16 @@ function echoValidatedTest {
     fi
 }
 
+function echoWarningAsk {
+    local message=$1
+
+    if [ $VERBOSE_LEVEL -ge 1 ]; then
+        echo -n -e "  \e[44m > \e[00m \e[43m $message \e[00m "
+    else
+        echo -n -e "\e[43m $message \e[00m "
+    fi
+}
+
 function echoValidationGroupEnd {
     local minVerboseLevel=$1
     local doneSuffix=$2
@@ -83,13 +93,13 @@ function definePhpComponentConfigurationValues {
     sed -i -e "s~____PHPBENCHMARKS_PHP_7_2_ENABLED____~$PHPBENCHMARKS_PHP_7_2_ENABLED~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_PHP_7_3_ENABLED____~$PHPBENCHMARKS_PHP_7_3_ENABLED~g" $phpFile
 
-    sed -i -e "s~____PHPBENCHMARKS_URL____~$PHPBENCHMARKS_URL~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_BENCHMARK_URL____~$PHPBENCHMARKS_BENCHMARK_URL~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_SLUG____~$PHPBENCHMARKS_SLUG~g" $phpFile
 
     sed -i -e "s~____PHPBENCHMARKS_MAIN_REPOSITORY____~$PHPBENCHMARKS_MAIN_REPOSITORY~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_VERSION_MAJOR____~$PHPBENCHMARKS_VERSION_MAJOR~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_VERSION_MINOR____~$PHPBENCHMARKS_VERSION_MINOR~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_VERSION_BUGFIX____~$PHPBENCHMARKS_VERSION_BUGFIX~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_MAJOR_VERSION____~$PHPBENCHMARKS_MAJOR_VERSION~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_MINOR_VERSION____~$PHPBENCHMARKS_MINOR_VERSION~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_BUGFIX_VERSION____~$PHPBENCHMARKS_BUGFIX_VERSION~g" $phpFile
 }
 
 VERBOSE_LEVEL=0

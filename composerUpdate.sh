@@ -12,6 +12,7 @@ assertInitBenchmark
 source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
 
+copyReadMe
 assertReadMe
 
 cp common.sh docker/composerUpdate

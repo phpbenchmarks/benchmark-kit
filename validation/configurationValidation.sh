@@ -2,6 +2,16 @@
 
 source "$(dirname $0)/validation/common.sh"
 
+function copyReadMe {
+    local readMePath="$CONFIGURATION_PATH/../README.md"
+    if [ -f "$readMePath" ]; then
+        rm "$readMePath"
+    fi
+
+    cp $INSTALLATION_PATH/README.md $readMePath
+    [ $? != "0" ] && exitScript "[README.md] Error while copying README.md."
+}
+
 function copyConfigurationFiles {
     rm $CONFIGURATION_PATH/*
     cp $INSTALLATION_PATH/.phpbenchmarks/* $CONFIGURATION_PATH
@@ -47,29 +57,33 @@ function assertCommonConfiguration {
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_PHP_7_3_ENABLED. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_PHP_7_3_ENABLED ($PHPBENCHMARKS_PHP_7_3_ENABLED)."
 
-    [ "$PHPBENCHMARKS_URL" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_URL. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_URL ($PHPBENCHMARKS_URL)."
+    [ "$PHPBENCHMARKS_NAME" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_NAME. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_NAME ($PHPBENCHMARKS_NAME)."
 
     [ "$PHPBENCHMARKS_SLUG" == "" ] \
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_SLUG. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_SLUG ($PHPBENCHMARKS_SLUG)."
 
+    [ "$PHPBENCHMARKS_BENCHMARK_URL" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_BENCHMARK_URL. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_BENCHMARK_URL ($PHPBENCHMARKS_BENCHMARK_URL)."
+
     [ "$PHPBENCHMARKS_MAIN_REPOSITORY" == "" ] \
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MAIN_REPOSITORY. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MAIN_REPOSITORY ($PHPBENCHMARKS_MAIN_REPOSITORY)."
 
-    [ "$PHPBENCHMARKS_VERSION_MAJOR" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_VERSION_MAJOR. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_VERSION_MAJOR ($PHPBENCHMARKS_VERSION_MAJOR)."
+    [ "$PHPBENCHMARKS_MAJOR_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MAJOR_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MAJOR_VERSION ($PHPBENCHMARKS_MAJOR_VERSION)."
 
-    [ "$PHPBENCHMARKS_VERSION_MINOR" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_VERSION_MINOR. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_VERSION_MINOR ($PHPBENCHMARKS_VERSION_MINOR)."
+    [ "$PHPBENCHMARKS_MINOR_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MINOR_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MINOR_VERSION ($PHPBENCHMARKS_MINOR_VERSION)."
 
-    [ "$PHPBENCHMARKS_VERSION_BUGFIX" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_VERSION_BUGFIX. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_VERSION_BUGFIX ($PHPBENCHMARKS_VERSION_BUGFIX)."
+    [ "$PHPBENCHMARKS_BUGFIX_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_BUGFIX_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_BUGFIX_VERSION ($PHPBENCHMARKS_BUGFIX_VERSION)."
 }
 
 function assertVhostConfiguration {
@@ -102,6 +116,35 @@ function assertInitBenchmark {
 
 function assertReadMe {
     echoValidationGroupStart "Validation of README.md"
+
     assertFileExist "README.md"
+
+    local oldIFS=$IFS
+    IFS=
+    local validReadMeContent=$(cat validation/mainRepositoryReadme.md)
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_NAME____/$PHPBENCHMARKS_NAME}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_MAJOR_VERSION____/$PHPBENCHMARKS_MAJOR_VERSION}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_MINOR_VERSION____/$PHPBENCHMARKS_MINOR_VERSION}
+    local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
+    IFS=$oldIFS
+    if [ "$validReadMeContent" != "$readMeContent" ]; then
+        echoWarningAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [y/N]"
+        read editReadMe
+
+        if [ $VERBOSE_LEVEL -eq 0 ]; then
+            echo ""
+        fi
+
+        if [ "$editReadMe" == "y" ] || [ "$editReadMe" == "Y" ]; then
+            echo "$validReadMeContent" > $INSTALLATION_PATH/README.md
+
+            copyReadMe
+            local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
+        fi
+    fi
+    [ "$validReadMeContent" != "$readMeContent" ] && exitScript "[README.md] Content is invalid."
+    echoValidatedTest "[README.md] Content is valid."
+
     echoValidationGroupEnd
 }

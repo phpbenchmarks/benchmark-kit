@@ -12,13 +12,13 @@ class ComponentConfiguration
     public const PHP_7_2_ENABLED = ____PHPBENCHMARKS_PHP_7_2_ENABLED____;
     public const PHP_7_3_ENABLED = ____PHPBENCHMARKS_PHP_7_3_ENABLED____;
 
-    public const URL = "____PHPBENCHMARKS_URL____";
+    public const URL = "____PHPBENCHMARKS_BENCHMARK_URL____";
     public const SLUG = "____PHPBENCHMARKS_SLUG____";
 
     public const MAIN_REPOSITORY = "____PHPBENCHMARKS_MAIN_REPOSITORY____";
-    public const VERSION_MAJOR = ____PHPBENCHMARKS_VERSION_MAJOR____;
-    public const VERSION_MINOR = ____PHPBENCHMARKS_VERSION_MINOR____;
-    public const VERSION_BUGFIX = ____PHPBENCHMARKS_VERSION_BUGFIX____;
+    public const VERSION_MAJOR = ____PHPBENCHMARKS_MAJOR_VERSION____;
+    public const VERSION_MINOR = ____PHPBENCHMARKS_MINOR_VERSION____;
+    public const VERSION_BUGFIX = ____PHPBENCHMARKS_BUGFIX_VERSION____;
 
     public static function getVersion(): string
     {
