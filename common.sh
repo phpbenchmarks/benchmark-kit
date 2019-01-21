@@ -16,12 +16,12 @@ function echoBlock {
     echo -en "\e[0m\n\n"
 }
 
-function echoTitle {
-    echoBlock 45 "$1"
-}
-
 function echoError {
-    echo -e "\e[41m ERROR \e[00m \e[31m$1\e[00m"
+    if [ $VERBOSE_LEVEL == 0 ]; then
+        echo -e "\e[41m ERROR \e[00m \e[31m$1\e[00m"
+    else
+        echo -e "  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m$1\e[00m"
+    fi
 }
 
 function echoWarning {
@@ -40,7 +40,7 @@ function echoValidationGroupStart {
 
 function echoValidatedTest {
     if [ $VERBOSE_LEVEL -ge 1 ]; then
-        echo -e "  \e[44m > \e[00m \e[32mValidated\e[00m $1"
+        echo -e "  \e[42m > \e[00m \e[32mValidated\e[00m $1"
     fi
 }
 
@@ -48,7 +48,7 @@ function echoWarningAsk {
     local message=$1
 
     if [ $VERBOSE_LEVEL -ge 1 ]; then
-        echo -n -e "  \e[44m > \e[00m \e[43m $message \e[00m "
+        echo -n -e "  \e[43m > \e[00m \e[43m $message \e[00m "
     else
         echo -n -e "\e[43m $message \e[00m "
     fi
@@ -67,7 +67,7 @@ function echoValidationGroupEnd {
         if [ "$doneSuffix" != "" ]; then
             message="$message $doneSuffix"
         fi
-        echo -e "\e[42m $message \e[0m"
+        echo -e "  \e[42m $message \e[0m"
         echo ""
     else
         echo -en "\e[1A"

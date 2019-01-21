@@ -129,14 +129,14 @@ function assertReadMe {
     local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
     IFS=$oldIFS
     if [ "$validReadMeContent" != "$readMeContent" ]; then
-        echoWarningAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [y/N]"
+        echoWarningAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [Y/n]"
         read editReadMe
 
         if [ $VERBOSE_LEVEL -eq 0 ]; then
             echo ""
         fi
 
-        if [ "$editReadMe" == "y" ] || [ "$editReadMe" == "Y" ]; then
+        if [ "$editReadMe" == "" ] || [ "$editReadMe" == "y" ] || [ "$editReadMe" == "Y" ]; then
             echo "$validReadMeContent" > $INSTALLATION_PATH/README.md
 
             copyReadMe
