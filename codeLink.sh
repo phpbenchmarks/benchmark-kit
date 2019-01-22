@@ -57,7 +57,7 @@ function validateCodeLinks {
     return 0
 }
 echoValidationGroupStart "Validation of .phpbenchmarks directory"
-copyConfigurationFiles
+copyConfigurationFiles "$CONFIGURATION_PATH"
 assertCommonConfiguration
 source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd

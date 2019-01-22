@@ -43,7 +43,7 @@ RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm start" 
 # change this dir credentials to 777
 RUN chmod 777 /etc/nginx/sites-enabled
 
-COPY validate.sh /var/phpbenchmarks/validate.sh
+COPY codeValidation.sh /var/phpbenchmarks/codeValidation.sh
 
 COPY cli/ /var/phpbenchmarks/cli/
 RUN cd /var/phpbenchmarks/cli && composer update

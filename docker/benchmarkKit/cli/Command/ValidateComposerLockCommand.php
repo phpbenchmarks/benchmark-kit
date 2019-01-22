@@ -18,6 +18,8 @@ class ValidateComposerLockCommand extends AbstractCommand
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('phpbenchmarks:validate:composerlock')
             ->setDescription('Validation of dependencies in composer.lock.phpX.Y');
@@ -25,6 +27,8 @@ class ValidateComposerLockCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
+
         try {
             $this
                 ->validateDisabledPhpVersions($output)
@@ -71,13 +75,15 @@ class ValidateComposerLockCommand extends AbstractCommand
                 $this->validationFailed($output, 'Error while parsing: ' . $e->getMessage());
             }
 
-            $this->validateRequireComponent($output, $data);
+            $this
+                ->validateComponentVersion($output, $data)
+                ->validateCommonVersion($output, $data);
         }
 
         return $this;
     }
 
-    private function validateRequireComponent(OutputInterface $output, array $data): self
+    private function validateComponentVersion(OutputInterface $output, array $data): self
     {
         $packageFound = false;
         foreach ($data['packages'] as $package) {
@@ -114,6 +120,55 @@ class ValidateComposerLockCommand extends AbstractCommand
 
         if ($packageFound === false) {
             $this->validationFailed($output, 'Package ' . ComponentConfiguration::MAIN_REPOSITORY . ' not found.');
+        }
+
+        return $this;
+    }
+
+    private function validateCommonVersion(OutputInterface $output, array $data): self
+    {
+        if ($this->isRepositoriesCreated()) {
+            $packageFound = false;
+            $commonRepositoryName = $this->getCommonRepositoryName();
+
+            foreach ($data['packages'] as $package) {
+                if ($package['name'] === $commonRepositoryName) {
+                    $packageFound = true;
+
+                    if ($this->isValidateDev()) {
+                        $commonExpectedVersion = $this->getCommonDevBranchName();
+                        $isValidBranch = $package['version'] === $commonExpectedVersion;
+                    } else {
+                        $branchPrefix = $this->getCommonProdBranchPrefix($output);
+                        $commonExpectedVersion = $branchPrefix . 'z';
+                        $isValidBranch = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
+                    }
+
+                    $isValidBranch
+                        ?
+                            $this->validationSuccess(
+                                $output,
+                                'Package ' . $commonRepositoryName . ' version is ' . $commonExpectedVersion . '.'
+                            )
+                        :
+                            $this->validationFailed(
+                                $output,
+                                'Package '
+                                    . $commonRepositoryName
+                                    . ' version should be '
+                                    . $commonExpectedVersion
+                                    . ' but is '
+                                    . $package['version']
+                                    . '. See README.md for more informations.'
+                            );
+                }
+            }
+
+            if ($packageFound === false) {
+                $this->validationFailed($output, 'Package ' . ComponentConfiguration::MAIN_REPOSITORY . ' not found.');
+            }
+        } else {
+            $this->repositoriesNotCreatedWarning($output);
         }
 
         return $this;

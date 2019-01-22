@@ -4,18 +4,14 @@ source common.sh
 source validation/configurationValidation.sh
 
 echoValidationGroupStart "Validation of .phpbenchmarks directory"
-copyConfigurationFiles
+copyConfigurationFiles "$CONFIGURATION_PATH"
 assertCommonConfiguration
-assertVhostConfiguration
-assertInitBenchmark
-source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
 
-copyReadMe
-assertReadMe
+validateBranchName
 
 cp common.sh docker/composerUpdate
-cp $CONFIGURATION_PATH/configuration.sh docker/composerUpdate/componentFiles/.phpbenchmarks
+copyConfigurationFiles "docker/composerUpdate/componentFiles/.phpbenchmarks"
 
 source docker/composerUpdate/createEnv.sh
 echoValidationGroupStart "Building Docker container"
@@ -41,4 +37,4 @@ else
 fi
 echoValidationGroupEnd
 
-echoValidationOk "Composer update done. To validate your code, use \"./validate.sh $COMPONENT_TYPE $RESULT_TYPE $INSTALLATION_PATH\"."
+echoValidationOk "Composer update done. To validate your code, use \"./codeValidation.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG $INSTALLATION_PATH\"."

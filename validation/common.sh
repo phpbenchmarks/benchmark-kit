@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 COMPONENT_TYPE=$1
-RESULT_TYPE=$2
+RESULT_TYPE_SLUG=$2
 INSTALLATION_PATH=$3
 showCliWarning=false
 
@@ -16,14 +16,14 @@ if [ "$COMPONENT_TYPE" != "framework" ] && [ "$COMPONENT_TYPE" != "templateEngin
     exitScript "Invalid component type."
 fi
 
-if [ "$RESULT_TYPE" != "helloWorld" ] && [ "$RESULT_TYPE" != "restApi" ]; then
+if [ "$RESULT_TYPE_SLUG" != "hello-world" ] && [ "$RESULT_TYPE_SLUG" != "rest-api" ]; then
     showCliWarning=true
     echo "> Choose benchmark type:"
-    echo "   helloWorld"
-    echo "   restApi"
-    read RESULT_TYPE
+    echo "   hello-world"
+    echo "   rest-api"
+    read RESULT_TYPE_SLUG
 fi
-if [ "$RESULT_TYPE" != "helloWorld" ] && [ "$RESULT_TYPE" != "restApi" ]; then
+if [ "$RESULT_TYPE_SLUG" != "hello-world" ] && [ "$RESULT_TYPE_SLUG" != "rest-api" ]; then
     exitScript "Invalid benchmark type."
 fi
 
@@ -37,8 +37,8 @@ if [ ! -d "$INSTALLATION_PATH" ]; then
 fi
 
 if [ $showCliWarning == true ]; then
-    echoWarning "You could use \"$0 $COMPONENT_TYPE $RESULT_TYPE $INSTALLATION_PATH\"."
+    echoWarning "You could use \"$0 $COMPONENT_TYPE $RESULT_TYPE_SLUG $INSTALLATION_PATH\"."
 fi
 
-readonly RESULT_TYPE_PATH="$(dirname $0)/validation/$COMPONENT_TYPE/$RESULT_TYPE"
+readonly RESULT_TYPE_PATH="$(dirname $0)/validation/$COMPONENT_TYPE/$RESULT_TYPE_SLUG"
 readonly CONFIGURATION_PATH="$RESULT_TYPE_PATH/componentFiles/.phpbenchmarks"

@@ -1,10 +1,13 @@
 /.idea/
 
+/docker/benchmarkKit/cli/vendor
+
 /docker/composerUpdate/.env
 /docker/composerUpdate/common.sh
-!/docker/composerUpdate/componentFiles/.phpbenchmarks
+/docker/composerUpdate/componentFiles
+!/docker/composerUpdate/componentFiles/.gitkeep
 
-/validation/framework/helloWorld/docker/validate/.env
-/validation/framework/helloWorld/docker/validate/common.sh
-/validation/framework/helloWorld/componentFiles/
-!/framework/helloWorld/componentFiles/.phpbenchmarks/.gitkeep
+/validation/framework/hello-world/docker/codeValidation/.env
+/validation/framework/hello-world/docker/codeValidation/common.sh
+/validation/framework/hello-world/componentFiles
+!/validation/framework/hello-world/componentFiles/.gitkeep

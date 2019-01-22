@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /var/phpbenchmarks/configuration.sh
+source /var/phpbenchmarks/componentFiles/.phpbenchmarks/configuration.sh
 source /var/phpbenchmarks/common.sh
 
 function generateComposerFiles {

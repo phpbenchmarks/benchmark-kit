@@ -16,6 +16,7 @@ class ComponentConfiguration
     public const SLUG = "____PHPBENCHMARKS_SLUG____";
 
     public const MAIN_REPOSITORY = "____PHPBENCHMARKS_MAIN_REPOSITORY____";
+    public const COMMON_REPOSITORY = '____PHPBENCHMARKS_SLUG____-common';
     public const VERSION_MAJOR = ____PHPBENCHMARKS_MAJOR_VERSION____;
     public const VERSION_MINOR = ____PHPBENCHMARKS_MINOR_VERSION____;
     public const VERSION_BUGFIX = ____PHPBENCHMARKS_BUGFIX_VERSION____;

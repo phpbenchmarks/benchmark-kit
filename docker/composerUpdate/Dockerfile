@@ -10,10 +10,11 @@ ARG DOCKER_UID
 RUN useradd -ms /bin/bash --uid ${DOCKER_UID} phpbenchmarks \
     && usermod -a -G www-data phpbenchmarks
 
-COPY componentFiles/.phpbenchmarks/configuration.sh /var/phpbenchmarks/configuration.sh
+COPY componentFiles/.phpbenchmarks/configuration.sh /var/phpbenchmarks/componentFiles/.phpbenchmarks/
 
 RUN chown -R phpbenchmarks:phpbenchmarks /var/phpbenchmarks
 
 USER phpbenchmarks
 WORKDIR /var/www/phpbenchmarks
-ENTRYPOINT ["/var/phpbenchmarks/entrypoint.sh", "-v"]
+
+ENTRYPOINT /var/phpbenchmarks/entrypoint.sh -v

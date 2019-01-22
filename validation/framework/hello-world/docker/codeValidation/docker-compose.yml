@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-    phpbenchmarks_framework_hello_world:
-        container_name: phpbenchmarks_framework_hello_world
+    phpbenchmarks_code_validation_framework_hello_world:
+        container_name: phpbenchmarks_code_validation_framework_hello_world
         tty: true
         build:
             context: ../../
-            dockerfile: docker/validate/Dockerfile
+            dockerfile: docker/codeValidation/Dockerfile
             args:
                 DOCKER_UID: ${DOCKER_UID}
         volumes:

@@ -3,9 +3,9 @@
 function validateCode {
     local containerName=$1
 
-    cp common.sh $RESULT_TYPE_PATH/docker/validate
+    cp common.sh $RESULT_TYPE_PATH/docker/codeValidation
 
-    cd $RESULT_TYPE_PATH/docker/validate
+    cd $RESULT_TYPE_PATH/docker/codeValidation
 
     source createEnv.sh
 
@@ -20,7 +20,7 @@ function validateCode {
     fi
     echoValidationGroupEnd
 
-    echoValidationGroupStart "Validating code"
+    echoValidationGroupStart "Validation of code"
     if [ $VERBOSE_LEVEL -ge 1 ]; then
         docker-compose up --abort-on-container-exit --exit-code-from $containerName
         [ "$?" != "0" ] && exitScript "Benchmark code validation failed."
@@ -36,11 +36,11 @@ source common.sh
 source validation/configurationValidation.sh
 
 echoValidationGroupStart "Validation of .phpbenchmarks directory"
-copyConfigurationFiles
+copyConfigurationFiles "$CONFIGURATION_PATH"
 assertCommonConfiguration
 assertVhostConfiguration
 assertInitBenchmark
 source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
 
-source "$RESULT_TYPE_PATH/validate.sh"
+source "$RESULT_TYPE_PATH/codeValidation.sh"

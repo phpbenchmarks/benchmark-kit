@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /var/phpbenchmarks/validate.sh
+source /var/phpbenchmarks/codeValidation.sh
 
 validateComposerJson
 validateComposerLock

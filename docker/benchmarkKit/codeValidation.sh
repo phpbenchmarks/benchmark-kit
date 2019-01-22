@@ -1,35 +1,35 @@
 #!/usr/bin/env bash
 
-source /var/phpbenchmarks/configuration.sh
+source /var/phpbenchmarks/componentFiles/.phpbenchmarks/configuration.sh
 source /var/phpbenchmarks/common.sh
 
 function createVhosts {
     local php56VhostFile=/etc/nginx/sites-enabled/benchmark.php56.conf
-    cp /var/phpbenchmarks/vhost.conf $php56VhostFile
+    cp $DOCKER_CONFIGURATION_PATH/vhost.conf $php56VhostFile
     sed -i -e "s/____HOST____/php56.benchmark.loc/g" $php56VhostFile
     sed -i -e "s~____PROJECT_DIR____~/var/www/phpbenchmarks~g" $php56VhostFile
     sed -i -e "s/____PHP_FPM_SOCK____/php5.6-fpm.sock/g" $php56VhostFile
 
     local php70VhostFile=/etc/nginx/sites-enabled/benchmark.php70.conf
-    cp /var/phpbenchmarks/vhost.conf $php70VhostFile
+    cp $DOCKER_CONFIGURATION_PATH/vhost.conf $php70VhostFile
     sed -i -e "s/____HOST____/php70.benchmark.loc/g" $php70VhostFile
     sed -i -e "s~____PROJECT_DIR____~/var/www/phpbenchmarks~g" $php70VhostFile
     sed -i -e "s/____PHP_FPM_SOCK____/php7.0-fpm.sock/g" $php70VhostFile
 
     local php71VhostFile=/etc/nginx/sites-enabled/benchmark.php71.conf
-    cp /var/phpbenchmarks/vhost.conf $php71VhostFile
+    cp $DOCKER_CONFIGURATION_PATH/vhost.conf $php71VhostFile
     sed -i -e "s/____HOST____/php71.benchmark.loc/g" $php71VhostFile
     sed -i -e "s~____PROJECT_DIR____~/var/www/phpbenchmarks~g" $php71VhostFile
     sed -i -e "s/____PHP_FPM_SOCK____/php7.1-fpm.sock/g" $php71VhostFile
 
     local php72VhostFile=/etc/nginx/sites-enabled/benchmark.php72.conf
-    cp /var/phpbenchmarks/vhost.conf $php72VhostFile
+    cp $DOCKER_CONFIGURATION_PATH/vhost.conf $php72VhostFile
     sed -i -e "s/____HOST____/php72.benchmark.loc/g" $php72VhostFile
     sed -i -e "s~____PROJECT_DIR____~/var/www/phpbenchmarks~g" $php72VhostFile
     sed -i -e "s/____PHP_FPM_SOCK____/php7.2-fpm.sock/g" $php72VhostFile
 
     local php73VhostFile=/etc/nginx/sites-enabled/benchmark.php73.conf
-    cp /var/phpbenchmarks/vhost.conf $php73VhostFile
+    cp $DOCKER_CONFIGURATION_PATH/vhost.conf $php73VhostFile
     sed -i -e "s/____HOST____/php73.benchmark.loc/g" $php73VhostFile
     sed -i -e "s~____PROJECT_DIR____~/var/www/phpbenchmarks~g" $php73VhostFile
     sed -i -e "s/____PHP_FPM_SOCK____/php7.3-fpm.sock/g" $php73VhostFile
@@ -68,7 +68,7 @@ function validateBody {
     local phpVersion=$1
     local benchmarkUrl="http://php${phpVersion//.}.benchmark.loc$2"
     local bodyFile="/tmp/benchmark.body"
-    local responseFileDir="/var/phpbenchmarks/responseBody"
+    local responseFileDir="$DOCKER_CONFIGURATION_PATH/responseBody"
 
     echoValidationGroupStart "Validating $benchmarkUrl"
 

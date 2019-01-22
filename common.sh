@@ -38,6 +38,12 @@ function echoValidationGroupStart {
     fi
 }
 
+function echoValidationWarning {
+    if [ $VERBOSE_LEVEL -ge 1 ]; then
+        echo -e "  \e[43m > \e[00m \e[43m $1 \e[00m"
+    fi
+}
+
 function echoValidatedTest {
     if [ $VERBOSE_LEVEL -ge 1 ]; then
         echo -e "  \e[42m > \e[00m \e[32mValidated\e[00m $1"
@@ -106,8 +112,8 @@ function definePhpComponentConfigurationValues {
 function validateComposerJson {
     cd /var/phpbenchmarks/cli
     echoValidationGroupStart "Validation of composer.json"
-    php console phpbenchmarks:validate:composerjson
-    [ "$?" != "0" ] && exitScript
+    php console phpbenchmarks:validate:composerjson $VALIDATE_DEV $REPOSITORIES_CREATED $RESULT_TYPE_SLUG
+    [ "$?" != "0" ] && exit 1
     echoValidationGroupEnd
     cd - &>/dev/null
 }
@@ -115,10 +121,29 @@ function validateComposerJson {
 function validateComposerLock {
     cd /var/phpbenchmarks/cli
     echoValidationGroupStart "Validation of composer.lock.phpX.Y"
-    php console phpbenchmarks:validate:composerlock
-    [ "$?" != "0" ] && exitScript
+    php console phpbenchmarks:validate:composerlock $VALIDATE_DEV $REPOSITORIES_CREATED $RESULT_TYPE_SLUG
+    [ "$?" != "0" ] && exit 1
     echoValidationGroupEnd
     cd - &>/dev/null
+}
+
+function validateBranchName {
+    echoValidationGroupStart "Validation of git branch"
+
+    if [ $REPOSITORIES_CREATED == false ]; then
+        echoValidationWarning "Branch names are not validated. Don't forget to remove '--repositories-not-created' parameter when repositories will be created."
+    else
+        local gitBranch=$(cd $INSTALLATION_PATH && git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/' -e 's/(//g' -e 's/)//g')
+        local expectedGitBranch="$PHPBENCHMARKS_SLUG"_"$PHPBENCHMARKS_MAJOR_VERSION.$PHPBENCHMARKS_MINOR_VERSION"_"$RESULT_TYPE_SLUG"
+        if [ $VALIDATE_DEV == true ]; then
+            expectedGitBranch=$expectedGitBranch"_prepare"
+        fi
+
+        [ "$gitBranch" != "$expectedGitBranch" ] && echoError "Git branch should be $expectedGitBranch, but is $gitBranch." && exit 1
+        echoValidatedTest "Git branch is $expectedGitBranch."
+    fi
+
+    echoValidationGroupEnd
 }
 
 VERBOSE_LEVEL=0
@@ -129,5 +154,21 @@ for param in "$@"; do
         VERBOSE_LEVEL=2
     elif [ "$param" == "-vvv" ]; then
         VERBOSE_LEVEL=3
+    elif [ "$param" == "--prod" ]; then
+        VALIDATE_DEV=false
+    elif [ "$param" == "--repositories-not-created" ]; then
+        REPOSITORIES_CREATED=false
     fi
 done
+
+if [ "$VALIDATE_DEV" == "" ]; then
+    VALIDATE_DEV=true
+fi
+if [ "$REPOSITORIES_CREATED" == "" ]; then
+    REPOSITORIES_CREATED=true
+fi
+readonly VERBOSE_LEVEL
+readonly VALIDATE_DEV
+readonly REPOSITORIES_CREATED
+
+readonly DOCKER_CONFIGURATION_PATH=/var/phpbenchmarks/componentFiles/.phpbenchmarks

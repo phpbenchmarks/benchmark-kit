@@ -13,11 +13,13 @@ function copyReadMe {
 }
 
 function copyConfigurationFiles {
-    if [ -d "$CONFIGURATION_PATH" ]; then
-        rm -rf $CONFIGURATION_PATH
+    local destinationPath=$1
+
+    if [ -d "$destinationPath" ]; then
+        rm -rf $destinationPath
     fi
-    mkdir $CONFIGURATION_PATH
-    cp -R $INSTALLATION_PATH/.phpbenchmarks/* $CONFIGURATION_PATH
+    mkdir $destinationPath
+    cp -R $INSTALLATION_PATH/.phpbenchmarks/* $destinationPath/
 }
 
 function assertConfigurationFileExist {
@@ -114,7 +116,7 @@ function assertInitBenchmark {
     [ "$?" != "0" ] \
         && cat /tmp/phpbenchmarks.docker.build \
         && validationFailedExit "Function init_benchmark.sh::initBenchmark() does not exist. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/initBenchmark.sh] Function initBenchmark() exit."
+    echoValidatedTest "[.phpbenchmarks/initBenchmark.sh] Function initBenchmark() exist."
 }
 
 function assertReadMe {

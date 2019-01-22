@@ -10,6 +10,7 @@ use App\{
 };
 use Symfony\Component\Console\{
     Command\Command,
+    Input\InputArgumpent,
     Input\InputInterface,
     Output\OutputInterface
 };
@@ -18,6 +19,8 @@ class ValidateComposerJsonCommand extends AbstractCommand
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('phpbenchmarks:validate:composerjson')
             ->setDescription('Validation of dependencies in composer.json');
@@ -25,6 +28,8 @@ class ValidateComposerJsonCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
+
         try {
             $composerJsonFile = $this->getInstallationPath() . '/composer.json';
             if (is_readable($composerJsonFile) === false) {
@@ -40,8 +45,8 @@ class ValidateComposerJsonCommand extends AbstractCommand
             $this
                 ->validateName($output, $data)
                 ->validateLicense($output, $data)
-                ->validateRequireCommon($output, $data)
-                ->validateRequireComponent($output, $data);
+                ->validateRequireComponent($output, $data)
+                ->validateRequireCommon($input, $output, $data);
         } catch (ValidationException $e) {
             return 1;
         }
@@ -51,36 +56,22 @@ class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateName(OutputInterface $output, array $data): self
     {
-        ($data['name'] ?? null) !== 'phpbenchmarks/' . ComponentConfiguration::SLUG
-            ?
+        ($data['name'] ?? null) === 'phpbenchmarks/' . ComponentConfiguration::SLUG
+            ? $this->validationSuccess($output, 'Name ' . $data['name'] . ' is valid.')
+            :
                 $this->validationFailed(
                     $output,
                     'Repository name must be "phpbenchmarks/' . ComponentConfiguration::SLUG . '".'
-                )
-            : $this->validationSuccess($output, 'Name ' . $data['name'] . ' is valid.');
+                );
 
         return $this;
     }
 
     private function validateLicense(OutputInterface $output, array $data): self
     {
-        ($data['license'] ?? null) !== 'proprietary'
-            ? $this->validationFailed($output, 'License must be "proprietary".')
-            : $this->validationSuccess($output, 'License ' . $data['license']  .' is valid.');
-
-        return $this;
-    }
-
-    private function validateRequireCommon(OutputInterface $output, array $data): self
-    {
-        $commonRepository = 'phpbenchmarks/' . ComponentConfiguration::SLUG . '-common';
-        (is_null($data['require'][$commonRepository] ?? null))
-            ?
-                $this->validationFailed(
-                    $output,
-                    'It should require ' . $commonRepository . '. See README.md for more informations.'
-                )
-            : $this->validationSuccess($output, 'Require ' . $commonRepository . '.');
+        ($data['license'] ?? null) === 'proprietary'
+            ? $this->validationSuccess($output, 'License ' . $data['license']  .' is valid.')
+            : $this->validationFailed($output, 'License must be "proprietary".');
 
         return $this;
     }
@@ -115,6 +106,41 @@ class ValidateComposerJsonCommand extends AbstractCommand
                     . ComponentConfiguration::getVersion()
                     . '. See README.md for more informations.'
             );
+        }
+
+        return $this;
+    }
+
+    private function validateRequireCommon(InputInterface $input, OutputInterface $output, array $data): self
+    {
+        if ($this->isRepositoriesCreated()) {
+            $commonRepository = $this->getCommonRepositoryName();
+            $commonVersion = $data['require'][$commonRepository] ?? null;
+
+            if ($this->isValidateDev()) {
+                $branch = $this->getCommonDevBranchName();
+                $isBranchValid = ($data['require'][$commonRepository] ?? null) === $branch;
+            } else {
+                $branchPrefix = $this->getCommonProdBranchPrefix($output);
+                $branch = $branchPrefix . '.z';
+                $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
+            }
+
+            $isBranchValid
+                ? $this->validationSuccess($output, 'Require ' . $commonRepository . ' as ' . $branch . '.')
+                :
+                    $this->validationFailed(
+                        $output,
+                        'It should require '
+                        . $commonRepository
+                        . ' as '
+                        . $branch
+                        . ' but is '
+                        . $commonVersion
+                        . '. See README.md for more informations.'
+                    );
+        } else {
+            $this->repositoriesNotCreatedWarning($output);
         }
 
         return $this;
