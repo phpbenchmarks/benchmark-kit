@@ -5,8 +5,8 @@ services:
         container_name: phpbenchmarks_framework_hello_world
         tty: true
         build:
-            context: ../
-            dockerfile: docker/Dockerfile
+            context: ../../
+            dockerfile: docker/validate/Dockerfile
             args:
                 DOCKER_UID: ${DOCKER_UID}
         volumes:

@@ -17,14 +17,14 @@ abstract class AbstractCommand extends Command
 
     protected function validationSuccess(OutputInterface $output, string $message): self
     {
-        $output->writeln("\e[32m  Validated\e[00m " . $this->validationPrefix . $message);
+        $output->writeln("  \e[42m > \e[00m \e[32mValidated\e[00m " . $this->validationPrefix . $message);
 
         return $this;
     }
 
     protected function validationFailed(OutputInterface $output, string $error): void
     {
-        throw new ValidationException($output, "  \e[44m > \e[00m " . $this->validationPrefix . $error);
+        throw new ValidationException($output, $this->validationPrefix . $error);
     }
 
     protected function getInstallationPath(): string

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+readonly PHPBENCHMARKS_PHP_5_6_ENABLED=false
+readonly PHPBENCHMARKS_PHP_7_0_ENABLED=false
+readonly PHPBENCHMARKS_PHP_7_1_ENABLED=true
+readonly PHPBENCHMARKS_PHP_7_2_ENABLED=true
+readonly PHPBENCHMARKS_PHP_7_3_ENABLED=true
+
+readonly PHPBENCHMARKS_NAME="Symfony"
+readonly PHPBENCHMARKS_SLUG="symfony"
+
+readonly PHPBENCHMARKS_BENCHMARK_URL="/benchmark/helloworld"
+
+readonly PHPBENCHMARKS_MAIN_REPOSITORY="symfony/framework-bundle"
+
+readonly PHPBENCHMARKS_MAJOR_VERSION=4
+readonly PHPBENCHMARKS_MINOR_VERSION=2
+readonly PHPBENCHMARKS_BUGFIX_VERSION=2

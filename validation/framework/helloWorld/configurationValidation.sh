@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-assertConfigurationFileExist "responseBody.txt"
+assertConfigurationFileExist "responseBody/responseBody.txt"

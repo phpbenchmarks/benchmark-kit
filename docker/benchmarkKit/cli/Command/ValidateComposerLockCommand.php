@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\ComponentConfiguration;
+use App\{
+    ComponentConfiguration,
+    Exception\ValidationException
+};
 use Symfony\Component\Console\{
     Command\Command,
     Input\InputInterface,
@@ -22,9 +25,13 @@ class ValidateComposerLockCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this
-            ->validateDisabledPhpVersions($output)
-            ->validateEnabledPhpVersions($output);
+        try {
+            $this
+                ->validateDisabledPhpVersions($output)
+                ->validateEnabledPhpVersions($output);
+        } catch (ValidationException $e) {
+            return 1;
+        }
 
         return 0;
     }

@@ -13,8 +13,11 @@ function copyReadMe {
 }
 
 function copyConfigurationFiles {
-    rm $CONFIGURATION_PATH/*
-    cp $INSTALLATION_PATH/.phpbenchmarks/* $CONFIGURATION_PATH
+    if [ -d "$CONFIGURATION_PATH" ]; then
+        rm -rf $CONFIGURATION_PATH
+    fi
+    mkdir $CONFIGURATION_PATH
+    cp -R $INSTALLATION_PATH/.phpbenchmarks/* $CONFIGURATION_PATH
 }
 
 function assertConfigurationFileExist {

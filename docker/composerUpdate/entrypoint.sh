@@ -25,11 +25,7 @@ function generateComposerFiles {
 
 definePhpComponentConfigurationValues
 
-cd /var/phpbenchmarks/cli
-echoValidationGroupStart "Validation of composer.json"
-php console phpbenchmarks:validate:composerjson
-[ "$?" != "0" ] && exit 1
-echoValidationGroupEnd
+validateComposerJson
 
 cd /var/www/phpbenchmarks
 generateComposerFiles "5.6" "$PHPBENCHMARKS_PHP_5_6_ENABLED"
@@ -38,9 +34,5 @@ generateComposerFiles "7.1" "$PHPBENCHMARKS_PHP_7_1_ENABLED"
 generateComposerFiles "7.2" "$PHPBENCHMARKS_PHP_7_2_ENABLED"
 generateComposerFiles "7.3" "$PHPBENCHMARKS_PHP_7_3_ENABLED"
 
-cd /var/phpbenchmarks/cli
 echo ""
-echoValidationGroupStart "Validation of composer.lock.phpX.Y"
-php console phpbenchmarks:validate:composerlock
-[ "$?" != "0" ] && exit 1
-echoValidationGroupEnd
+validateComposerLock

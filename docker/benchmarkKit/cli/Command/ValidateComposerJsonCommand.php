@@ -25,18 +25,18 @@ class ValidateComposerJsonCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $composerJsonFile = $this->getInstallationPath() . '/composer.json';
-        if (is_readable($composerJsonFile) === false) {
-            $this->validationFailed($output, 'File does not exist.');
-        }
-
         try {
-            $data = json_decode(file_get_contents($composerJsonFile), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\Exception $e) {
-            $this->validationFailed($output, 'Error while parsing: ' . $e->getMessage());
-        }
+            $composerJsonFile = $this->getInstallationPath() . '/composer.json';
+            if (is_readable($composerJsonFile) === false) {
+                $this->validationFailed($output, 'File does not exist.');
+            }
 
-        try {
+            try {
+                $data = json_decode(file_get_contents($composerJsonFile), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\Exception $e) {
+                $this->validationFailed($output, 'Error while parsing: ' . $e->getMessage());
+            }
+
             $this
                 ->validateName($output, $data)
                 ->validateLicense($output, $data)

@@ -87,6 +87,7 @@ function echoValidationOk {
 
 function definePhpComponentConfigurationValues {
     local phpFile=/var/phpbenchmarks/cli/ComponentConfiguration.php
+
     sed -i -e "s~____PHPBENCHMARKS_PHP_5_6_ENABLED____~$PHPBENCHMARKS_PHP_5_6_ENABLED~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_PHP_7_0_ENABLED____~$PHPBENCHMARKS_PHP_7_0_ENABLED~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_PHP_7_1_ENABLED____~$PHPBENCHMARKS_PHP_7_1_ENABLED~g" $phpFile
@@ -100,6 +101,24 @@ function definePhpComponentConfigurationValues {
     sed -i -e "s~____PHPBENCHMARKS_MAJOR_VERSION____~$PHPBENCHMARKS_MAJOR_VERSION~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_MINOR_VERSION____~$PHPBENCHMARKS_MINOR_VERSION~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_BUGFIX_VERSION____~$PHPBENCHMARKS_BUGFIX_VERSION~g" $phpFile
+}
+
+function validateComposerJson {
+    cd /var/phpbenchmarks/cli
+    echoValidationGroupStart "Validation of composer.json"
+    php console phpbenchmarks:validate:composerjson
+    [ "$?" != "0" ] && exitScript
+    echoValidationGroupEnd
+    cd - &>/dev/null
+}
+
+function validateComposerLock {
+    cd /var/phpbenchmarks/cli
+    echoValidationGroupStart "Validation of composer.lock.phpX.Y"
+    php console phpbenchmarks:validate:composerlock
+    [ "$?" != "0" ] && exitScript
+    echoValidationGroupEnd
+    cd - &>/dev/null
 }
 
 VERBOSE_LEVEL=0

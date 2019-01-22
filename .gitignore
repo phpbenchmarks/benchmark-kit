@@ -2,9 +2,9 @@
 
 /docker/composerUpdate/.env
 /docker/composerUpdate/common.sh
-/docker/composerUpdate/componentFiles/.phpbenchmarks
-!/docker/composerUpdate/componentFiles/.phpbenchmarks/.gitkeep
+!/docker/composerUpdate/componentFiles/.phpbenchmarks
 
-/validation/framework/helloWorld/docker/.env
+/validation/framework/helloWorld/docker/validate/.env
+/validation/framework/helloWorld/docker/validate/common.sh
 /validation/framework/helloWorld/componentFiles/
 !/framework/helloWorld/componentFiles/.phpbenchmarks/.gitkeep

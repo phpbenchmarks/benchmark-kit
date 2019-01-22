@@ -7,7 +7,6 @@ echoValidationGroupStart "Validation of .phpbenchmarks directory"
 copyConfigurationFiles
 assertCommonConfiguration
 assertVhostConfiguration
-assertConfigurationFileExist "sudoers"
 assertInitBenchmark
 source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
@@ -27,8 +26,9 @@ if [ $VERBOSE_LEVEL -ge 2 ]; then
 else
     docker-compose up --build --no-start &>/tmp/phpbenchmarks.docker
     [ $? != "0" ] && cat /tmp/phpbenchmarks.docker && exitScript "Error while building Docker container."
+    rm /tmp/phpbenchmarks.docker
 fi
-echoValidationGroupEnd 1
+echoValidationGroupEnd
 
 echoValidationGroupStart "Composer update"
 if [ $VERBOSE_LEVEL -ge 1 ]; then
@@ -37,6 +37,7 @@ if [ $VERBOSE_LEVEL -ge 1 ]; then
 else
     docker-compose up --abort-on-container-exit --exit-code-from phpbenchmarks_composer_update &>/tmp/phpbenchmarks.docker
     [ $? != "0" ] && cat /tmp/phpbenchmarks.docker && exitScript "Composer update failed."
+    rm /tmp/phpbenchmarks.docker
 fi
 echoValidationGroupEnd
 

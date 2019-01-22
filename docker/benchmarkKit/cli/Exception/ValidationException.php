@@ -12,6 +12,6 @@ class ValidationException extends \Exception
     {
         parent::__construct($message);
 
-        $output->writeln("  \e[41m ERROR \e[00m\e[31m" . $message . "\e[00m");
+        $output->writeln("  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m" . $message . "\e[00m");
     }
 }

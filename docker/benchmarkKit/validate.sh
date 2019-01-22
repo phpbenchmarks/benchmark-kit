@@ -1,37 +1,7 @@
 #!/usr/bin/env bash
 
 source /var/phpbenchmarks/configuration.sh
-
-function echoBlock {
-    local title=$2
-    local titleLength=${#2}
-
-    echo -en "\n\e[$1m\e[1;37m    "
-    for x in $(seq 1 $titleLength); do echo -en " "; done;
-    echo -en "\e[0m\n"
-
-    echo -en "\e[$1m\e[1;37m  $title  \e[0m\n"
-    echo -en "\e[$1m\e[1;37m    "
-    for x in $(seq 1 $titleLength); do echo -en " "; done;
-    echo -en "\e[0m\n\n"
-}
-
-function echoTitle {
-    echoBlock 45 "$1"
-}
-
-function echoValidatedTest {
-    echo -e "\e[32mValidated\e[00m $1"
-}
-
-function validationFailed {
-    echoBlock 41 "$1"
-}
-
-function validationFailedExit {
-    validationFailed "$1"
-    exit 1
-}
+source /var/phpbenchmarks/common.sh
 
 function createVhosts {
     local php56VhostFile=/etc/nginx/sites-enabled/benchmark.php56.conf
@@ -66,11 +36,11 @@ function createVhosts {
 }
 
 function startNginx {
-    sudo /usr/sbin/service nginx start 1>/dev/null
-    [ $? != "0" ] && validationFailedExit "Error while starting nginx."
+    sudo /usr/sbin/service nginx start &>/tmp/nginx.start
+    [ $? != "0" ] && cat /tmp/nginx.start && exitScript "Error while starting nginx."
 }
 
-function validateBodies {
+function validateBenchmarkUrlBodies {
     [ "$PHPBENCHMARKS_PHP_5_6_ENABLED" == "true" ] && validateBody "5.6" "$PHPBENCHMARKS_BENCHMARK_URL"
     [ "$PHPBENCHMARKS_PHP_7_0_ENABLED" == "true" ] && validateBody "7.0" "$PHPBENCHMARKS_BENCHMARK_URL"
     [ "$PHPBENCHMARKS_PHP_7_1_ENABLED" == "true" ] && validateBody "7.1" "$PHPBENCHMARKS_BENCHMARK_URL"
@@ -78,27 +48,38 @@ function validateBodies {
     [ "$PHPBENCHMARKS_PHP_7_3_ENABLED" == "true" ] && validateBody "7.3" "$PHPBENCHMARKS_BENCHMARK_URL"
 }
 
+function callInitBenchmark {
+    echoValidationGroupStart "Call .phpbenchmarks/initBenchmark.sh::initBenchmark()"
+
+    cd /var/www/phpbenchmarks
+
+    source .phpbenchmarks/initBenchmark.sh
+    [ "$?" != "0" ] && exitScript "File .phpbenchmarks/initBenchmark.sh not found."
+
+    initBenchmark
+    [ "$?" != "0" ] && exitScript "Could not call .phpbenchmarks/initBenchmark.sh::initBenchmark()."
+
+    cd - &>/dev/null
+    echoValidationGroupEnd
+}
+
+
 function validateBody {
     local phpVersion=$1
     local benchmarkUrl="http://php${phpVersion//.}.benchmark.loc$2"
     local bodyFile="/tmp/benchmark.body"
-    local responseFile="/var/phpbenchmarks/responseBody.txt"
+    local responseFileDir="/var/phpbenchmarks/responseBody"
 
-    echoTitle "Testing $benchmarkUrl"
+    echoValidationGroupStart "Validating $benchmarkUrl"
 
     sudo /usr/sbin/service php$phpVersion-fpm start
-    [ "$?" != "0" ] && validationFailedExit "Could not start PHP $phpVersion FPM"
+    [ "$?" != "0" ] && exitScript "Could not start PHP $phpVersion FPM."
 
     cd /var/www/phpbenchmarks
-    [ "$?" != "0" ] && validationFailedExit "Could not change directory to /var/www/phpbenchmarks"
+    [ "$?" != "0" ] && exitScript "Could not change directory to /var/www/phpbenchmarks."
 
     cp "composer.lock.php$phpVersion" composer.lock
-    [ "$?" != "0" ] && validationFailedExit "Could not copy composer.lock.php$phpVersion to composer.lock"
-
-    source init_benchmark.sh
-    [ "$?" != "0" ] && validationFailedExit "File init_benchmark.sh not found."
-    init &>/dev/null
-    [ "$?" != "0" ] && validationFailedExit "Could not call init_benchmark.sh::init()."
+    [ "$?" != "0" ] && exitScript "Could not copy composer.lock.php$phpVersion to composer.lock."
 
     if [ -f $bodyFile ]; then
         rm $bodyFile
@@ -109,51 +90,34 @@ function validateBody {
     if [ "$httpCode" == "200" ]; then
         echoValidatedTest "HTTP code is 200."
 
-        if [ "$(cat $bodyFile)" == "$(cat $responseFile)" ]; then
-            echoValidatedTest "Body is valid."
-        else
-            validationFailed "Body is invalid."
-            echo "Http code:"
-            echo $httpCode
-            echo "Expected body:"
-            cat $responseFile
-            echo ""
-            echo "Body:"
+        local oldIFS=$IFS
+        IFS=
+        local bodyContent=$(cat $bodyFile)
+        local contentValidated=false
+        for responseFile in $responseFileDir/*; do
+            local expectedContent=$(cat $responseFile)
+            if [ "$bodyContent" == "$expectedContent" ]; then
+                echoValidatedTest "Body is equal to .phpbenchmarks/responseBody/$(basename $responseFile) content."
+                contentValidated=true
+            fi
+        done
+        IFS=$oldIFS
+
+        if [ $contentValidated == false ]; then
+            echoError "Body should be equal to the content of a file in .phpbenchmarks/responseBody."
             cat $bodyFile
+            echo ""
             exit 1
         fi
     else
-        validationFailedExit "HTTP code should be 200, but is $httpCode."
+        exitScript "HTTP code should be 200, but is $httpCode."
     fi
+
+    echoValidationGroupEnd
 
     cd - &>/dev/null
 }
 
-function configurePhpCli {
-    local componentConfigurationPath='/var/phpbenchmarks/cli/ComponentConfiguration.php'
-    sed -i -e "s/____PHPBENCHMARKS_PHP_5_6_ENABLED____/$PHPBENCHMARKS_PHP_5_6_ENABLED/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_PHP_7_0_ENABLED____/$PHPBENCHMARKS_PHP_7_0_ENABLED/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_PHP_7_1_ENABLED____/$PHPBENCHMARKS_PHP_7_1_ENABLED/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_PHP_7_2_ENABLED____/$PHPBENCHMARKS_PHP_7_2_ENABLED/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_PHP_7_3_ENABLED____/$PHPBENCHMARKS_PHP_7_3_ENABLED/g" $componentConfigurationPath
-
-    sed -i -e "s~____PHPBENCHMARKS_BENCHMARK_URL____~$PHPBENCHMARKS_BENCHMARK_URL~g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG/g" $componentConfigurationPath
-
-    sed -i -e "s/____PHPBENCHMARKS_MAIN_REPOSITORY____/$PHPBENCHMARKS_MAIN_REPOSITORY/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_MAJOR_VERSION____/$PHPBENCHMARKS_MAJOR_VERSION/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_MINOR_VERSION____/$PHPBENCHMARKS_MINOR_VERSION/g" $componentConfigurationPath
-    sed -i -e "s/____PHPBENCHMARKS_BUGFIX_VERSION____/$PHPBENCHMARKS_BUGFIX_VERSION/g" $componentConfigurationPath
-}
-
-function validateComposerJson {
-    echoTitle "Validate composer.json"
-    cd /var/phpbenchmarks/cli
-    php console phpbenchmarks:validate:composerjson
-    [ $? != "0" ] && exit 1;
-    cd -
-}
-
 createVhosts
 startNginx
-configurePhpCli
+definePhpComponentConfigurationValues
