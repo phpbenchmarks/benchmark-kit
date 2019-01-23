@@ -1,6 +1,7 @@
 /.idea/
 
 /docker/benchmarkKit/cli/vendor
+/docker/benchmarkKit/cli/composer.lock
 
 /docker/composerUpdate/.env
 /docker/composerUpdate/common.sh
