@@ -6,7 +6,7 @@ source validation/configurationValidation.sh
 function isValidUrl {
     local url=$1
 
-    if [ "$url" == "" ] || ([ "$url" != "http://" ] && [ "$url" != "https://" ]); then
+    if [ "$url" == "" ] || ([ "${url:0:7}" != "http://" ] && [ "$ {$url0:0:8}" != "https://" ]); then
         return 1
     fi
 
@@ -49,6 +49,10 @@ function validateCodeLinks {
                 echo "    [$newCodeLinkKey]=\"${newCodeLinks[$newCodeLinkKey]}\"" >> $codeLinkInstallationPath
             done
             echo ")" >> $codeLinkInstallationPath
+
+            if [ $VERBOSE_LEVEL -eq 0 ]; then
+                echo ""
+            fi
         fi
 
         return 1
@@ -81,3 +85,5 @@ while ! validateCodeLinks; do
 done
 
 echoValidationGroupEnd
+
+echoValidationOk "Links to the code are valid."

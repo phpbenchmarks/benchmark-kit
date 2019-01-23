@@ -1,22 +1,29 @@
 #!/usr/bin/env bash
 
-grep --quiet "INSTALLATION_PATH=$INSTALLATION_PATH" ".env" &>/dev/null
-readonly installationPathConfigured=$?
+echoValidationGroupStart "Create $(pwd)/.env"
 
-if [ ! -f ".env" ] || [ "$installationPathConfigured" != "0" ]; then
-    echoValidationGroupStart "Create .env for Docker container"
+cp .env.dist .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "File created from .env.dist."
 
-    cp .env.dist .env
-    [ $? != "0" ] && exitScript
-    echoValidatedTest "File created."
+sed -i -e "s~____INSTALLATION_PATH____~$INSTALLATION_PATH~g" .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "\$INSTALLATION_PATH defined to $INSTALLATION_PATH."
 
-    sed -i -e "s~____INSTALLATION_PATH____~$INSTALLATION_PATH~g" .env
-    [ $? != "0" ] && exitScript
-    echoValidatedTest "\$INSTALLATION_PATH defined to $INSTALLATION_PATH."
+sed -i -e "s~____DOCKER_UID____~$UID~g" .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "\$DOCKER_UID defined to $UID."
 
-    sed -i -e "s~____DOCKER_UID____~$UID~g" .env
-    [ $? != "0" ] && exitScript
-    echoValidatedTest "\$DOCKER_UID defined to $UID."
+sed -i -e "s~____VALIDATE_DEV____~$VALIDATE_DEV~g" .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "\$VALIDATE_DEV defined to $VALIDATE_DEV."
 
-    echoValidationGroupEnd
-fi
+sed -i -e "s~____REPOSITORIES_CREATED____~$REPOSITORIES_CREATED~g" .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "\$REPOSITORIES_CREATED defined to $REPOSITORIES_CREATED."
+
+sed -i -e "s~____RESULT_TYPE_SLUG____~$RESULT_TYPE_SLUG~g" .env
+[ $? != "0" ] && exitScript
+echoValidatedTest "\$RESULT_TYPE_SLUG defined to $RESULT_TYPE_SLUG."
+
+echoValidationGroupEnd

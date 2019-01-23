@@ -40,14 +40,6 @@ function startNginx {
     [ $? != "0" ] && cat /tmp/nginx.start && exitScript "Error while starting nginx."
 }
 
-function validateBenchmarkUrlBodies {
-    [ "$PHPBENCHMARKS_PHP_5_6_ENABLED" == "true" ] && validateBody "5.6" "$PHPBENCHMARKS_BENCHMARK_URL"
-    [ "$PHPBENCHMARKS_PHP_7_0_ENABLED" == "true" ] && validateBody "7.0" "$PHPBENCHMARKS_BENCHMARK_URL"
-    [ "$PHPBENCHMARKS_PHP_7_1_ENABLED" == "true" ] && validateBody "7.1" "$PHPBENCHMARKS_BENCHMARK_URL"
-    [ "$PHPBENCHMARKS_PHP_7_2_ENABLED" == "true" ] && validateBody "7.2" "$PHPBENCHMARKS_BENCHMARK_URL"
-    [ "$PHPBENCHMARKS_PHP_7_3_ENABLED" == "true" ] && validateBody "7.3" "$PHPBENCHMARKS_BENCHMARK_URL"
-}
-
 function callInitBenchmark {
     echoValidationGroupStart "Call .phpbenchmarks/initBenchmark.sh::initBenchmark()"
 

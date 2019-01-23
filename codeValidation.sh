@@ -44,3 +44,5 @@ source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
 
 source "$RESULT_TYPE_PATH/codeValidation.sh"
+
+echoValidationOk "Code is valid. If everything is done and commited, you can use \"./codeLink.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG $INSTALLATION_PATH\"."

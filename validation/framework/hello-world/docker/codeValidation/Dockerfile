@@ -17,4 +17,4 @@ COPY docker/codeValidation/common.sh /var/phpbenchmarks
 RUN chown -R phpbenchmarks:phpbenchmarks /var/phpbenchmarks
 
 USER phpbenchmarks
-ENTRYPOINT ["/var/phpbenchmarks/entrypoint.sh", "-v"]
+ENTRYPOINT /var/phpbenchmarks/entrypoint.sh -v

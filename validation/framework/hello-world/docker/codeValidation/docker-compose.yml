@@ -9,6 +9,10 @@ services:
             dockerfile: docker/codeValidation/Dockerfile
             args:
                 DOCKER_UID: ${DOCKER_UID}
+        environment:
+            - VALIDATE_DEV=${VALIDATE_DEV}
+            - REPOSITORIES_CREATED=${REPOSITORIES_CREATED}
+            - RESULT_TYPE_SLUG=${RESULT_TYPE_SLUG}
         volumes:
             - ${INSTALLATION_PATH}:/var/www/phpbenchmarks
         extra_hosts:
