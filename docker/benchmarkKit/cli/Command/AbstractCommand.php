@@ -106,7 +106,7 @@ abstract class AbstractCommand extends Command
             'dev-'
             . ComponentConfiguration::SLUG
             . '_'
-            . ComponentConfiguration::VERSION_MAJOR
+            . ComponentConfiguration::DEPENDENCY_MAJOR_VERSION
             . '_'
             . $this->getResultTypeSlug()
             . '_prepare';
@@ -124,6 +124,6 @@ abstract class AbstractCommand extends Command
                 );
         }
 
-        return  ComponentConfiguration::VERSION_MAJOR . '.' . $commonMinorVersion . '.';
+        return  ComponentConfiguration::DEPENDENCY_MAJOR_VERSION . '.' . $commonMinorVersion . '.';
     }
 }

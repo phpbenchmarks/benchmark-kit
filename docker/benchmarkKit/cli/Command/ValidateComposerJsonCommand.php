@@ -78,32 +78,32 @@ class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateRequireComponent(OutputInterface $output, array $data): self
     {
-        if (is_null($data['require'][ComponentConfiguration::MAIN_REPOSITORY] ?? null)) {
+        if (is_null($data['require'][ComponentConfiguration::DEPENDENCY_NAME] ?? null)) {
             $this->validationFailed(
                 $output,
-                'It should require ' . ComponentConfiguration::MAIN_REPOSITORY . '. See README.md for more informations.'
+                'It should require ' . ComponentConfiguration::DEPENDENCY_NAME . '. See README.md for more informations.'
             );
         }
 
         if (
-            $data['require'][ComponentConfiguration::MAIN_REPOSITORY] === ComponentConfiguration::getVersion()
-            || $data['require'][ComponentConfiguration::MAIN_REPOSITORY] === 'v' . ComponentConfiguration::getVersion()
+            $data['require'][ComponentConfiguration::DEPENDENCY_NAME] === ComponentConfiguration::getDependencyVersion()
+            || $data['require'][ComponentConfiguration::DEPENDENCY_NAME] === 'v' . ComponentConfiguration::getDependencyVersion()
         ) {
             $this->validationSuccess(
                 $output,
                 'Require '
-                    . ComponentConfiguration::MAIN_REPOSITORY
+                    . ComponentConfiguration::DEPENDENCY_NAME
                     . ': '
-                    . $data['require'][ComponentConfiguration::MAIN_REPOSITORY]
+                    . $data['require'][ComponentConfiguration::DEPENDENCY_NAME]
                     . '.'
             );
         } else {
             $this->validationFailed(
                 $output,
                 'It should require '
-                    . ComponentConfiguration::MAIN_REPOSITORY
+                    . ComponentConfiguration::DEPENDENCY_NAME
                     . ' as '
-                    . ComponentConfiguration::getVersion()
+                    . ComponentConfiguration::getDependencyVersion()
                     . '. See README.md for more informations.'
             );
         }

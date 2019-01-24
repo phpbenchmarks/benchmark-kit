@@ -74,21 +74,21 @@ function assertCommonConfiguration {
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_BENCHMARK_URL. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_BENCHMARK_URL ($PHPBENCHMARKS_BENCHMARK_URL)."
 
-    [ "$PHPBENCHMARKS_MAIN_REPOSITORY" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MAIN_REPOSITORY. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MAIN_REPOSITORY ($PHPBENCHMARKS_MAIN_REPOSITORY)."
+    [ "$PHPBENCHMARKS_DEPENDENCY_NAME" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_DEPENDENCY_NAME. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_DEPENDENCY_NAME ($PHPBENCHMARKS_DEPENDENCY_NAME)."
 
-    [ "$PHPBENCHMARKS_MAJOR_VERSION" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MAJOR_VERSION. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MAJOR_VERSION ($PHPBENCHMARKS_MAJOR_VERSION)."
+    [ "$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION ($PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION)."
 
-    [ "$PHPBENCHMARKS_MINOR_VERSION" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_MINOR_VERSION. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_MINOR_VERSION ($PHPBENCHMARKS_MINOR_VERSION)."
+    [ "$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION ($PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION)."
 
-    [ "$PHPBENCHMARKS_BUGFIX_VERSION" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_BUGFIX_VERSION. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_BUGFIX_VERSION ($PHPBENCHMARKS_BUGFIX_VERSION)."
+    [ "$PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION ($PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION)."
 }
 
 function assertVhostConfiguration {
@@ -129,12 +129,12 @@ function assertReadMe {
     local validReadMeContent=$(cat validation/mainRepositoryReadme.md)
     validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG}
     validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_NAME____/$PHPBENCHMARKS_NAME}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_MAJOR_VERSION____/$PHPBENCHMARKS_MAJOR_VERSION}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_MINOR_VERSION____/$PHPBENCHMARKS_MINOR_VERSION}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION}
     local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
     IFS=$oldIFS
     if [ "$validReadMeContent" != "$readMeContent" ]; then
-        echoWarningAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [Y/n]"
+        echoAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [Y/n]"
         read editReadMe
 
         if [ $VERBOSE_LEVEL -eq 0 ]; then

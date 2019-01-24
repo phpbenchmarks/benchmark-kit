@@ -7,7 +7,8 @@ showCliWarning=false
 
 if [ "$COMPONENT_TYPE" != "framework" ] && [ "$COMPONENT_TYPE" != "templateEngine" ]; then
     showCliWarning=true
-    echo "> Choose component type:"
+    echoAsk "Choose component type" false
+    echo ""
     echo "   framework"
     echo "   templateEngine"
     read COMPONENT_TYPE
@@ -18,7 +19,8 @@ fi
 
 if [ "$RESULT_TYPE_SLUG" != "hello-world" ] && [ "$RESULT_TYPE_SLUG" != "rest-api" ]; then
     showCliWarning=true
-    echo "> Choose benchmark type:"
+    echoAsk "Choose benchmark type" false
+    echo ""
     echo "   hello-world"
     echo "   rest-api"
     read RESULT_TYPE_SLUG
@@ -29,7 +31,8 @@ fi
 
 if [ "$INSTALLATION_PATH" == "" ]; then
     showCliWarning=true
-    echo "> Path to your code?"
+    echoAsk "Path to your code?" false
+    echo ""
     read INSTALLATION_PATH
 fi
 if [ ! -d "$INSTALLATION_PATH" ]; then

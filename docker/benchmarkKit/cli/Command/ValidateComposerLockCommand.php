@@ -87,19 +87,19 @@ class ValidateComposerLockCommand extends AbstractCommand
     {
         $packageFound = false;
         foreach ($data['packages'] as $package) {
-            if ($package['name'] === ComponentConfiguration::MAIN_REPOSITORY) {
+            if ($package['name'] === ComponentConfiguration::DEPENDENCY_NAME) {
                 $packageFound = true;
 
                 if (
-                    $package['version'] !== ComponentConfiguration::getVersion()
-                    && $package['version'] !== 'v' . ComponentConfiguration::getVersion())
+                    $package['version'] !== ComponentConfiguration::getDependencyVersion()
+                    && $package['version'] !== 'v' . ComponentConfiguration::getDependencyVersion())
                 {
                     $this->validationFailed(
                         $output,
                         'Package '
-                            . ComponentConfiguration::MAIN_REPOSITORY
+                            . ComponentConfiguration::DEPENDENCY_NAME
                             . ' version should be '
-                            . ComponentConfiguration::getVersion()
+                            . ComponentConfiguration::getDependencyVersion()
                             . ', '
                             . $package['version']
                             . ' found.'
@@ -108,9 +108,9 @@ class ValidateComposerLockCommand extends AbstractCommand
                     $this->validationSuccess(
                         $output,
                         'Package '
-                            . ComponentConfiguration::MAIN_REPOSITORY
+                            . ComponentConfiguration::DEPENDENCY_NAME
                             . ' version is '
-                            . ComponentConfiguration::getVersion()
+                            . ComponentConfiguration::getDependencyVersion()
                             . '.'
                     );
                     break;
@@ -119,7 +119,7 @@ class ValidateComposerLockCommand extends AbstractCommand
         }
 
         if ($packageFound === false) {
-            $this->validationFailed($output, 'Package ' . ComponentConfiguration::MAIN_REPOSITORY . ' not found.');
+            $this->validationFailed($output, 'Package ' . ComponentConfiguration::DEPENDENCY_NAME . ' not found.');
         }
 
         return $this;
@@ -165,7 +165,7 @@ class ValidateComposerLockCommand extends AbstractCommand
             }
 
             if ($packageFound === false) {
-                $this->validationFailed($output, 'Package ' . ComponentConfiguration::MAIN_REPOSITORY . ' not found.');
+                $this->validationFailed($output, 'Package ' . ComponentConfiguration::DEPENDENCY_NAME . ' not found.');
             }
         } else {
             $this->repositoriesNotCreatedWarning($output);

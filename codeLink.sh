@@ -21,7 +21,7 @@ function validateCodeLinks {
             hasNewValues=true
             invalidUrl=true
             while [ $invalidUrl == true ]; do
-                echoWarningAsk "${codeLinkNames[$codeLinkKey]}"
+                echoAsk "${codeLinkNames[$codeLinkKey]}"
                 read sourceCodeUrl
 
                 if ! isValidUrl "$sourceCodeUrl"; then
@@ -38,7 +38,7 @@ function validateCodeLinks {
     done
 
     if [ $hasNewValues == true ]; then
-        echoWarningAsk "Write .phpbenchmarks/codeLink.sh with new values? [Y/n]"
+        echoAsk "Write .phpbenchmarks/codeLink.sh with new values? [Y/n]"
         read writeCodeLinkFile
         if [ "$writeCodeLinkFile" == "" ] || [ "$writeCodeLinkFile" == "y" ] || [ "$writeCodeLinkFile" == "Y" ]; then
             codeLinkInstallationPath="$INSTALLATION_PATH/.phpbenchmarks/codeLink.sh"

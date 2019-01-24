@@ -22,8 +22,8 @@ Switch branch to select version and benchmark you want to see.
 
 ## Benchmarks
 
-You can find ____PHPBENCHMARKS_NAME____ ____PHPBENCHMARKS_MAJOR_VERSION____.____PHPBENCHMARKS_MINOR_VERSION____ benchmarks results on
-[benchmarks results page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_SLUG____/____PHPBENCHMARKS_MAJOR_VERSION____.____PHPBENCHMARKS_MINOR_VERSION____).
+You can find ____PHPBENCHMARKS_NAME____ ____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____ benchmarks results on
+[benchmarks results page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_SLUG____/____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____).
 
 See all ____PHPBENCHMARKS_NAME____ benchmarked versions on [select version page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_SLUG____/version).
 

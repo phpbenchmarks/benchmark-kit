@@ -15,15 +15,21 @@ class ComponentConfiguration
     public const URL = "____PHPBENCHMARKS_BENCHMARK_URL____";
     public const SLUG = "____PHPBENCHMARKS_SLUG____";
 
-    public const MAIN_REPOSITORY = "____PHPBENCHMARKS_MAIN_REPOSITORY____";
     public const COMMON_REPOSITORY = '____PHPBENCHMARKS_SLUG____-common';
-    public const VERSION_MAJOR = ____PHPBENCHMARKS_MAJOR_VERSION____;
-    public const VERSION_MINOR = ____PHPBENCHMARKS_MINOR_VERSION____;
-    public const VERSION_BUGFIX = ____PHPBENCHMARKS_BUGFIX_VERSION____;
 
-    public static function getVersion(): string
+    public const DEPENDENCY_NAME = "____PHPBENCHMARKS_DEPENDENCY_NAME____";
+    public const DEPENDENCY_MAJOR_VERSION = ____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____;
+    public const DEPENDENCY_MINOR_VERSION = ____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____;
+    public const DEPENDENCY_BUGFIX_VERSION = ____PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION____;
+
+    public static function getDependencyVersion(): string
     {
-        return static::VERSION_MAJOR . '.' . static::VERSION_MINOR . '.' . static::VERSION_BUGFIX;
+        return
+            static::DEPENDENCY_MAJOR_VERSION
+            . '.'
+            . static::DEPENDENCY_MINOR_VERSION
+            . '.'
+            . static::DEPENDENCY_BUGFIX_VERSION;
     }
 
     public static function getEnabledPhpVersions(): array

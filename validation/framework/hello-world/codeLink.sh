@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-codeLink[]="route"
-codeLink[]="controller"
+codeLink=(
+    "route"
+    "controller"
+)

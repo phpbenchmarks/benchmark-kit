@@ -1,4 +1,4 @@
-Initialize code
+Initialize branch
 -
 
 To make benchmark kit works, some file are required in your `main` repository branch.
@@ -21,6 +21,10 @@ Without any parameter, it will ask you 3 informations:
 * component type (framework or templateEngine)
 * benchmark type (hello-world or rest-api)
 * path to your code
+
+Available options:
+* `-v`: view each validations performed
+* `-vv`: view each validations performed and wget output if configuration files are downloaded from github
 
 ```bash
 # will ask the 3 informations

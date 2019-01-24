@@ -41,22 +41,29 @@ function echoValidationGroupStart {
 function echoValidationWarning {
     if [ $VERBOSE_LEVEL -ge 1 ]; then
         echo -e "  \e[43m > \e[00m \e[43m $1 \e[00m"
+    else
+        echo -e "\e[43m $1 \e[00m"
     fi
 }
 
 function echoValidatedTest {
+    local message=$1
+    local title=$2
+    [ "$title" == "" ] && title="Validated"
+
     if [ $VERBOSE_LEVEL -ge 1 ]; then
-        echo -e "  \e[42m > \e[00m \e[32mValidated\e[00m $1"
+        echo -e "  \e[42m > \e[00m \e[32m$title\e[00m $1"
     fi
 }
 
-function echoWarningAsk {
+function echoAsk {
     local message=$1
+    local isInValidationGroup=$2
 
-    if [ $VERBOSE_LEVEL -ge 1 ]; then
-        echo -n -e "  \e[43m > \e[00m \e[43m $message \e[00m "
+    if [ "$isInValidationGroup" == "false" ] || [ $VERBOSE_LEVEL -le 0 ]; then
+        echo -n -e "\e[45m $message \e[00m "
     else
-        echo -n -e "\e[43m $message \e[00m "
+        echo -n -e "  \e[45m > \e[00m \e[45m $message \e[00m "
     fi
 }
 
@@ -103,10 +110,10 @@ function definePhpComponentConfigurationValues {
     sed -i -e "s~____PHPBENCHMARKS_BENCHMARK_URL____~$PHPBENCHMARKS_BENCHMARK_URL~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_SLUG____~$PHPBENCHMARKS_SLUG~g" $phpFile
 
-    sed -i -e "s~____PHPBENCHMARKS_MAIN_REPOSITORY____~$PHPBENCHMARKS_MAIN_REPOSITORY~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_MAJOR_VERSION____~$PHPBENCHMARKS_MAJOR_VERSION~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_MINOR_VERSION____~$PHPBENCHMARKS_MINOR_VERSION~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_BUGFIX_VERSION____~$PHPBENCHMARKS_BUGFIX_VERSION~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_NAME____~$PHPBENCHMARKS_DEPENDENCY_NAME~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____~$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____~$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION~g" $phpFile
+    sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION____~$PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION~g" $phpFile
 }
 
 function validateComposerJson {
@@ -134,7 +141,7 @@ function validateBranchName {
         echoValidationWarning "Branch names are not validated. Don't forget to remove '--repositories-not-created' parameter when repositories will be created."
     else
         local gitBranch=$(cd $INSTALLATION_PATH && git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/' -e 's/(//g' -e 's/)//g')
-        local expectedGitBranch="$PHPBENCHMARKS_SLUG"_"$PHPBENCHMARKS_MAJOR_VERSION.$PHPBENCHMARKS_MINOR_VERSION"_"$RESULT_TYPE_SLUG"
+        local expectedGitBranch="$PHPBENCHMARKS_SLUG"_"$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION.$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION"_"$RESULT_TYPE_SLUG"
         if [ $VALIDATE_DEV == true ]; then
             expectedGitBranch=$expectedGitBranch"_prepare"
         fi
