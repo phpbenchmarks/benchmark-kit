@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-downloadGithubFile ".phpbenchmarks/responseBody/responseBody.txt"
+downloadGitHubFile ".phpbenchmarks/responseBody/responseBody.txt"

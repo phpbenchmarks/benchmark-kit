@@ -3,7 +3,7 @@
 source common.sh
 source validation/configurationValidation.sh
 
-function downloadGithubFile {
+function downloadGitHubFile {
     local file=$1
     local url="https://raw.githubusercontent.com/phpbenchmarks/$slugToCopy/$GITHUB_BRANCH/$file"
     local showValidationSuccess=true
@@ -32,9 +32,9 @@ function downloadFilesFromGithub {
 
     readonly GITHUB_BRANCH="$slugToCopy"_"$versionToCopy"_"$RESULT_TYPE_SLUG"
     echoValidationGroupStart "Downloading files from https://github.com/phpbenchmarks/$slugToCopy/tree/$GITHUB_BRANCH"
-    downloadGithubFile ".phpbenchmarks/configuration.sh"
-    downloadGithubFile ".phpbenchmarks/initBenchmark.sh"
-    downloadGithubFile ".phpbenchmarks/vhost.conf"
+    downloadGitHubFile ".phpbenchmarks/configuration.sh"
+    downloadGitHubFile ".phpbenchmarks/initBenchmark.sh"
+    downloadGitHubFile ".phpbenchmarks/vhost.conf"
     source $RESULT_TYPE_PATH/downloadFilesFromGithub.sh
     echoValidationGroupEnd
 }
@@ -140,6 +140,43 @@ function createConfigurationFile {
     echoValidationGroupEnd
 }
 
+function createInitBenchmarkFile {
+    local initBenchmarkPath="$INSTALLATION_PATH/.phpbenchmarks/initBenchmark.sh"
+
+    if [ ! -f "$initBenchmarkPath" ]; then
+        echoValidationGroupStart "Create .phpbenchmarks/initBenchmark.sh"
+
+        cp validation/mainRepository/.phpbenchmarks/initBenchmark.sh $INSTALLATION_PATH/.phpbenchmarks/
+        [ $? != "0" ] && exitScript "Error while writing $initBenchmarkPath."
+        echoValidatedTest "File created."
+        echoValidatedTest "Function initBenchmark() created."
+        echoValidationWarning ".phpbenchmarks/initBenchmark.sh::initBenchmark() has been created, but is nearly empty. Add commands to initialize benchmark here."
+
+        if [ $VERBOSE_LEVEL -eq 0 ]; then
+            echo ""
+        fi
+        echoValidationGroupEnd
+    fi
+}
+
+function createVhostFile {
+    local vhostPath="$INSTALLATION_PATH/.phpbenchmarks/vhost.conf"
+
+    if [ ! -f "$vhostPath" ]; then
+        echoValidationGroupStart "Create .phpbenchmarks/vhost.conf"
+
+        cp validation/mainRepository/.phpbenchmarks/vhost.conf $INSTALLATION_PATH/.phpbenchmarks/
+        [ $? != "0" ] && exitScript "Error while writing $vhostPath."
+        echoValidatedTest "File created."
+        echoValidationWarning ".phpbenchmarks/vhost.conf has been created with default nginx virtual host configuration. Edit it if needed."
+
+        if [ $VERBOSE_LEVEL -eq 0 ]; then
+            echo ""
+        fi
+        echoValidationGroupEnd
+    fi
+}
+
 createPhpbenchmarksDirectories
 
 echoAsk "Copy configuration files from another location? [github/NONE]" false
@@ -156,3 +193,7 @@ fi
 
 createCodeLinkFile
 createConfigurationFile
+createInitBenchmarkFile
+createVhostFile
+assertReadMe false
+source $RESULT_TYPE_PATH/initializeBranch.sh

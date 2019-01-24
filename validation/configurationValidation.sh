@@ -2,16 +2,6 @@
 
 source "$(dirname $0)/validation/common.sh"
 
-function copyReadMe {
-    local readMePath="$CONFIGURATION_PATH/../README.md"
-    if [ -f "$readMePath" ]; then
-        rm "$readMePath"
-    fi
-
-    cp $INSTALLATION_PATH/README.md $readMePath
-    [ $? != "0" ] && exitScript "[README.md] Error while copying README.md."
-}
-
 function copyConfigurationFiles {
     local destinationPath=$1
 
@@ -117,39 +107,4 @@ function assertInitBenchmark {
         && cat /tmp/phpbenchmarks.docker.build \
         && validationFailedExit "Function init_benchmark.sh::initBenchmark() does not exist. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/initBenchmark.sh] Function initBenchmark() exist."
-}
-
-function assertReadMe {
-    echoValidationGroupStart "Validation of README.md"
-
-    assertFileExist "README.md"
-
-    local oldIFS=$IFS
-    IFS=
-    local validReadMeContent=$(cat validation/mainRepositoryReadme.md)
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_NAME____/$PHPBENCHMARKS_NAME}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION}
-    local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
-    IFS=$oldIFS
-    if [ "$validReadMeContent" != "$readMeContent" ]; then
-        echoAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [Y/n]"
-        read editReadMe
-
-        if [ $VERBOSE_LEVEL -eq 0 ]; then
-            echo ""
-        fi
-
-        if [ "$editReadMe" == "" ] || [ "$editReadMe" == "y" ] || [ "$editReadMe" == "Y" ]; then
-            echo "$validReadMeContent" > $INSTALLATION_PATH/README.md
-
-            copyReadMe
-            local readMeContent=$(cat $CONFIGURATION_PATH/../README.md)
-        fi
-    fi
-    [ "$validReadMeContent" != "$readMeContent" ] && exitScript "[README.md] Content is invalid."
-    echoValidatedTest "[README.md] Content is valid."
-
-    echoValidationGroupEnd
 }

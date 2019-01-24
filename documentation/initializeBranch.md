@@ -7,7 +7,7 @@ You can use `initializeBranch.sh` to create them.
 <br>
 Feel free to edit them manually.
 
-* `README.md`: explanations about phpbenchmarks.com, this repository etc. 
+* `README.md`: explanations about phpbenchmarks.com, this repository etc.
 * `.phpbenchmarks/vhost.conf`: nginx configuration for virtual host.
 * `.phpbenchmarks/configuration.sh`: configure enabled PHP versions, component version etc.
 * `.phpbenchmarks/initBenchmark.sh`: should contains `initBenchmark()` function. Called before the benchmark to clear cache, install dependencies etc.

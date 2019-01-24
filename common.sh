@@ -159,6 +159,53 @@ function definePhpCliVersion {
     sudo /usr/bin/update-alternatives --set php /usr/bin/php$phpVersion
 }
 
+function copyReadMe {
+    local readMePath="$CONFIGURATION_PATH/../README.md"
+    if [ -f "$readMePath" ]; then
+        rm "$readMePath"
+    fi
+
+    cp $INSTALLATION_PATH/README.md $readMePath
+    [ $? != "0" ] && exitScript "[README.md] Error while copying README.md."
+}
+
+function assertReadMe {
+    local askToModify=$1
+    echoValidationGroupStart "Validation of README.md"
+
+    assertFileExist "README.md"
+
+    local oldIFS=$IFS
+    IFS=
+    local validReadMeContent=$(cat validation/mainRepository/README.md)
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_NAME____/$PHPBENCHMARKS_NAME}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION}
+    local readMeContent=$(cat $INSTALLATION_PATH/README.md)
+
+    if [ "$validReadMeContent" != "$readMeContent" ]; then
+        if [ "$askToModify" == "true" ] | [ "$askToModify" == "" ]; then
+            echoAsk "Content of README.md is not valid. Do you want to modify it automaticaly? [Y/n]"
+            read editReadMe
+        else
+            local editReadMe="y"
+        fi
+
+        if [ "$editReadMe" == "" ] || [ "$editReadMe" == "y" ] || [ "$editReadMe" == "Y" ]; then
+            echo "$validReadMeContent" > $INSTALLATION_PATH/README.md
+
+            copyReadMe
+            local readMeContent=$(cat $INSTALLATION_PATH/README.md)
+        fi
+    fi
+    IFS=$oldIFS
+    [ "$validReadMeContent" != "$readMeContent" ] && exitScript "[README.md] Content is invalid."
+    echoValidatedTest "[README.md] Content is valid."
+
+    echoValidationGroupEnd
+}
+
 VERBOSE_LEVEL=0
 for param in "$@"; do
     if [ "$param" == "-v" ]; then
