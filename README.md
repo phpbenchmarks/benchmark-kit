@@ -38,12 +38,12 @@ Code links
 
 To show us all features are included, you need to indicate where each feature is coded.
 
-[./codeLink.sh](documentation/codeLink.sh) helps you to tell us.
+[./codeLink.sh](documentation/codeLink.md) helps you to tell us.
 
 Everything is done
 -
 
-When [./codeValidation.sh](documentation/codeValidation.md) and [./codeLink.sh](documentation/codeLink.md) say it's good,
+When [./codeValidation.sh](documentation/codeValidation.md) and [./codeLink.md](documentation/codeLink.md) say it's good,
 you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact).
 
 Thank you!

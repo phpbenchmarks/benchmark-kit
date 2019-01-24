@@ -6,7 +6,7 @@ source validation/configurationValidation.sh
 function isValidUrl {
     local url=$1
 
-    if [ "$url" == "" ] || ([ "${url:0:7}" != "http://" ] && [ "$ {$url0:0:8}" != "https://" ]); then
+    if [ "${url:0:8}" != "https://" ]; then
         return 1
     fi
 

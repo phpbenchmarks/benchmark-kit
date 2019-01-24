@@ -3,6 +3,18 @@ Configure code links
 
 To prove all features are coded, you need to configure `$codeLinks` in `.phpbenchmarks/codeLink.sh`.
 
+`$codeLinks` contains links to your code, on `common` repository, for each benchmark feature.
+<br>
+Example for Symfony 4.0 Hello world:
+```bash
+#!/usr/bin/env bash
+
+declare -A codeLinks=(
+    [controller]="https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world_prepare/Controller/HelloWorldController.php"
+    [route]="https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world_prepare/Resources/config/routing.yml"
+)
+```
+
 To do it easily, you can use `./codeLink.sh`.
 
 ./codeLink.sh
