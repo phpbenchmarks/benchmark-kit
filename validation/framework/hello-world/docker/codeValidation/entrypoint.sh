@@ -9,6 +9,7 @@ function validateBenchmarkBody {
     local phpVersion=$1
 
     echoBlock 45 "PHP $phpVersion"
+    definePhpCliVersion "$phpVersion"
     callInitBenchmark
     validateBody $phpVersion $PHPBENCHMARKS_BENCHMARK_URL
 }

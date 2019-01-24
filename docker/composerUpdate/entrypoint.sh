@@ -15,8 +15,12 @@ function generateComposerFiles {
     fi
 
     if [ "$enabled" == "true" ]; then
+        definePhpCliVersion "$phpVersion"
+        [ $? != "0" ] && echoError "Define PHP cli version to $phpVersion failed." && exit 1
         composer update
-        mv composer.lock $composerLockFile
+        [ $? != "0" ] && echoError "Composer update failed." && exit 1
+        mv composer.lock "$composerLockFile"
+        [ $? != "0" ] && echoError "Moving composer.lock to $composerLockFile failed." && exit 1
         echoValidationGroupEnd
     else
         echoValidationGroupEnd 0 "(disabled by configuration)"

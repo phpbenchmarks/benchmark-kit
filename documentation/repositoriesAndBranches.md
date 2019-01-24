@@ -92,7 +92,7 @@ Example:
 * `common` repository
    * branch `symfony_4_hello-world_prepare`
 
-You will probably have to add `"minimum-stability": "dev"` and `"prefer-stable": "true"` to `main` repository composer.json,
+You will probably have to add `"minimum-stability": "dev"` and `"prefer-stable": true` to `main` repository composer.json,
 to be able to have `dev-symfony_4_hello-world_prepare` as dependency.
 
 [Back to documentation index](../README.md)

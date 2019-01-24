@@ -153,6 +153,12 @@ function validateBranchName {
     echoValidationGroupEnd
 }
 
+function definePhpCliVersion {
+    local phpVersion=$1
+
+    sudo /usr/bin/update-alternatives --set php /usr/bin/php$phpVersion
+}
+
 VERBOSE_LEVEL=0
 for param in "$@"; do
     if [ "$param" == "-v" ]; then

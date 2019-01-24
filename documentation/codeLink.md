@@ -14,6 +14,8 @@ Without any parameter, it will ask you 3 informations:
 * path to your code
 
 ```bash
+cd vendor/phpbenchmarks/benchmark-kit
+
 # will ask the 3 informations
 ./codeLink.sh
 # first parameter is component type, it will ask only the 2 next informations

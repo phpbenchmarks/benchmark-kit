@@ -21,8 +21,10 @@ if [ $VERBOSE_LEVEL -ge 2 ]; then
     [ $? != "0" ] && exitScript "Error while building Docker container."
 else
     docker-compose up --build --no-start &>/tmp/phpbenchmarks.docker
-    [ $? != "0" ] && cat /tmp/phpbenchmarks.docker && exitScript "Error while building Docker container."
-    rm /tmp/phpbenchmarks.docker
+    [ $? != "0" ] \
+        && cat /tmp/phpbenchmarks.docker \
+        && rm /tmp/phpbenchmarks.docker \
+        && exitScript "Error while building Docker container."
 fi
 echoValidationGroupEnd
 
@@ -32,8 +34,10 @@ if [ $VERBOSE_LEVEL -ge 1 ]; then
     [ $? != "0" ] && exitScript "Composer update failed."
 else
     docker-compose up --abort-on-container-exit --exit-code-from phpbenchmarks_composer_update &>/tmp/phpbenchmarks.docker
-    [ $? != "0" ] && cat /tmp/phpbenchmarks.docker && exitScript "Composer update failed."
-    rm /tmp/phpbenchmarks.docker
+    [ $? != "0" ] \
+        && cat /tmp/phpbenchmarks.docker \
+        && rm /tmp/phpbenchmarks.docker \
+        && exitScript "Composer update failed."
 fi
 echoValidationGroupEnd
 

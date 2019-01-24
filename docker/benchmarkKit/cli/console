@@ -3,10 +3,8 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use App\{
-    Command\ValidateComposerLockCommand,
-    Command\ValidateComposerJsonCommand
-};
+use App\Command\ValidateComposerLockCommand;
+use App\Command\ValidateComposerJsonCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();

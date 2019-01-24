@@ -25,6 +25,8 @@ Available options:
 * `--prod`: validate everything is on the final branch and versioned, instead of development branch and not versioned.
 
 ```bash
+cd vendor/phpbenchmarks/benchmark-kit
+
 # will ask the 3 informations
 ./composerUpdate.sh
 # first parameter is component type, it will ask only the 2 next informations

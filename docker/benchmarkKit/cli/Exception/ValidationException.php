@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Exception;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ValidationException extends \Exception
 {
-    public function __construct(OutputInterface $output, string $message)
+    public function __construct(OutputInterface $output, $message)
     {
         parent::__construct($message);
 

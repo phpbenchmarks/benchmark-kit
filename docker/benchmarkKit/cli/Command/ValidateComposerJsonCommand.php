@@ -1,19 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Command;
 
-use App\{
-    ComponentConfiguration,
-    Exception\ValidationException
-};
-use Symfony\Component\Console\{
-    Command\Command,
-    Input\InputArgumpent,
-    Input\InputInterface,
-    Output\OutputInterface
-};
+use App\ComponentConfiguration;
+use App\Exception\ValidationException;
+use Symfony\Component\Console\Input\InputArgumpent;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ValidateComposerJsonCommand extends AbstractCommand
 {
@@ -54,7 +47,7 @@ class ValidateComposerJsonCommand extends AbstractCommand
         return 0;
     }
 
-    private function validateName(OutputInterface $output, array $data): self
+    private function validateName(OutputInterface $output, array $data)
     {
         ($data['name'] ?? null) === 'phpbenchmarks/' . ComponentConfiguration::SLUG
             ? $this->validationSuccess($output, 'Name ' . $data['name'] . ' is valid.')
@@ -67,7 +60,7 @@ class ValidateComposerJsonCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateLicense(OutputInterface $output, array $data): self
+    private function validateLicense(OutputInterface $output, array $data)
     {
         ($data['license'] ?? null) === 'proprietary'
             ? $this->validationSuccess($output, 'License ' . $data['license']  .' is valid.')
@@ -76,7 +69,7 @@ class ValidateComposerJsonCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateRequireComponent(OutputInterface $output, array $data): self
+    private function validateRequireComponent(OutputInterface $output, array $data)
     {
         if (is_null($data['require'][ComponentConfiguration::DEPENDENCY_NAME] ?? null)) {
             $this->validationFailed(
@@ -111,7 +104,7 @@ class ValidateComposerJsonCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateRequireCommon(InputInterface $input, OutputInterface $output, array $data): self
+    private function validateRequireCommon(InputInterface $input, OutputInterface $output, array $data)
     {
         if ($this->isRepositoriesCreated()) {
             $commonRepository = $this->getCommonRepositoryName();

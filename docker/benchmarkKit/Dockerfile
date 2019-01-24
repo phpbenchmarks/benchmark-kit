@@ -38,6 +38,12 @@ RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.1-fpm start" 
 RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.2-fpm start" >> /etc/sudoers.d/phpbenchmarks
 RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm start" >> /etc/sudoers.d/phpbenchmarks
 
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php5.6" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.0" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.1" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.2" >> /etc/sudoers.d/phpbenchmarks
+RUN echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.3" >> /etc/sudoers.d/phpbenchmarks
+
 # we have some commands to do in this dir with phpbenchmarks user
 # so instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
 # change this dir credentials to 777

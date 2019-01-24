@@ -1,18 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Command;
 
-use App\{
-    ComponentConfiguration,
-    Exception\ValidationException
-};
-use Symfony\Component\Console\{
-    Command\Command,
-    Input\InputInterface,
-    Output\OutputInterface
-};
+use App\ComponentConfiguration;
+use App\Exception\ValidationException;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ValidateComposerLockCommand extends AbstractCommand
 {
@@ -40,7 +33,7 @@ class ValidateComposerLockCommand extends AbstractCommand
         return 0;
     }
 
-    private function validateDisabledPhpVersions(OutputInterface $output): self
+    private function validateDisabledPhpVersions(OutputInterface $output)
     {
         foreach (ComponentConfiguration::getDisabledPhpVersions() as $phpVersion) {
             $lockFile = 'composer.lock.php' . $phpVersion;
@@ -59,7 +52,7 @@ class ValidateComposerLockCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateEnabledPhpVersions(OutputInterface $output): self
+    private function validateEnabledPhpVersions(OutputInterface $output)
     {
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $lockFile = 'composer.lock.php' . $phpVersion;
@@ -83,7 +76,7 @@ class ValidateComposerLockCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateComponentVersion(OutputInterface $output, array $data): self
+    private function validateComponentVersion(OutputInterface $output, array $data)
     {
         $packageFound = false;
         foreach ($data['packages'] as $package) {
@@ -125,7 +118,7 @@ class ValidateComposerLockCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateCommonVersion(OutputInterface $output, array $data): self
+    private function validateCommonVersion(OutputInterface $output, array $data)
     {
         if ($this->isRepositoriesCreated()) {
             $packageFound = false;

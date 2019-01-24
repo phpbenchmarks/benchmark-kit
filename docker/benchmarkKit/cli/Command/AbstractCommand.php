@@ -1,19 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Command;
 
-use App\{
-    ComponentConfiguration,
-    Exception\ValidationException
-};
-use Symfony\Component\Console\{
-    Command\Command,
-    Input\InputArgument,
-    Input\InputInterface,
-    Output\OutputInterface
-};
+use App\ComponentConfiguration;
+use App\Exception\ValidationException;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
@@ -27,17 +21,17 @@ abstract class AbstractCommand extends Command
     /** @var ?string */
     private $resultTypeSlug;
 
-    public function isValidateDev(): bool
+    public function isValidateDev()
     {
         return $this->validateDev;
     }
 
-    public function isRepositoriesCreated(): bool
+    public function isRepositoriesCreated()
     {
         return $this->repositoriesCreated;
     }
 
-    public function getResultTypeSlug(): ?string
+    public function getResultTypeSlug()
     {
         return $this->resultTypeSlug;
     }
@@ -59,26 +53,26 @@ abstract class AbstractCommand extends Command
         return 0;
     }
 
-    protected function validationSuccess(OutputInterface $output, string $message): self
+    protected function validationSuccess(OutputInterface $output, $message)
     {
         $output->writeln("  \e[42m > \e[00m \e[32mValidated\e[00m " . $this->validationPrefix . $message);
 
         return $this;
     }
 
-    protected function validationFailed(OutputInterface $output, string $error): void
+    protected function validationFailed(OutputInterface $output, $error)
     {
         throw new ValidationException($output, $this->validationPrefix . $error);
     }
 
-    protected function warning(OutputInterface $output, string $message): self
+    protected function warning(OutputInterface $output, $message)
     {
         $output->writeln("  \e[43m > \e[00m \e[43m " . $this->validationPrefix . $message . " \e[00m");
 
         return $this;
     }
 
-    protected function repositoriesNotCreatedWarning(OutputInterface $output): self
+    protected function repositoriesNotCreatedWarning(OutputInterface $output)
     {
         $this->warning(
             $output,
@@ -90,17 +84,17 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    protected function getInstallationPath(): string
+    protected function getInstallationPath()
     {
         return '/var/www/phpbenchmarks';
     }
 
-    protected function getCommonRepositoryName(): string
+    protected function getCommonRepositoryName()
     {
         return 'phpbenchmarks/' . ComponentConfiguration::COMMON_REPOSITORY;
     }
 
-    protected function getCommonDevBranchName(): string
+    protected function getCommonDevBranchName()
     {
         return
             'dev-'
@@ -112,7 +106,7 @@ abstract class AbstractCommand extends Command
             . '_prepare';
     }
 
-    protected function getCommonProdBranchPrefix(OutputInterface $output): string
+    protected function getCommonProdBranchPrefix(OutputInterface $output)
     {
         switch ($this->getResultTypeSlug()) {
             case 'hello-world': $commonMinorVersion = 1; break;

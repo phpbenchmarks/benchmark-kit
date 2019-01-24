@@ -27,6 +27,8 @@ Available options:
 * `-vv`: view each validations performed and wget output if configuration files are downloaded from github
 
 ```bash
+cd vendor/phpbenchmarks/benchmark-kit
+
 # will ask the 3 informations
 ./initializeBranch.sh
 # first parameter is component type, it will ask only the 2 next informations

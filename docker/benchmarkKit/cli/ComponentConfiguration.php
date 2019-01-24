@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App;
 
 class ComponentConfiguration
@@ -22,7 +20,7 @@ class ComponentConfiguration
     public const DEPENDENCY_MINOR_VERSION = ____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____;
     public const DEPENDENCY_BUGFIX_VERSION = ____PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION____;
 
-    public static function getDependencyVersion(): string
+    public static function getDependencyVersion()
     {
         return
             static::DEPENDENCY_MAJOR_VERSION
