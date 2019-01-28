@@ -29,6 +29,7 @@ function generateComposerFiles {
 
 definePhpComponentConfigurationValues
 
+definePhpCliVersion "7.3"
 validateComposerJson
 
 cd /var/www/phpbenchmarks
@@ -39,4 +40,5 @@ generateComposerFiles "7.2" "$PHPBENCHMARKS_PHP_7_2_ENABLED"
 generateComposerFiles "7.3" "$PHPBENCHMARKS_PHP_7_3_ENABLED"
 
 echo ""
+definePhpCliVersion "7.3"
 validateComposerLock
