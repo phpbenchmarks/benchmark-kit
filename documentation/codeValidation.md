@@ -20,7 +20,7 @@ Without any parameter, it will ask you 2 informations:
 Available options:
 * `-v`: view each validations performed
 * `-vv`: view each validations performed + docker-compose build details
-* `--repositories-not-created`: some validations could not be done when working before repositories are created. Use this parameter before repositories are created.
+* `--skip-branch-name`: some validations could not be done when working before repositories are created. Use this parameter before repositories are created.
 * `--prod`: validate everything is on the final branch and versioned, instead of development branch and not versioned.
 
 ```bash

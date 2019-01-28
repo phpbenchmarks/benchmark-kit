@@ -1,14 +1,10 @@
 /.idea/
 
-/docker/benchmarkKit/cli/vendor
-/docker/benchmarkKit/cli/composer.lock
+/vendor/
 
-/docker/composerUpdate/.env
-/docker/composerUpdate/common.sh
-/docker/composerUpdate/componentFiles
-!/docker/composerUpdate/componentFiles/.gitkeep
+/src/vendor/
+/var/
+!/var/.gitkeep
 
-/validation/framework/hello-world/docker/codeValidation/.env
-/validation/framework/hello-world/docker/codeValidation/common.sh
-/validation/framework/hello-world/componentFiles
-!/validation/framework/hello-world/componentFiles/.gitkeep
+/docker/vhost.conf
+/docker/.env

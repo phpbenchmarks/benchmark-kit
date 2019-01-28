@@ -10,7 +10,18 @@
             "role": "Project lead"
         }
     ],
+    "require": {
+        "php": "7.3.*",
+        "ext-json": "*",
+        "symfony/console": "^4.2"
+    },
     "require-dev": {
-        "steevanb/docker-php-code-sniffs": "~1.0.2"
+        "symfony/var-dumper": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "",
+            "AbstractComponentConfiguration\\": "/var/www/phpbenchmarks/.phpbenchmarks"
+        }
     }
 }

@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use App\{
+    Command\ComposerUpdateCommand,
+    Command\InitializeAllCommand,
+    Command\BenchmarkValidateCommand,
+    Command\InitializeConfigurationComponentCommand,
+    Command\InitializeConfigurationDirectoryCommand,
+    Command\InitializeConfigurationInitBenchmarkCommand,
+    Command\InitializeConfigurationVhostCommand,
+    Command\InitializeResponseBodyCommand,
+    Command\ValidateBranchNameCommand,
+    Command\ValidateComposerLockFilesCommand,
+    Command\ValidateComposerJsonFilesCommand,
+    Command\ValidateConfigurationComponentCommand,
+    Command\ValidateConfigurationInitBenchmarkCommand,
+    Command\ValidateConfigurationVhostCommand,
+    Command\ValidateResponseBodyCommand,
+    Command\VhostCreateCommand
+};
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->add(new ValidateComposerJsonFilesCommand());
+$application->add(new ValidateComposerLockFilesCommand());
+$application->add(new ValidateBranchNameCommand());
+$application->add(new ValidateConfigurationComponentCommand());
+$application->add(new ValidateConfigurationVhostCommand());
+$application->add(new ValidateConfigurationInitBenchmarkCommand());
+$application->add(new ValidateResponseBodyCommand());
+
+$application->add(new InitializeAllCommand());
+$application->add(new InitializeConfigurationComponentCommand());
+$application->add(new InitializeConfigurationDirectoryCommand());
+$application->add(new InitializeConfigurationInitBenchmarkCommand());
+$application->add(new InitializeConfigurationVhostCommand());
+$application->add(new InitializeResponseBodyCommand());
+
+$application->add(new BenchmarkValidateCommand());
+$application->add(new ComposerUpdateCommand());
+$application->add(new VhostCreateCommand());
+
+$application->run();

@@ -1,0 +1,41 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "6ff5b0ca852afb77a0e1d8365d6a18ee",
+    "content-hash": "e810f7407a28e4245d131c28cdb7b30d",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "steevanb/docker-php-code-sniffs",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/steevanb/docker-php-code-sniffs.git",
+                "reference": "7b61110acf06227e43ac0c2910715b63ebc5694b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/steevanb/docker-php-code-sniffs/zipball/7b61110acf06227e43ac0c2910715b63ebc5694b",
+                "reference": "7b61110acf06227e43ac0c2910715b63ebc5694b",
+                "shasum": ""
+            },
+            "type": "lib",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Docker container for steevanb/php-code-sniffs",
+            "time": "2019-01-29 19:17:14"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
