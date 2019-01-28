@@ -176,7 +176,7 @@ function createVhostFile {
     if [ ! -f "$vhostPath" ]; then
         echoValidationGroupStart "Create .phpbenchmarks/vhost.conf"
 
-        cp "$BENCHMARK_KIT_PATHvalidation/mainRepository/.phpbenchmarks/vhost.conf" "$INSTALLATION_PATH/.phpbenchmarks/"
+        cp "$BENCHMARK_KIT_PATH/validation/mainRepository/.phpbenchmarks/vhost.conf" "$INSTALLATION_PATH/.phpbenchmarks/"
         [ $? != "0" ] && exitScript "Error while writing $vhostPath."
         echoValidatedTest "File created."
         echoValidationWarning ".phpbenchmarks/vhost.conf has been created with default nginx virtual host configuration. Edit it if needed."

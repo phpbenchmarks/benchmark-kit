@@ -100,11 +100,9 @@ function assertInitBenchmark {
     assertConfigurationFileExist "initBenchmark.sh"
 
     source $CONFIGURATION_PATH/initBenchmark.sh
-    [ "$?" != "0" ] && validationFailedExit "File init_benchmark.sh could not be included."
+    [ "$?" != "0" ] && exitScript "File init_benchmark.sh could not be included."
 
     type initBenchmark &>/dev/null
-    [ "$?" != "0" ] \
-        && cat /tmp/phpbenchmarks.docker.build \
-        && validationFailedExit "Function init_benchmark.sh::initBenchmark() does not exist. See README.md for more informations."
+    [ "$?" != "0" ] && exitScript "Function init_benchmark.sh::initBenchmark() does not exist. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/initBenchmark.sh] Function initBenchmark() exist."
 }
