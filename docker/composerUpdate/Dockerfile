@@ -1,4 +1,4 @@
-FROM phpbenchmarks/benchmark-kit:1.0.0
+FROM phpbenchmarks/benchmark-kit:1.0.1
 
 COPY entrypoint.sh /var/phpbenchmarks
 RUN chmod +x /var/phpbenchmarks/entrypoint.sh

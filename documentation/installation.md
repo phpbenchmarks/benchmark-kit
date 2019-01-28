@@ -9,13 +9,13 @@ You will need this dependencies to make it work:
 Installation
 -
 
+Add `phpbenchmarks/benchmark-kit` as dependency of your projet.
+
+Not you have to do it in `require`, not in `require-dev`.
+As benchmark kit contains only bash scripts, requiring it will not affect your code until you call them manually.
+
 ```bash
-mkdir ~/benchmarkKit
-cd ~/benchmarkKit
-echo '{"require": {"phpbenchmarks/benchmark-kit": "^1.0"}}' > composer.json
-docker run --rm -v $(pwd):/app composer/composer update
-# composer update is called with root user, so change permissions to current user
-sudo chown -R $USER:$USER vendor
+composer require phpbenchmarks/benchmark-kit ^1.0
 ```
 
 [Back to documentation index](../README.md)

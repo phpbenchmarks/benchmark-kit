@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-source common.sh
-source validation/configurationValidation.sh
+# Assume that we are in vendor/bin directory. If you know how to get the real path of this script, don't hesitate ;)
+readonly BENCHMARK_KIT_PATH=$(dirname $(cd `dirname $0` && pwd))"/phpbenchmarks/benchmark-kit"
+source $BENCHMARK_KIT_PATH/common.sh
+source $BENCHMARK_KIT_PATH/validation/configurationValidation.sh
 
 echoValidationGroupStart "Validation of .phpbenchmarks directory"
 copyConfigurationFiles "$CONFIGURATION_PATH"
@@ -10,12 +12,12 @@ echoValidationGroupEnd
 
 validateBranchName
 
-cp common.sh docker/composerUpdate
-copyConfigurationFiles "docker/composerUpdate/componentFiles/.phpbenchmarks"
+cp "$BENCHMARK_KIT_PATH/common.sh" "$BENCHMARK_KIT_PATH/docker/composerUpdate"
+copyConfigurationFiles "$BENCHMARK_KIT_PATH/docker/composerUpdate/componentFiles/.phpbenchmarks"
 
-source docker/composerUpdate/createEnv.sh
+source "$BENCHMARK_KIT_PATH/docker/composerUpdate/createEnv.sh"
 echoValidationGroupStart "Building Docker container"
-cd docker/composerUpdate
+cd "$BENCHMARK_KIT_PATH/docker/composerUpdate"
 if [ $VERBOSE_LEVEL -ge 2 ]; then
     docker-compose up --build --no-start
     [ $? != "0" ] && exitScript "Error while building Docker container."

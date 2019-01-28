@@ -108,7 +108,8 @@ function definePhpComponentConfigurationValues {
     sed -i -e "s~____PHPBENCHMARKS_PHP_7_3_ENABLED____~$PHPBENCHMARKS_PHP_7_3_ENABLED~g" $phpFile
 
     sed -i -e "s~____PHPBENCHMARKS_BENCHMARK_URL____~$PHPBENCHMARKS_BENCHMARK_URL~g" $phpFile
-    sed -i -e "s~____PHPBENCHMARKS_SLUG____~$PHPBENCHMARKS_SLUG~g" $phpFile
+
+    sed -i -e "s~____PHPBENCHMARKS_COMPONENT_SLUG____~$PHPBENCHMARKS_COMPONENT_SLUG~g" $phpFile
 
     sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_NAME____~$PHPBENCHMARKS_DEPENDENCY_NAME~g" $phpFile
     sed -i -e "s~____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____~$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION~g" $phpFile
@@ -141,7 +142,7 @@ function validateBranchName {
         echoValidationWarning "Branch names are not validated. Don't forget to remove '--repositories-not-created' parameter when repositories will be created."
     else
         local gitBranch=$(cd $INSTALLATION_PATH && git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/' -e 's/(//g' -e 's/)//g')
-        local expectedGitBranch="$PHPBENCHMARKS_SLUG"_"$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION.$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION"_"$RESULT_TYPE_SLUG"
+        local expectedGitBranch="$PHPBENCHMARKS_COMPONENT_SLUG"_"$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION.$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION"_"$RESULT_TYPE_SLUG"
         if [ $VALIDATE_DEV == true ]; then
             expectedGitBranch=$expectedGitBranch"_prepare"
         fi
@@ -177,9 +178,9 @@ function assertReadMe {
 
     local oldIFS=$IFS
     IFS=
-    local validReadMeContent=$(cat validation/mainRepository/README.md)
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_SLUG____/$PHPBENCHMARKS_SLUG}
-    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_NAME____/$PHPBENCHMARKS_NAME}
+    local validReadMeContent=$(cat $BENCHMARK_KIT_PATH/validation/mainRepository/README.md)
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_COMPONENT_SLUG____/$PHPBENCHMARKS_COMPONENT_SLUG}
+    validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_COMPONENT_NAME____/$PHPBENCHMARKS_COMPONENT_NAME}
     validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION}
     validReadMeContent=${validReadMeContent//____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____/$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION}
     local readMeContent=$(cat $INSTALLATION_PATH/README.md)

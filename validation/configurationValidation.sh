@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname $0)/validation/common.sh"
+source "$BENCHMARK_KIT_PATH/validation/common.sh"
 
 function copyConfigurationFiles {
     local destinationPath=$1
@@ -52,13 +52,13 @@ function assertCommonConfiguration {
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_PHP_7_3_ENABLED. See README.md for more informations."
     echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_PHP_7_3_ENABLED ($PHPBENCHMARKS_PHP_7_3_ENABLED)."
 
-    [ "$PHPBENCHMARKS_NAME" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_NAME. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_NAME ($PHPBENCHMARKS_NAME)."
+    [ "$PHPBENCHMARKS_COMPONENT_NAME" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_COMPONENT_NAME. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_COMPONENT_NAME ($PHPBENCHMARKS_COMPONENT_NAME)."
 
-    [ "$PHPBENCHMARKS_SLUG" == "" ] \
-        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_SLUG. See README.md for more informations."
-    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_SLUG ($PHPBENCHMARKS_SLUG)."
+    [ "$PHPBENCHMARKS_COMPONENT_SLUG" == "" ] \
+        && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_COMPONENT_SLUG. See README.md for more informations."
+    echoValidatedTest "[.phpbenchmarks/configuration.sh] Define \$PHPBENCHMARKS_COMPONENT_SLUG ($PHPBENCHMARKS_COMPONENT_SLUG)."
 
     [ "$PHPBENCHMARKS_BENCHMARK_URL" == "" ] \
         && exitScript "[.phpbenchmarks/configuration.sh] Should define \$PHPBENCHMARKS_BENCHMARK_URL. See README.md for more informations."

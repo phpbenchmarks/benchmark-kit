@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-readonly ENV_DIR="$(dirname $0)/docker/composerUpdate"
+readonly ENV_DIR="$BENCHMARK_KIT_PATH/docker/composerUpdate"
 
 echoValidationGroupStart "Create $ENV_DIR/.env"
 

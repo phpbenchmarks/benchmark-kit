@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# Assume that we are in vendor/bin directory. If you know how to get the real path of this script, don't hesitate ;)
+readonly BENCHMARK_KIT_PATH=$(dirname $(cd `dirname $0` && pwd))"/phpbenchmarks/benchmark-kit"
+source $BENCHMARK_KIT_PATH/common.sh
+source $BENCHMARK_KIT_PATH/validation/configurationValidation.sh
+
 function validateCode {
     local containerName=$1
 
-    cp common.sh $RESULT_TYPE_PATH/docker/codeValidation
+    cp "$BENCHMARK_KIT_PATH/common.sh" $RESULT_TYPE_PATH/docker/codeValidation
 
     cd $RESULT_TYPE_PATH/docker/codeValidation
 
@@ -31,9 +36,6 @@ function validateCode {
     fi
     echoValidationGroupEnd
 }
-
-source common.sh
-source validation/configurationValidation.sh
 
 echoValidationGroupStart "Validation of .phpbenchmarks directory"
 copyConfigurationFiles "$CONFIGURATION_PATH"

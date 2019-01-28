@@ -2,7 +2,6 @@
 
 COMPONENT_TYPE=$1
 RESULT_TYPE_SLUG=$2
-INSTALLATION_PATH=$3
 showCliWarning=false
 
 if [ "$COMPONENT_TYPE" != "framework" ] && [ "$COMPONENT_TYPE" != "templateEngine" ]; then
@@ -29,19 +28,16 @@ if [ "$RESULT_TYPE_SLUG" != "hello-world" ] && [ "$RESULT_TYPE_SLUG" != "rest-ap
     exitScript "Invalid benchmark type."
 fi
 
-if [ "$INSTALLATION_PATH" == "" ]; then
-    showCliWarning=true
-    echoAsk "Path to your code?" false
-    echo ""
-    read INSTALLATION_PATH
-fi
-if [ ! -d "$INSTALLATION_PATH" ]; then
-    exitScript "Invalid path to your code: $INSTALLATION_PATH."
-fi
-
 if [ $showCliWarning == true ]; then
-    echoWarning "You could use \"$0 $COMPONENT_TYPE $RESULT_TYPE_SLUG $INSTALLATION_PATH\"."
+    echoWarning "You could use \"$0 $COMPONENT_TYPE $RESULT_TYPE_SLUG\"."
 fi
 
-readonly RESULT_TYPE_PATH="$(dirname $0)/validation/$COMPONENT_TYPE/$RESULT_TYPE_SLUG"
+readonly INSTALLATION_PATH="$BENCHMARK_KIT_PATH/../../.."
+readonly RESULT_TYPE_PATH="$BENCHMARK_KIT_PATH/validation/$COMPONENT_TYPE/$RESULT_TYPE_SLUG"
+if [ ! -d $RESULT_TYPE_PATH ]; then
+    exitScript "$RESULT_TYPE_PATH is not a valid directory."
+fi
 readonly CONFIGURATION_PATH="$RESULT_TYPE_PATH/componentFiles/.phpbenchmarks"
+if [ ! -d "$CONFIGURATION_PATH" ]; then
+    mkdir "$CONFIGURATION_PATH"
+fi

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-source common.sh
-source validation/configurationValidation.sh
+# Assume that we are in vendor/bin directory. If you know how to get the real path of this script, don't hesitate ;)
+readonly BENCHMARK_KIT_PATH=$(dirname $(cd `dirname $0` && pwd))"/phpbenchmarks/benchmark-kit"
+source $BENCHMARK_KIT_PATH/common.sh
+source $BENCHMARK_KIT_PATH/validation/configurationValidation.sh
 
 function downloadGitHubFile {
     local file=$1
@@ -123,8 +125,8 @@ function createConfigurationFile {
     defineVariableInConfigurationFile "PHPBENCHMARKS_PHP_7_3_ENABLED" "$PHPBENCHMARKS_PHP_7_3_ENABLED" false "true/false"
 
     echo "" >> $configurationFilePath
-    defineVariableInConfigurationFile "PHPBENCHMARKS_NAME" "$PHPBENCHMARKS_NAME" true
-    defineVariableInConfigurationFile "PHPBENCHMARKS_SLUG" "$PHPBENCHMARKS_SLUG" true
+    defineVariableInConfigurationFile "PHPBENCHMARKS_COMPONENT_NAME" "$PHPBENCHMARKS_COMPONENT_NAME" true
+    defineVariableInConfigurationFile "PHPBENCHMARKS_COMPONENT_SLUG" "$PHPBENCHMARKS_COMPONENT_SLUG" true
 
     echo "" >> $configurationFilePath
     defineVariableInConfigurationFile "PHPBENCHMARKS_BENCHMARK_URL" "$PHPBENCHMARKS_BENCHMARK_URL" true
@@ -146,7 +148,7 @@ function createInitBenchmarkFile {
     if [ ! -f "$initBenchmarkPath" ]; then
         echoValidationGroupStart "Create .phpbenchmarks/initBenchmark.sh"
 
-        cp validation/mainRepository/.phpbenchmarks/initBenchmark.sh $INSTALLATION_PATH/.phpbenchmarks/
+        cp "$BENCHMARK_KIT_PATH/validation/mainRepository/.phpbenchmarks/initBenchmark.sh" "$INSTALLATION_PATH/.phpbenchmarks/"
         [ $? != "0" ] && exitScript "Error while writing $initBenchmarkPath."
         echoValidatedTest "File created."
         echoValidatedTest "Function initBenchmark() created."
@@ -165,7 +167,7 @@ function createVhostFile {
     if [ ! -f "$vhostPath" ]; then
         echoValidationGroupStart "Create .phpbenchmarks/vhost.conf"
 
-        cp validation/mainRepository/.phpbenchmarks/vhost.conf $INSTALLATION_PATH/.phpbenchmarks/
+        cp "$BENCHMARK_KIT_PATHvalidation/mainRepository/.phpbenchmarks/vhost.conf" "$INSTALLATION_PATH/.phpbenchmarks/"
         [ $? != "0" ] && exitScript "Error while writing $vhostPath."
         echoValidatedTest "File created."
         echoValidationWarning ".phpbenchmarks/vhost.conf has been created with default nginx virtual host configuration. Edit it if needed."

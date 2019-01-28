@@ -1,4 +1,4 @@
-FROM phpbenchmarks/benchmark-kit:1.0.0
+FROM phpbenchmarks/benchmark-kit:1.0.1
 
 # copy config files
 COPY componentFiles/.phpbenchmarks /var/phpbenchmarks/componentFiles/.phpbenchmarks/

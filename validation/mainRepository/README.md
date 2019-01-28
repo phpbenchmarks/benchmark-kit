@@ -14,18 +14,18 @@ Our benchmarking protocol is available on [benchmarking protocol page](http://ww
 
 ## What is this repository ?
 
-It contains ____PHPBENCHMARKS_NAME____ installation `only`.
+It contains ____PHPBENCHMARKS_COMPONENT_NAME____ installation `only`.
 To reuse code between minor versions, features for benchmarks are not coded in this repository
-but in [phpbenchmarks/____PHPBENCHMARKS_SLUG____-common](https://github.com/phpbenchmarks/____PHPBENCHMARKS_SLUG____-common) repository.
+but in [phpbenchmarks/____PHPBENCHMARKS_COMPONENT_SLUG____-common](https://github.com/phpbenchmarks/____PHPBENCHMARKS_COMPONENT_SLUG____-common) repository.
 
 Switch branch to select version and benchmark you want to see.
 
 ## Benchmarks
 
-You can find ____PHPBENCHMARKS_NAME____ ____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____ benchmarks results on
-[benchmarks results page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_SLUG____/____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____).
+You can find ____PHPBENCHMARKS_COMPONENT_NAME____ ____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____ benchmarks results on
+[benchmarks results page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_COMPONENT_SLUG____/____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____.____PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION____).
 
-See all ____PHPBENCHMARKS_NAME____ benchmarked versions on [select version page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_SLUG____/version).
+See all ____PHPBENCHMARKS_COMPONENT_NAME____ benchmarked versions on [select version page](http://www.phpbenchmarks.com/en/benchmark/____PHPBENCHMARKS_COMPONENT_SLUG____/version).
 
 ## Community
 

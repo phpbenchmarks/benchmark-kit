@@ -11,9 +11,9 @@ class ComponentConfiguration
     public const PHP_7_3_ENABLED = ____PHPBENCHMARKS_PHP_7_3_ENABLED____;
 
     public const URL = "____PHPBENCHMARKS_BENCHMARK_URL____";
-    public const SLUG = "____PHPBENCHMARKS_SLUG____";
+    public const SLUG = "____PHPBENCHMARKS_COMPONENT_SLUG____";
 
-    public const COMMON_REPOSITORY = '____PHPBENCHMARKS_SLUG____-common';
+    public const COMMON_REPOSITORY = '____PHPBENCHMARKS_COMPONENT_SLUG____-common';
 
     public const DEPENDENCY_NAME = "____PHPBENCHMARKS_DEPENDENCY_NAME____";
     public const DEPENDENCY_MAJOR_VERSION = ____PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION____;
