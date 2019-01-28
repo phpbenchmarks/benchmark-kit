@@ -13,10 +13,9 @@ To create them, you can use `./composerUpdate.sh`, who will do a `composer updat
 ./composerUpdate.sh
 -
 
-Without any parameter, it will ask you 3 informations:
+Without any parameter, it will ask you 2 informations:
 * component type (framework or templateEngine)
 * benchmark type (hello-world or rest-api)
-* path to your code
 
 Available options:
 * `-v`: view each validations performed
@@ -31,10 +30,8 @@ cd vendor/phpbenchmarks/benchmark-kit
 ./composerUpdate.sh
 # first parameter is component type, it will ask only the 2 next informations
 ./composerUpdate.sh framework
-# second parameter is benchmark type, it will ask only the path to your code
-./composerUpdate.sh framework hello-world
 # all informations are passed as parameters, no ask
-./composerUpdate.sh framework hello-world /foo/bar
+./composerUpdate.sh framework hello-world
 ```
 
 [Back to documentation index](../README.md)

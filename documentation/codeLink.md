@@ -20,10 +20,9 @@ To do it easily, you can use `./codeLink.sh`.
 ./codeLink.sh
 -
 
-Without any parameter, it will ask you 3 informations:
+Without any parameter, it will ask you 2 informations:
 * component type (framework or templateEngine)
 * benchmark type (hello-world or rest-api)
-* path to your code
 
 ```bash
 cd vendor/phpbenchmarks/benchmark-kit
@@ -32,10 +31,8 @@ cd vendor/phpbenchmarks/benchmark-kit
 ./codeLink.sh
 # first parameter is component type, it will ask only the 2 next informations
 ./codeLink.sh framework
-# second parameter is benchmark type, it will ask only the path to your code
-./codeLink.sh framework hello-world
 # all informations are passed as parameters, no ask
-./codeLink.sh framework hello-world /foo/bar
+./codeLink.sh framework hello-world
 ```
 
 [Back to documentation index](../README.md)

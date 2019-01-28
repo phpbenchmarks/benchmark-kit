@@ -13,10 +13,9 @@ What will be validated:
 ./codeValidation.sh
 -
 
-Without any parameter, it will ask you 3 informations:
+Without any parameter, it will ask you 2 informations:
 * component type (framework or templateEngine)
 * benchmark type (hello-world or rest-api)
-* path to your code
 
 Available options:
 * `-v`: view each validations performed
@@ -31,10 +30,8 @@ cd vendor/phpbenchmarks/benchmark-kit
 ./codeValidation.sh
 # first parameter is component type, it will ask only the 2 next informations
 ./codeValidation.sh framework
-# second parameter is benchmark type, it will ask only the path to your code
-./codeValidation.sh framework hello-world
 # all informations are passed as parameters, no ask
-./codeValidation.sh framework hello-world /foo/bar
+./codeValidation.sh framework hello-world
 ```
 
 [Back to documentation index](../README.md)
