@@ -8,5 +8,11 @@
             "homepage": "http://www.info-droid.fr",
             "role": "Project lead"
         }
+    ],
+    "bin": [
+        "codeLink.sh",
+        "codeValidation.sh",
+        "composerUpdate.sh",
+        "initializeBranch.sh"
     ]
 }
