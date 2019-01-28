@@ -25,6 +25,12 @@ function downloadGitHubFile {
     fi
 }
 
+function removeComponentVersionVariables {
+    sed -i "/readonly PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION=/d" "$INSTALLATION_PATH/.phpbenchmarks/configuration.sh"
+    sed -i "/readonly PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION=/d" "$INSTALLATION_PATH/.phpbenchmarks/configuration.sh"
+    sed -i "/readonly PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION=/d" "$INSTALLATION_PATH/.phpbenchmarks/configuration.sh"
+}
+
 function downloadFilesFromGithub {
     echoAsk "Component slug to copy? (Example: symfony, laravel, cake-php)" false
     read slugToCopy
@@ -35,7 +41,7 @@ function downloadFilesFromGithub {
     readonly GITHUB_BRANCH="$slugToCopy"_"$versionToCopy"_"$RESULT_TYPE_SLUG"
     echoValidationGroupStart "Downloading files from https://github.com/phpbenchmarks/$slugToCopy/tree/$GITHUB_BRANCH"
     downloadGitHubFile ".phpbenchmarks/configuration.sh"
-    echoValidationWarning "Configuration has been copied from another version. Don't forget to edit .phpbenchmarks/configuration.sh."
+    removeComponentVersionVariables
     downloadGitHubFile ".phpbenchmarks/initBenchmark.sh"
     downloadGitHubFile ".phpbenchmarks/vhost.conf"
     source $RESULT_TYPE_PATH/downloadFilesFromGithub.sh
@@ -139,6 +145,8 @@ function createConfigurationFile {
     defineVariableInConfigurationFile "PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION" "$PHPBENCHMARKS_DEPENDENCY_MAJOR_VERSION" false
     defineVariableInConfigurationFile "PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION" "$PHPBENCHMARKS_DEPENDENCY_MINOR_VERSION" false
     defineVariableInConfigurationFile "PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION" "$PHPBENCHMARKS_DEPENDENCY_BUGFIX_VERSION" false
+
+    source "$configurationFilePath" &>/dev/null
 
     echoValidationGroupEnd
 }
