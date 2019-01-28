@@ -35,6 +35,7 @@ function downloadFilesFromGithub {
     readonly GITHUB_BRANCH="$slugToCopy"_"$versionToCopy"_"$RESULT_TYPE_SLUG"
     echoValidationGroupStart "Downloading files from https://github.com/phpbenchmarks/$slugToCopy/tree/$GITHUB_BRANCH"
     downloadGitHubFile ".phpbenchmarks/configuration.sh"
+    echoValidationWarning "Configuration has been copied from another version. Don't forget to edit .phpbenchmarks/configuration.sh."
     downloadGitHubFile ".phpbenchmarks/initBenchmark.sh"
     downloadGitHubFile ".phpbenchmarks/vhost.conf"
     source $RESULT_TYPE_PATH/downloadFilesFromGithub.sh

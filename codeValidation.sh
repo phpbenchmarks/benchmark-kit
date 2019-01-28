@@ -45,6 +45,8 @@ assertInitBenchmark
 source "$RESULT_TYPE_PATH/configurationValidation.sh"
 echoValidationGroupEnd
 
+assertReadMe
+
 source "$RESULT_TYPE_PATH/codeValidation.sh"
 
-echoValidationOk "Code is valid. If everything is done and commited, you can use \"./codeLink.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG\"."
+echoValidationOk "Code is valid. If everything is done and commited, you can use \"./vendor/bin/codeLink.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG\"."

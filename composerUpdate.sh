@@ -43,4 +43,4 @@ else
 fi
 echoValidationGroupEnd
 
-echoValidationOk "Composer update done. To validate your code, use \"./codeValidation.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG $INSTALLATION_PATH\"."
+echoValidationOk "Composer update done. To validate your code, use \"./vendor/bin/codeValidation.sh $COMPONENT_TYPE $RESULT_TYPE_SLUG\"."
