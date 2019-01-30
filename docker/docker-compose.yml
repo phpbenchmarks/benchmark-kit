@@ -11,6 +11,8 @@ services:
             dockerfile: docker/Dockerfile
             args:
                 DOCKER_UID: ${DOCKER_UID}
+        ports:
+            - 80:80
         volumes:
             - ${INSTALLATION_PATH}:/var/www/phpbenchmarks
             - ../src:/var/phpbenchmarks

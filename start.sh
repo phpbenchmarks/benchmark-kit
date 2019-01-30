@@ -82,6 +82,16 @@ function startDockerContainer {
     echoActionDone
 }
 
+function addHost() {
+    local host=$1
+    if [ "$(cat /etc/hosts | grep $host)" == "" ]; then
+        echoAction "Add $host host in /etc/hosts"
+        sudo bash -c "echo '127.0.0.1       $host' >> /etc/hosts"
+        [ "$?" != "0" ] && exitScript "Error while adding host $host."
+        echoActionDone
+    fi
+}
+
 trap onExit EXIT
 
 currentAction=
@@ -90,6 +100,12 @@ installationPath=$1
 defineInstallationPath
 
 createPhpbenchmarksDirectory
+
+addHost "php56.benchmark.loc"
+addHost "php70.benchmark.loc"
+addHost "php71.benchmark.loc"
+addHost "php72.benchmark.loc"
+addHost "php73.benchmark.loc"
 
 cd docker
 buildDockerImage
