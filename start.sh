@@ -28,7 +28,7 @@ function echoAsk {
 }
 
 function defineInstallationPath {
-    lastInstallationPathFile=$(dirname $0)/var/lastInstallationPath.sh
+    lastInstallationPathFile="$KIT_ROOT_PATH/var/lastInstallationPath.sh"
     if [ ! -d "$installationPath" ]; then
         question="Path to your code?"
         if [ -f "$lastInstallationPathFile" ]; then
@@ -93,6 +93,7 @@ function addHost() {
 }
 
 trap onExit EXIT
+readonly KIT_ROOT_PATH="vendor/phpbenchmarks/benchmark-kit"
 
 currentAction=
 
@@ -107,9 +108,9 @@ addHost "php71.benchmark.loc"
 addHost "php72.benchmark.loc"
 addHost "php73.benchmark.loc"
 
-cd docker
+cd "$KIT_ROOT_PATH/docker"
 buildDockerImage
 startDockerContainer
 cd - 1>/dev/null
 
-source dockerBash.sh
+source "$KIT_ROOT_PATH/dockerBash.sh"

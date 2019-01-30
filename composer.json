@@ -12,5 +12,9 @@
     ],
     "require-dev": {
         "steevanb/docker-php-code-sniffs": "~1.0.2"
-    }
+    },
+    "bin": [
+        "start.sh",
+        "dockerBash.sh"
+    ]
 }

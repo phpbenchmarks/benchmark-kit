@@ -78,7 +78,7 @@ class ConfigureComponentCommand extends AbstractConfigureComponentCommand
         $this->defineVariable(
             '____PHPBENCHMARKS_BENCHMARK_URL____',
             function () {
-                return $this->question('Benchmark url, after host?', '/benchmark/helloworld');
+                return $this->question('Benchmark url, after host?', 'benchmark/helloworld');
             }
         );
 

@@ -43,7 +43,7 @@ class BenchmarkValidateCommand extends AbstractCommand
         $url =
             'http://php'
             . str_replace('.', null, $phpVersion)
-            . '.benchmark.loc'
+            . '.benchmark.loc/'
             . ComponentConfiguration::getBenchmarkUrl();
 
         $this
