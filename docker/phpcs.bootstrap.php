@@ -8,10 +8,14 @@ PHP_CodeSniffer_Reports_Steevanb::addReplaceInPath(
 Steevanb_Sniffs_Uses_GroupUsesSniff::addSymfonyPrefixs();
 
 Steevanb_Sniffs_Functions_DisallowMultipleReturnSniff::addAllowedFunction(
-    '/var/phpcs/Command/InitializeBranchCommand.php',
-    'createComponentConfiguration'
+    '/var/phpcs/Command/Configure/ConfigureComponentCommand.php',
+    'createConfiguration'
 );
 Steevanb_Sniffs_Functions_DisallowMultipleReturnSniff::addAllowedFunction(
-    '/var/phpcs/Command/InitializeBranchCommand.php',
-    'defineAbstractComponentConfigurationCodeDependencyName'
+    '/var/phpcs/Command/Configure/ConfigureComponentCommand.php',
+    'defineCodeDependencyName'
+);
+Steevanb_Sniffs_Functions_DisallowMultipleReturnSniff::addAllowedFunction(
+    '/var/phpcs/Command/Configure/ConfigureComponentCommand.php',
+    'defineSourceCodeUrls'
 );

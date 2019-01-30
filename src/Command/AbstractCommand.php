@@ -29,28 +29,33 @@ abstract class AbstractCommand extends Command
     /** @var OutputInterface */
     private $output;
 
-    /** @var ?string */
-    private $validationPrefix;
-
     private $validateProd = true;
 
-    private $repositoriesCreated = true;
+    private $skipBranchName = true;
 
-    public function isValidateProd()
+    private $skipSourceCodeUrls = false;
+
+    public function validateProd(): bool
     {
         return $this->validateProd;
     }
 
-    public function isRepositoriesCreated()
+    public function skipBranchName(): bool
     {
-        return $this->repositoriesCreated;
+        return $this->skipBranchName;
+    }
+
+    public function skipSourceCodeUrls(): bool
+    {
+        return $this->skipSourceCodeUrls;
     }
 
     protected function configure()
     {
         $this
             ->addOption('validate-prod', 'p', null, 'Validate data for prod instead of dev')
-            ->addOption('skip-branch-name', 'sbn', null, 'Do not validate branch name');
+            ->addOption('skip-branch-name', null, null, 'Do not validate branch name')
+            ->addOption('skip-source-code-urls', null, null, 'Do not validate source code urls');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +63,8 @@ abstract class AbstractCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $this->validateProd = $input->getOption('validate-prod');
-        $this->repositoriesCreated = $input->getOption('skip-branch-name') === false;
+        $this->skipBranchName = $input->getOption('skip-branch-name');
+        $this->skipSourceCodeUrls = $input->getOption('skip-source-code-urls');
 
         $return = 0;
         try {
@@ -90,13 +96,6 @@ abstract class AbstractCommand extends Command
         return $this->output;
     }
 
-    protected function setValidationPrefix(?string $prefix): self
-    {
-        $this->validationPrefix = $prefix;
-
-        return $this;
-    }
-
     /** @return $this */
     protected function title(string $title): self
     {
@@ -108,22 +107,23 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function success(string $message): self
     {
-        $this->output->writeln("  \e[42m > \e[00m " . $this->validationPrefix . $message);
+        $this->output->writeln("  \e[42m > \e[00m " . $message);
 
         return $this;
     }
 
     /** @return $this */
-    protected function warning(string $message): self
+    protected function warning(string $message, bool $indent = true): self
     {
-        $this->output->writeln("  \e[43m > \e[00m \e[43m " . $this->validationPrefix . $message . " \e[00m");
+        $prefix = $indent ? "  \e[43m > \e[00m " : null;
+        $this->output->writeln($prefix . "\e[43m " . $message . " \e[00m");
 
         return $this;
     }
 
     protected function error(string $error = null): void
     {
-        throw new ValidationException($this->validationPrefix . $error);
+        throw new ValidationException($error);
     }
 
     /** @return $this */
@@ -195,11 +195,14 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function runCommand(string $name, array $arguments = []): self
     {
-        if ($this->isValidateProd()) {
+        if ($this->validateProd()) {
             $arguments['--validate-prod'] = true;
         }
-        if ($this->isRepositoriesCreated() === false) {
+        if ($this->skipBranchName()) {
             $arguments['--skip-branch-name'] = true;
+        }
+        if ($this->skipSourceCodeUrls()) {
+            $arguments['--skip-source-code-urls'] = true;
         }
 
         $returnCode = $this
@@ -267,20 +270,9 @@ abstract class AbstractCommand extends Command
     protected function assertFileExist(string $filePath, string $shortFilePath): self
     {
         if (is_readable($filePath) === false) {
-            $this->error('File ' . $shortFilePath . ' does not exist. Use "phpbench initialize:branch" to create it.');
+            $this->error('File ' . $shortFilePath . ' does not exist. Use "phpbench configure:all" to create it.');
         }
         $this->success('File ' . $shortFilePath . ' exist.');
-
-        return $this;
-    }
-
-    protected function skipBranchNameWarning(): self
-    {
-        $this->warning(
-            'Branch name is not validated.'
-            . ' Don\'t forget to remove "--skip-branch-name"'
-            . ' parameter to validate it.'
-        );
 
         return $this;
     }

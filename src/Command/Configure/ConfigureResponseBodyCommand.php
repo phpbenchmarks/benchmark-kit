@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
-class InitializeResponseBodyCommand extends AbstractInitializeConfigurationCommand
+class ConfigureResponseBodyCommand extends AbstractConfigureCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('initialize:responseBody')
-            ->setDescription('Create response body files');
+            ->setName('configure:responseBody')
+            ->setDescription('Create .phpbenchmarks/responseBody files');
     }
 
     protected function doExecute(): parent
@@ -20,7 +20,7 @@ class InitializeResponseBodyCommand extends AbstractInitializeConfigurationComma
         $this
             ->title('Creation of .phpbenchmarks/responseBody/responseBody.txt')
             ->copyDefaultConfigurationFile('responseBody/responseBody.txt', true)
-            ->runCommand('validate:responseBody');
+            ->runCommand('validate:configuration:responseBody');
 
         return $this;
     }

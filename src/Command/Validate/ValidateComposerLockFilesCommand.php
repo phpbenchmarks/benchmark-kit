@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
 use App\ComponentConfiguration\ComponentConfiguration;
 
@@ -112,7 +112,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
     private function validateCommonVersion(array $data): self
     {
-        if ($this->isRepositoriesCreated()) {
+        if ($this->skipBranchName() === false) {
             $packageFound = false;
             $commonRepositoryName = $this->getCommonRepositoryName();
 
@@ -120,7 +120,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
                 if ($package['name'] === $commonRepositoryName) {
                     $packageFound = true;
 
-                    if ($this->isValidateProd()) {
+                    if ($this->validateProd()) {
                         $branchPrefix = $this->getCommonProdBranchPrefix();
                         $commonExpectedVersion = $branchPrefix . 'z';
                         $isValidBranch = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
@@ -150,8 +150,6 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
             if ($packageFound === false) {
                 $this->error('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
             }
-        } else {
-            $this->skipBranchNameWarning();
         }
 
         return $this;

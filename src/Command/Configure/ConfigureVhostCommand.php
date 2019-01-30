@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
-class InitializeConfigurationVhostCommand extends AbstractInitializeConfigurationCommand
+class ConfigureVhostCommand extends AbstractConfigureCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('initialize:configuration:vhost')
-            ->setDescription('Create .phpbenchmarks/vhost.conf');
+            ->setName('configure:vhost')
+            ->setDescription('Create .phpbenchmarks/vhost.conf, create phpXY.benchmark.loc vhosts and reload nginx');
     }
 
     protected function doExecute(): parent

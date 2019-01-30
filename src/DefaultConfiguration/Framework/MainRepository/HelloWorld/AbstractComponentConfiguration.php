@@ -76,8 +76,11 @@ abstract class AbstractComponentConfiguration
         return 1;
     }
 
-    public static function getFeatureLinks(): array
+    public static function getSourceCodeUrls(): array
     {
-        return [];
+        return [
+            'route' => '____PHPBENCHMARKS_ROUTE_SOURCE_CODE_URL____',
+            'controller' => '____PHPBENCHMARKS_CONTROLLER_SOURCE_CODE_URL____'
+        ];
     }
 }

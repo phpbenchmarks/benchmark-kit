@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
@@ -24,9 +25,7 @@ class ValidateBranchNameCommand extends AbstractCommand
     {
         $this->title('Validation of git branch name');
 
-        if ($this->isRepositoriesCreated() === false) {
-            $this->skipBranchNameWarning();
-        } else {
+        if ($this->skipBranchName() === false) {
             $this->validateBranchName();
         }
 
@@ -51,16 +50,14 @@ class ValidateBranchNameCommand extends AbstractCommand
             . ComponentConfiguration::getCoreDependencyMinorVersion()
             . '_'
             . BenchmarkType::getSlug(ComponentConfiguration::getBenchmarkType());
-        if ($this->isValidateProd() === false) {
+        if ($this->validateProd() === false) {
             $expectedGitBranch .= '_prepare';
         }
 
         if ($branchName !== $expectedGitBranch) {
             $this
-                ->warning(
-                    'You can skip branch name validation with --skip-branch-name '
-                    . 'or use --validate-prod to remove "_prepare" suffix in branch name.'
-                )
+                ->warning('You can add --skip-branch-name parameter to skip this validation.')
+                ->warning('You can add --validate-prod parameter to remove "_prepare" suffix in branch name.')
                 ->error('Branch name should be ' . $expectedGitBranch . ' but is ' . $branchName . '.');
         }
         $this->success('Branch name is ' . $branchName . '.');

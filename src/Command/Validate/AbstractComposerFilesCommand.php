@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
-use App\Benchmark\BenchmarkType;
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\{
+    Benchmark\BenchmarkType,
+    Command\AbstractCommand,
+    ComponentConfiguration\ComponentConfiguration
+};
 
 abstract class AbstractComposerFilesCommand extends AbstractCommand
 {

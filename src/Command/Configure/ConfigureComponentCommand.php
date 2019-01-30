@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
+use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
     Benchmark\BenchmarkType,
     Component\ComponentType,
     PhpVersion\PhpVersion
 };
 
-class InitializeConfigurationComponentCommand extends AbstractInitializeConfigurationCommand
+class ConfigureComponentCommand extends AbstractConfigureComponentCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('initialize:configuration:component')
+            ->setName('configure:component')
             ->setDescription('Create .phpbenchmarks/AbstractComponentConfiguration.php and configure it');
     }
 
@@ -44,7 +45,9 @@ class InitializeConfigurationComponentCommand extends AbstractInitializeConfigur
 
         $this->defineVariable(
             '____NAMESPACE____',
-            function () { return 'AbstractComponentConfiguration'; }
+            function () {
+                return 'AbstractComponentConfiguration';
+            }
         );
 
         $this->defineVariable(
@@ -179,18 +182,6 @@ class InitializeConfigurationComponentCommand extends AbstractInitializeConfigur
         $destination = $this->getInstallationPath() . '/.phpbenchmarks/AbstractComponentConfiguration.php';
         copy($source, $destination);
         $this->success($destination . ' created.');
-
-        return $this;
-    }
-
-    protected function defineVariable(string $name, callable $getValue): self
-    {
-        $filePath = $this->getConfigurationPath() . '/AbstractComponentConfiguration.php';
-        $content = file_get_contents($filePath);
-
-        if (strpos($content, $name) !== false) {
-            file_put_contents($filePath, str_replace($name, call_user_func($getValue), $content));
-        }
 
         return $this;
     }

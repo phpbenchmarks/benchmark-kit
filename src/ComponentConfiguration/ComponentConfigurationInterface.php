@@ -24,4 +24,6 @@ interface ComponentConfigurationInterface
     public static function getCoreDependencyPatchVersion(): int;
 
     public static function getBenchmarkType(): int;
+
+    public static function getSourceCodeUrls(): array;
 }

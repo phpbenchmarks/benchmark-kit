@@ -14,7 +14,7 @@ class ComposerUpdateCommand extends AbstractCommand
 
         $this
             ->setName('composer:update')
-            ->setDescription('Execute composer update for all enabled PHP versions, and create composer.lock.phpX.Y');
+            ->setDescription('Execute composer update for all enabled PHP versions and create composer.lock.phpX.Y');
     }
 
     protected function doExecute(): parent

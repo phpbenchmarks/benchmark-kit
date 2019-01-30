@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
-class InitializeConfigurationDirectoryCommand extends AbstractCommand
+use App\Command\AbstractCommand;
+
+class ConfigureDirectoryCommand extends AbstractCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('initialize:configuration:directory')
+            ->setName('configure:directory')
             ->setDescription('Create .phpbenchmarks and .phpbenchmarks/responseBody directories');
     }
 

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\PhpVersion\PhpVersion;
+use App\{
+    Command\Validate\AbstractComposerFilesCommand,
+    PhpVersion\PhpVersion
+};
 
 class VhostCreateCommand extends AbstractComposerFilesCommand
 {
@@ -14,7 +17,7 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
 
         $this
             ->setName('vhost:create')
-            ->setDescription('Create nginx vhosts phpX.Y.benchmark.loc');
+            ->setDescription('Create nginx vhosts phpXY.benchmark.loc');
     }
 
     protected function doExecute(): parent

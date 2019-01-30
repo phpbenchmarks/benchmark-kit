@@ -7,40 +7,46 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\{
     Command\ComposerUpdateCommand,
-    Command\InitializeAllCommand,
     Command\BenchmarkValidateCommand,
-    Command\InitializeConfigurationComponentCommand,
-    Command\InitializeConfigurationDirectoryCommand,
-    Command\InitializeConfigurationInitBenchmarkCommand,
-    Command\InitializeConfigurationVhostCommand,
-    Command\InitializeResponseBodyCommand,
-    Command\ValidateBranchNameCommand,
-    Command\ValidateComposerLockFilesCommand,
-    Command\ValidateComposerJsonFilesCommand,
-    Command\ValidateConfigurationComponentCommand,
-    Command\ValidateConfigurationInitBenchmarkCommand,
-    Command\ValidateConfigurationVhostCommand,
-    Command\ValidateResponseBodyCommand,
+    Command\Configure\ConfigureAllCommand,
+    Command\Configure\ConfigureComponentCommand,
+    Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
+    Command\Configure\ConfigureDirectoryCommand,
+    Command\Configure\ConfigureInitBenchmarkCommand,
+    Command\Configure\ConfigureResponseBodyCommand,
+    Command\Configure\ConfigureVhostCommand,
+    Command\Validate\ValidateAllCommand,
+    Command\Validate\ValidateBranchNameCommand,
+    Command\Validate\ValidateComposerJsonFilesCommand,
+    Command\Validate\ValidateComposerLockFilesCommand,
+    Command\Validate\ValidateConfigurationComponentCommand,
+    Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
+    Command\Validate\ValidateConfigurationInitBenchmarkCommand,
+    Command\Validate\ValidateConfigurationResponseBodyCommand,
+    Command\Validate\ValidateConfigurationVhostCommand,
     Command\VhostCreateCommand
 };
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
+$application->add(new ConfigureAllCommand());
+$application->add(new ConfigureComponentCommand());
+$application->add(new ConfigureComponentSourceCodeUrlsCommand());
+$application->add(new ConfigureDirectoryCommand());
+$application->add(new ConfigureInitBenchmarkCommand());
+$application->add(new ConfigureResponseBodyCommand());
+$application->add(new ConfigureVhostCommand());
+
+$application->add(new ValidateAllCommand());
+$application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateComposerJsonFilesCommand());
 $application->add(new ValidateComposerLockFilesCommand());
-$application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateConfigurationComponentCommand());
-$application->add(new ValidateConfigurationVhostCommand());
+$application->add(new ValidateConfigurationComponentSourceCodeUrlsCommand());
 $application->add(new ValidateConfigurationInitBenchmarkCommand());
-$application->add(new ValidateResponseBodyCommand());
-
-$application->add(new InitializeAllCommand());
-$application->add(new InitializeConfigurationComponentCommand());
-$application->add(new InitializeConfigurationDirectoryCommand());
-$application->add(new InitializeConfigurationInitBenchmarkCommand());
-$application->add(new InitializeConfigurationVhostCommand());
-$application->add(new InitializeResponseBodyCommand());
+$application->add(new ValidateConfigurationResponseBodyCommand());
+$application->add(new ValidateConfigurationVhostCommand());
 
 $application->add(new BenchmarkValidateCommand());
 $application->add(new ComposerUpdateCommand());

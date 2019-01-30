@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
-class ValidateResponseBodyCommand extends AbstractCommand
+use App\Command\AbstractCommand;
+
+class ValidateConfigurationResponseBodyCommand extends AbstractCommand
 {
     /** @var ?string */
     protected $vhostContent;
@@ -14,8 +16,8 @@ class ValidateResponseBodyCommand extends AbstractCommand
         parent::configure();
 
         $this
-            ->setName('validate:responseBody')
-            ->setDescription('Validate .phpbenchmarks/responseBody directory');
+            ->setName('validate:configuration:responseBody')
+            ->setDescription('Validate .phpbenchmarks/responseBody files');
     }
 
     protected function doExecute(): parent

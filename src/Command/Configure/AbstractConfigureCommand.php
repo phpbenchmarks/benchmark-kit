@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
-abstract class AbstractInitializeConfigurationCommand extends AbstractCommand
+use App\Command\AbstractCommand;
+
+abstract class AbstractConfigureCommand extends AbstractCommand
 {
     protected function copyDefaultConfigurationFile(
         string $file,

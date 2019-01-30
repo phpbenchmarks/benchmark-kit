@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Configure;
 
-class InitializeConfigurationInitBenchmarkCommand extends AbstractInitializeConfigurationCommand
+class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('initialize:configuration:initBenchmark')
+            ->setName('configure:initBenchmark')
             ->setDescription('Create .phpbenchmarks/initBenchmark.sh');
     }
 

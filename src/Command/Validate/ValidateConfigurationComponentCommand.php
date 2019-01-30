@@ -2,17 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\AbstractCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
+use Symfony\Component\Validator\{
+    Constraints\NotBlank,
+    Constraints\Type,
+    Constraints\Url,
+    ConstraintViolationListInterface,
+    Validation
+};
 
 class ValidateConfigurationComponentCommand extends AbstractCommand
 {
+    public static function validateSourCodeUrl($url): ConstraintViolationListInterface
+    {
+        return Validation::createValidator()->validate(
+            $url,
+            [
+                new NotBlank(),
+                new Type(['type' => 'string']),
+                new Url()
+            ]
+        );
+    }
+
     protected function configure()
     {
         parent::configure();
@@ -45,7 +65,7 @@ class ValidateConfigurationComponentCommand extends AbstractCommand
 
     protected function onError(): parent
     {
-        $this->warning('You can use phpbench initialize:branch to create AbstractComponentConfiguration class.');
+        $this->warning('You can call "phpbench configure:component" to create AbstractComponentConfiguration class.');
 
         return $this;
     }

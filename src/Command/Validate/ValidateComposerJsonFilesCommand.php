@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Validate;
 
 use App\ComponentConfiguration\ComponentConfiguration;
 
@@ -100,11 +100,11 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
 
     private function validateRequireCommon(array $data): self
     {
-        if ($this->isRepositoriesCreated()) {
+        if ($this->skipBranchName() === false) {
             $commonRepository = $this->getCommonRepositoryName();
             $commonVersion = $data['require'][$commonRepository] ?? null;
 
-            if ($this->isValidateProd()) {
+            if ($this->validateProd()) {
                 $branchPrefix = $this->getCommonProdBranchPrefix();
                 $branch = $branchPrefix . 'z';
                 $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
@@ -125,8 +125,6 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
                         . $commonVersion
                         . '. See README.md for more informations.'
                     );
-        } else {
-            $this->skipBranchNameWarning();
         }
 
         return $this;
