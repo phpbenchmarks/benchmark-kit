@@ -6,7 +6,7 @@ namespace App\Command\Configure;
 
 use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
-    Command\Validate\ValidateConfigurationComponentCommand,
+    Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -34,8 +34,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureComponent
         if ($this->skipSourceCodeUrls() === false) {
             $this
                 ->title('Configuration of AbstractComponentConfiguration::getSourceCodeUrls()')
-                ->defineSourceCodeUrls()
-                ->runCommand('validate:configuration:component:sourceCodeUrls');
+                ->defineSourceCodeUrls();
         }
 
         return $this;
@@ -88,7 +87,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureComponent
         ];
 
         foreach ($return as &$url) {
-            $violations = ValidateConfigurationComponentCommand::validateSourCodeUrl($url['url']);
+            $violations = ValidateConfigurationComponentSourceCodeUrlsCommand::validateSourCodeUrl($url['url']);
             $showWarning = false;
             do {
                 if (count($violations) > 0) {
@@ -105,7 +104,11 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureComponent
                 }
 
                 $showWarning = true;
-            } while (count($violations = ValidateConfigurationComponentCommand::validateSourCodeUrl($url['url'])) > 0);
+            } while (
+                count(
+                    $violations = ValidateConfigurationComponentSourceCodeUrlsCommand::validateSourCodeUrl($url['url'])
+                ) > 0
+            );
         }
 
         return $return;

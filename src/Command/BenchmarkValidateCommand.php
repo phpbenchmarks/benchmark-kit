@@ -22,13 +22,7 @@ class BenchmarkValidateCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this
-            ->runCommand('validate:configuration:component')
-            ->runCommand('validate:branch:name')
-            ->runCommand('validate:composer:json')
-            ->runCommand('validate:composer:lock')
-            ->runCommand('validate:configuration:initBenchmark')
-            ->runCommand('validate:configuration:vhost');
+        $this->runCommand('validate:all');
 
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);

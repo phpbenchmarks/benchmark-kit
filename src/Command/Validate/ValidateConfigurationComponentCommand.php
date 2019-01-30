@@ -11,28 +11,9 @@ use App\{
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
-use Symfony\Component\Validator\{
-    Constraints\NotBlank,
-    Constraints\Type,
-    Constraints\Url,
-    ConstraintViolationListInterface,
-    Validation
-};
 
 class ValidateConfigurationComponentCommand extends AbstractCommand
 {
-    public static function validateSourCodeUrl($url): ConstraintViolationListInterface
-    {
-        return Validation::createValidator()->validate(
-            $url,
-            [
-                new NotBlank(),
-                new Type(['type' => 'string']),
-                new Url()
-            ]
-        );
-    }
-
     protected function configure()
     {
         parent::configure();

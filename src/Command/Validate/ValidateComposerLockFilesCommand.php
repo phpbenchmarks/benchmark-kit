@@ -53,7 +53,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
             $lockFile = 'composer.lock.php' . $phpVersion;
             $lockPath = $this->getInstallationPath() . '/' . $lockFile;
             if (is_readable($lockPath) === false) {
-                $this->error('File does not exist.');
+                $this->error('File does not exist. Call "phpbench composer:update" to create it.');
             }
 
             try {
