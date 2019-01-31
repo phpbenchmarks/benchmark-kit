@@ -25,7 +25,7 @@ Almost all commands accept this options:
 #1 Ask us to create repositories
 -
 
-You can ask us to create repositories with [contact form](http://www.phpbenchmarks.com/en/contact).
+You can ask us to create repositories with [contact form](http://www.phpbenchmarks.com/en/contact?subject=create-benchmark-repositories).
 
 Tell us which component and version you want to benchmark,
 and `your github username` to allow you to commit on this repositories.
@@ -106,6 +106,6 @@ When you think it's ok, use `phpbench benchmark:validate` to validate it.
 -
 
 When `phpbench benchmark:validate` say it's good,
-you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact).
+you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact?subject=launch-benchmark).
 
 Thank you!
