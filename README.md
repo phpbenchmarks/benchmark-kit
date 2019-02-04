@@ -103,6 +103,12 @@ Note the `phpbench composer:update` command. We need a `composer.lock` per PHP v
 because some dependencies are installed in different versions depending on the version of PHP.
 Use `phpbench composer:update` to switch between PHP version, and create `composer.lock.phpX.Y`.
 
+```bash
+phpbench composer:update
+# you can specify a version of php
+phpbench composer:update 7.1
+```
+
 #4 Add required features for benchmarks
 -
 

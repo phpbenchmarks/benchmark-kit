@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Validate;
 
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\{
+    ComponentConfiguration\ComponentConfiguration,
+    PhpVersion\PhpVersion
+};
 
 class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 {
@@ -14,11 +17,17 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
         $this
             ->setName('validate:composer:lock')
-            ->setDescription('Validate dependencies in composer.lock.phpX.Y');
+            ->setDescription('Validate dependencies in composer.lock.phpX.Y')
+            ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
 
     protected function doExecute(): parent
     {
+        $phpVersion = $this->getInput()->getArgument('phpVersion');
+        if (is_string($phpVersion) && in_array($phpVersion, PhpVersion::getAll()) === false) {
+            throw new \Exception('Invalid PHP version ' . $phpVersion . '.');
+        }
+
         $this
             ->validateDisabledPhpVersions()
             ->validateEnabledPhpVersions();
@@ -28,7 +37,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
     private function validateDisabledPhpVersions(): self
     {
-        foreach (ComponentConfiguration::getDisabledPhpVersions() as $phpVersion) {
+        foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
             $this->title('Validation of composer.lock.php' . $phpVersion);
 
             $lockFile = 'composer.lock.php' . $phpVersion;
@@ -47,7 +56,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
     private function validateEnabledPhpVersions(): self
     {
-        foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
+        foreach ($this->getPhpVersions(ComponentConfiguration::getEnabledPhpVersions()) as $phpVersion) {
             $this->title('Validation of composer.lock.php' . $phpVersion);
 
             $lockFile = 'composer.lock.php' . $phpVersion;
@@ -153,5 +162,17 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
         }
 
         return $this;
+    }
+
+    private function getPhpVersions(array $phpVersions): array
+    {
+        $phpVersion = $this->getInput()->getArgument('phpVersion');
+        if (is_string($phpVersion)) {
+            $return = in_array($phpVersion, $phpVersions) ? [$phpVersion] : [];
+        } else {
+            $return = $phpVersions;
+        }
+
+        return $return;
     }
 }
