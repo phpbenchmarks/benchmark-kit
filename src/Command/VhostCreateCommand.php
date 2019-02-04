@@ -23,8 +23,8 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
     protected function doExecute(): parent
     {
         foreach (PhpVersion::getAll() as $phpVersion) {
+            $this->title('Create ' . $this->getHost($phpVersion) . ' virtual host');
             $phpVersionWithoutDot = str_replace('.', null, $phpVersion);
-            $this->title('Create php' . $phpVersionWithoutDot . '.benchmark.loc virtual host');
 
             $this
                 ->createVhostFile($phpVersionWithoutDot)
@@ -62,7 +62,7 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
             $this->error('Error while reading ' . $vhostFile . '.');
         }
 
-        $host = 'php' . $phpVersionWithoutDot . '.benchmark.loc';
+        $host = $this->getHost($phpVersion, false);
         $content = str_replace('____HOST____', $host, $content);
         $content = str_replace('____INSTALLATION_PATH____', $this->getInstallationPath(), $content);
         $phpFpm = 'php' . $phpVersion . '-fpm.sock';

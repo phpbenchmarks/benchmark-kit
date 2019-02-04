@@ -11,8 +11,10 @@ services:
             dockerfile: docker/Dockerfile
             args:
                 DOCKER_UID: ${DOCKER_UID}
+        environment:
+            - NGINX_PORT=${NGINX_PORT}
         ports:
-            - 80:80
+            - ${NGINX_PORT}:80
         volumes:
             - ${INSTALLATION_PATH}:/var/www/phpbenchmarks
             - ../src:/var/phpbenchmarks

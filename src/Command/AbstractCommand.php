@@ -276,4 +276,13 @@ abstract class AbstractCommand extends Command
 
         return $this;
     }
+
+    protected function getHost(string $phpVersion, bool $addPort = true): string
+    {
+        return
+            'php'
+            . str_replace('.', null, $phpVersion)
+            . '.benchmark.loc'
+            . ($addPort ? ':' . getenv('NGINX_PORT') : null);
+    }
 }

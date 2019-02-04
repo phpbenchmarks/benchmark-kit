@@ -28,11 +28,11 @@ function echoAsk {
 }
 
 function defineInstallationPath {
-    lastInstallationPathFile="$KIT_ROOT_PATH/var/lastInstallationPath.sh"
-    if [ ! -d "$installationPath" ]; then
+    if [ "$1" != "" ]; then
+        installationPath=$1
+    else
         question="Path to your code?"
-        if [ -f "$lastInstallationPathFile" ]; then
-            source "$lastInstallationPathFile"
+        if [ -d "$lastInstallationPath" ]; then
             question="$question [$lastInstallationPath]"
         fi
         echoAsk "$question"
@@ -41,11 +41,30 @@ function defineInstallationPath {
             installationPath=$lastInstallationPath
         fi
     fi
+
     if [ ! -d "$installationPath" ]; then
         exitScript "Invalid path."
     fi
-    echo "#!/usr/bin/env bash" > $lastInstallationPathFile
-    echo "readonly lastInstallationPath=$installationPath" >> $lastInstallationPathFile
+
+    echo "#!/usr/bin/env bash" > $lastConfigurationPath
+    echo "readonly lastInstallationPath=$installationPath" >> $lastConfigurationPath
+}
+
+function defineNginxPort {
+    if [ "$lastNginxPort" != "" ]; then
+        readonly defaultNginxPort="$lastNginxPort"
+    else
+        readonly defaultNginxPort="80"
+    fi
+
+    echoAsk "Port of nginx? [$defaultNginxPort]"
+    read nginxPort
+
+    if [ "$nginxPort" == "" ]; then
+        nginxPort=$defaultNginxPort
+    fi
+
+    echo "readonly lastNginxPort=$nginxPort" >> $lastConfigurationPath
 }
 
 function createPhpbenchmarksDirectory {
@@ -67,6 +86,9 @@ function buildDockerImage {
     [ $? != "0" ] && exitScript
 
     sed -i -e "s~____DOCKER_UID____~$UID~g" .env
+    [ $? != "0" ] && exitScript
+
+    sed -i -e "s~____NGINX_PORT____~$nginxPort~g" .env
     [ $? != "0" ] && exitScript
 
     docker-compose up --build --no-start phpbenchmarks_benchmark_kit &>/tmp/phpbenchmarks.docker
@@ -93,12 +115,21 @@ function addHost() {
 }
 
 trap onExit EXIT
-readonly KIT_ROOT_PATH="vendor/phpbenchmarks/benchmark-kit"
+if [ -d "vendor/phpbenchmarks/benchmark-kit" ]; then
+    readonly KIT_ROOT_PATH="vendor/phpbenchmarks/benchmark-kit"
+else
+    readonly KIT_ROOT_PATH="$(dirname $0)"
+fi
 
 currentAction=
 
-installationPath=$1
+lastConfigurationPath="$(dirname $0)/var/lastConfiguration.sh"
+if [ -f "$lastConfigurationPath" ]; then
+    source $lastConfigurationPath
+fi
+
 defineInstallationPath
+defineNginxPort
 
 createPhpbenchmarksDirectory
 

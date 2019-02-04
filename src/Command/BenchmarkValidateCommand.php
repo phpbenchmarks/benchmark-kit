@@ -41,9 +41,8 @@ class BenchmarkValidateCommand extends AbstractCommand
     protected function validateForPhpVersion(string $phpVersion): self
     {
         $url =
-            'http://php'
-            . str_replace('.', null, $phpVersion)
-            . '.benchmark.loc/'
+            'http://'
+            . $this->getHost($phpVersion)
             . ComponentConfiguration::getBenchmarkUrl();
 
         $this
