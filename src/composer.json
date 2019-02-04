@@ -13,6 +13,7 @@
     "require": {
         "php": "7.3.*",
         "ext-json": "*",
+        "ext-curl": "*",
         "symfony/console": "^4.2",
         "symfony/validator": "^4.2"
     },
