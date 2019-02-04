@@ -116,15 +116,17 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
             $isBranchValid
                 ? $this->success('Require ' . $commonRepository . ': ' . $branch . '.')
                 :
-                    $this->error(
-                        'It should require '
-                        . $commonRepository
-                        . ': '
-                        . $branch
-                        . ' but is '
-                        . $commonVersion
-                        . '. See README.md for more informations.'
-                    );
+                    $this
+                        ->warning('You can add --skip-branch-name parameter to skip this validation.')
+                        ->error(
+                            'It should require '
+                            . $commonRepository
+                            . ': '
+                            . $branch
+                            . ' but is '
+                            . $commonVersion
+                            . '. See README.md for more informations.'
+                        );
         }
 
         return $this;
