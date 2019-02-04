@@ -9,8 +9,30 @@ Benchmark kit is a tool to add a framework or a template engine benchmark on [ph
 Documentation
 -
 
- * [Requirements and installation](documentation/installation.md)
  * [Understand repositories and branches](documentation/repositoriesAndBranches.md)
+
+Requirements
+-
+
+You will need this dependencies to make it work:
+* Linux to use Docker and bash scripts
+* [Docker ^18.06](https://docs.docker.com/install/)
+* [docker-compose ^1.12](https://docs.docker.com/compose/install/)
+
+Installation
+-
+
+```bash
+# you can install it where you want, ~/benchmarkKit used for the example
+mkdir ~/benchmarkKit
+cd ~/benchmarkKit
+echo '{"require": {"phpbenchmarks/benchmark-kit": "^2.0"}}' > composer.json
+
+# you can use your local composer installation, of the official Docker container
+docker run --rm -v $(pwd):/app composer/composer update --no-dev
+# in Docker container, composer update is called with root user, so change permissions to current user
+sudo chown -R $USER:$USER vendor
+```
 
 Benchmark kit commands
 -
@@ -21,6 +43,10 @@ Almost all commands accept this options:
 * `--skip-branch-name`: don't validate git branch name, usefull while you are in development and repositories are not created yet.
 * `--skip-source-code-urls`: don't validate source code urls, usefull while you are in development.
 * `--validate-prod`: you should not need it, it's used when we test your code before benchmarking it.
+
+```bash
+phpbench benchmark:validate --skip-branch-name --skip-source-code-urls
+```
 
 #1 Ask us to create repositories
 -
@@ -37,6 +63,8 @@ We will send you an email when repositories will be created.
 -
 
 To start benchmark kit Docker container, you have to call `./vendor/bin/start.sh`.
+
+Do not start is as root, use your user.
 
 It will ask you the directory where you code is located.
 You can pass this directory as parameter to this script.
