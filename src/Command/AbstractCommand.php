@@ -163,7 +163,7 @@ abstract class AbstractCommand extends Command
         return
             $this->getDefaultConfigurationPath($componentType)
             . '/'
-            . BenchmarkType::getCamelCaseName($benchmarkType ?? ComponentConfiguration::getBenchmarkType());
+            . BenchmarkType::getUpperCamelCaseName($benchmarkType ?? ComponentConfiguration::getBenchmarkType());
     }
 
     /** @return $this */

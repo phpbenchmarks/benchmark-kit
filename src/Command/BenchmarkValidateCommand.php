@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\{
+    Benchmark\BenchmarkType,
+    ComponentConfiguration\ComponentConfiguration
+};
 
 class BenchmarkValidateCommand extends AbstractCommand
 {
@@ -22,7 +25,9 @@ class BenchmarkValidateCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this->runCommand('validate:all');
+        $this
+            ->runCommand('validate:all')
+            ->runCommand('vhost:create');
 
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
@@ -44,9 +49,13 @@ class BenchmarkValidateCommand extends AbstractCommand
             'http://'
             . $this->getHost($phpVersion, false)
             . ComponentConfiguration::getBenchmarkUrl();
+        $urlWithPort =
+            'http://'
+            . $this->getHost($phpVersion)
+            . ComponentConfiguration::getBenchmarkUrl();
 
         $this
-            ->title('Validation of ' . $url)
+            ->title('Validation of ' . $urlWithPort)
             ->definePhpCliVersion($phpVersion)
             ->exec('cd /var/www/phpbenchmarks && ./.phpbenchmarks/initBenchmark.sh')
             ->success('.phpbenchmarks/initBenchmark.sh executed.');
@@ -70,14 +79,22 @@ class BenchmarkValidateCommand extends AbstractCommand
 
     protected function validateBody(string $body): self
     {
-        $responseFile = $this->getResponseBodyPath() . '/responseBody.txt';
-        if ($body !== file_get_contents($responseFile)) {
+        $validated = false;
+        foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
+            $responseFile = $this->getResponseBodyPath() . '/' . $file;
+            if ($body === file_get_contents($responseFile)) {
+                $this->success('Body is equal to ' . $responseFile . ' content.');
+                $validated = true;
+                break;
+            }
+        }
+
+        if ($validated === false) {
             file_put_contents('/tmp/benchmark.body', $body);
             $this
                 ->warning('You canse use "diff /tmp/benchmark.body ' . $responseFile . '" to view differences.')
-                ->error('Invalid body, it should be equal to .phpbenchmarks/responseBody/responseBody.txt content.');
+                ->error('Invalid body, it should be equal to a file in .phpbenchmarks/responseBody.');
         }
-        $this->success('Body is equal to ' . $responseFile . ' content.');
 
         return $this;
     }

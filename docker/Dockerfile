@@ -75,6 +75,21 @@ RUN \
     touch /usr/share/man/man1/php7.2.1.gz \
     touch /usr/share/man/man1/php7.3.1.gz
 
+# use phpbenchmarks user to avoid file permission errors
+RUN sed -i 's/user www-data;/user phpbenchmarks;/g' /etc/nginx/nginx.conf
+RUN sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/5.6/fpm/pool.d/www.conf
+RUN sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/5.6/fpm/pool.d/www.conf
+RUN sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.0/fpm/pool.d/www.conf
+RUN sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.0/fpm/pool.d/www.conf
+RUN sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.1/fpm/pool.d/www.conf
+RUN sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.1/fpm/pool.d/www.conf
+RUN sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.2/fpm/pool.d/www.conf
+RUN sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.2/fpm/pool.d/www.conf
+RUN sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf
+RUN sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf
+
+RUN /usr/bin/update-alternatives --set php /usr/bin/php7.3
+
 CMD \
     /etc/init.d/php5.6-fpm start \
     && /etc/init.d/php7.0-fpm start \

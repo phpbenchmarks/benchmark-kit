@@ -78,7 +78,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
         $urls = ComponentConfiguration::getSourceCodeUrls();
         $return = [
             'route' => [
-                'question' => 'URL to route code?',
+                'question' => 'URL to benchmark route code?',
                 'url' => $urls['route'] ?? null,
                 'variable' => '____PHPBENCHMARKS_ROUTE_SOURCE_CODE_URL____'
             ],
@@ -86,6 +86,31 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
                 'question' => 'URL to Controller code?',
                 'url' => $urls['controller'] ?? null,
                 'variable' => '____PHPBENCHMARKS_CONTROLLER_SOURCE_CODE_URL____'
+            ],
+            'randomizeLanguageDispatchEvent' => [
+                'question' => 'URL to code who dispatch event to randomize language?',
+                'url' => $urls['randomizeLanguageDispatchEvent'] ?? null,
+                'variable' => '____PHPBENCHMARKS_RANDOMIZE_LANGUAGE_DISPATCH_EVENT_SOURCE_CODE_URL____'
+            ],
+            'randomizeLanguageEventListener' => [
+                'question' => 'URL to code who listen event to randomize language?',
+                'url' => $urls['randomizeLanguageEventListener'] ?? null,
+                'variable' => '____PHPBENCHMARKS_RANDOMIZE_LANGUAGE_EVENT_LISTENER_SOURCE_CODE_URL____'
+            ],
+            'translations' => [
+                'question' => 'URL to en_GB translations code?',
+                'url' => $urls['translations'] ?? null,
+                'variable' => '____PHPBENCHMARKS_TRANSLATIONS_SOURCE_CODE_URL____'
+            ],
+            'translate' => [
+                'question' => 'URL to code who translate translated.1000 key?',
+                'url' => $urls['translate'] ?? null,
+                'variable' => '____PHPBENCHMARKS_TRANSLATE_SOURCE_CODE_URL____'
+            ],
+            'serialize' => [
+                'question' => 'URL to code who serialize User?',
+                'url' => $urls['serialize'] ?? null,
+                'variable' => '____PHPBENCHMARKS_SERIALIZE_SOURCE_CODE_URL____'
             ]
         ];
 

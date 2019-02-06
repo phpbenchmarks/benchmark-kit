@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command\Validate;
 
 use App\{
+    Benchmark\BenchmarkType,
     Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration
 };
@@ -66,7 +67,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
                 . ' parameter to validate it.'
             );
         } else {
-            $expectedUrlIds = ['route', 'controller'];
+            $expectedUrlIds = BenchmarkType::getSourceCodeUrlIds(ComponentConfiguration::getBenchmarkType());
             $urls = ComponentConfiguration::getSourceCodeUrls();
             foreach ($urls as $id => $url) {
                 if (in_array($id, $expectedUrlIds) === false) {

@@ -13,23 +13,57 @@ class BenchmarkType
     public const TEMPLATING_SMALL_OVERLOAD = 4;
     public const TEMPLATING_BIG_OVERLOAD = 5;
 
+    protected const CONFIGURATIONS = [
+        self::HELLO_WORLD => [
+            'name' => 'Hello world',
+            'upperCamelCaseName' => 'HelloWorld',
+            'slug' => 'hello-world',
+            'defaultBenchmarkUrl' => '/benchmark/helloworld',
+            'responseBodyFiles' => ['responseBody.txt'],
+            'sourceCodeUrlIds' => ['route', 'controller']
+        ],
+        self::REST_API => [
+            'name' => 'REST API',
+            'upperCamelCaseName' => 'RestApi',
+            'slug' => 'rest-api',
+            'defaultBenchmarkUrl' => '/benchmark/rest',
+            'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
+            'sourceCodeUrlIds' => [
+                'route',
+                'controller',
+                'randomizeLanguageDispatchEvent',
+                'randomizeLanguageEventListener',
+                'translations',
+                'translate',
+                'serialize'
+            ]
+        ],
+        self::TEMPLATING_SMALL_OVERLOAD => [
+            'name' => 'Template engine small overload',
+            'upperCamelCaseName' => 'TemplateEngineSmallOverload',
+            'slug' => 'templating-small-overload',
+            'defaultBenchmarkUrl' => '/index.php',
+            'responseBodyFiles' => ['responseBody.html'],
+            'sourceCodeUrlIds' => []
+        ],
+        self::TEMPLATING_BIG_OVERLOAD => [
+            'name' => 'Template engine big overload',
+            'upperCamelCaseName' => 'TemplateEngineBigOverload',
+            'slug' => 'templating-big-overload',
+            'defaultBenchmarkUrl' => '/index.php',
+            'responseBodyFiles' => ['responseBody.html'],
+            'sourceCodeUrlIds' => []
+        ]
+    ];
+
     public static function getAll(): array
     {
         return [
-            static::HELLO_WORLD => 'Hello world',
-            static::REST_API => 'REST API',
-            static::TEMPLATING_SMALL_OVERLOAD => 'Template engine small overload',
-            static::TEMPLATING_BIG_OVERLOAD => 'Template engine big overload'
+            static::HELLO_WORLD => static::getConfiguration(static::HELLO_WORLD, 'name'),
+            static::REST_API => static::getConfiguration(static::REST_API, 'name'),
+            static::TEMPLATING_SMALL_OVERLOAD => static::getConfiguration(static::TEMPLATING_SMALL_OVERLOAD, 'name'),
+            static::TEMPLATING_BIG_OVERLOAD => static::getConfiguration(static::TEMPLATING_BIG_OVERLOAD, 'name')
         ];
-    }
-
-    public static function getName(int $type): string
-    {
-        if (array_key_exists($type, static::getAll()) === false) {
-            throw new \Exception('Unknown benchmark type ' . $type . '.');
-        }
-
-        return static::getAll()[$type];
     }
 
     public static function getAllByComponentType(): array
@@ -57,33 +91,45 @@ class BenchmarkType
         return static::getAllByComponentType()[$componentType];
     }
 
-    public static function getSlug(int $type): string
+    public static function getName(int $type): string
     {
-        $slugs = [
-            static::HELLO_WORLD => 'hello-world',
-            static::REST_API => 'rest-api',
-            static::TEMPLATING_SMALL_OVERLOAD => 'templating-small-overload',
-            static::TEMPLATING_BIG_OVERLOAD => 'templating-big-overload',
-        ];
-        if (array_key_exists($type, $slugs) === false) {
-            throw new \Exception('Unknown benchmark type ' . $type . '.');
-        }
-
-        return $slugs[$type];
+        return static::getConfiguration($type, 'name');
     }
 
-    public static function getCamelCaseName(int $type): string
+    public static function getSlug(int $type): string
     {
-        $names = [
-            static::HELLO_WORLD => 'HelloWorld',
-            static::REST_API => 'RestApi',
-            static::TEMPLATING_SMALL_OVERLOAD => 'TemplatingSmallOverload',
-            static::TEMPLATING_BIG_OVERLOAD => 'TemplatingBigOverload',
-        ];
-        if (array_key_exists($type, $names) === false) {
+        return static::getConfiguration($type, 'slug');
+    }
+
+    public static function getUpperCamelCaseName(int $type): string
+    {
+        return static::getConfiguration($type, 'upperCamelCase');
+    }
+
+    public static function getDefaultBenchmarkUrl(int $type): string
+    {
+        return static::getConfiguration($type, 'defaultBenchmarkUrl');
+    }
+
+    public static function getResponseBodyFiles(int $type): array
+    {
+        return static::getConfiguration($type, 'responseBodyFiles');
+    }
+
+    public static function getSourceCodeUrlIds(int $type): array
+    {
+        return static::getConfiguration($type, 'sourceCodeUrlIds');
+    }
+
+    /** @return mixed */
+    protected static function getConfiguration(int $type, string $name)
+    {
+        if (array_key_exists($type, static::CONFIGURATIONS) === false) {
             throw new \Exception('Unknown benchmark type ' . $type . '.');
+        } elseif (array_key_exists($name, static::CONFIGURATIONS[$type]) === false) {
+            throw new \Exception('Unknown configuration ' . $name . '.');
         }
 
-        return $names[$type];
+        return static::CONFIGURATIONS[$type][$name];
     }
 }

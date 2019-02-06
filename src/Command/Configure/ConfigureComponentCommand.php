@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Command\Configure;
 
 use AbstractComponentConfiguration\AbstractComponentConfiguration;
-use App\{
-    Benchmark\BenchmarkType,
+use App\{Benchmark\BenchmarkType,
     Component\ComponentType,
-    PhpVersion\PhpVersion
-};
+    ComponentConfiguration\ComponentConfiguration,
+    PhpVersion\PhpVersion};
 
 class ConfigureComponentCommand extends AbstractConfigureCommand
 {
@@ -41,8 +40,9 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
             $this->copyDefaultConfigurationFile('AbstractComponentConfiguration.php', true);
         }
 
+        $benchmarkType = null;
         if (is_file($configurationPath) === false) {
-            $this->createFile();
+            $benchmarkType = $this->createFile();
         }
 
         $this
@@ -63,8 +63,11 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
             )
             ->defineVariable(
                 '____PHPBENCHMARKS_BENCHMARK_URL____',
-                function () {
-                    return $this->question('Benchmark url, after host?', '/benchmark/helloworld');
+                function () use ($benchmarkType) {
+                    return $this->question(
+                        'Benchmark url, after host?',
+                        BenchmarkType::getDefaultBenchmarkUrl($benchmarkType ?? ComponentConfiguration::getBenchmarkType())
+                    );
                 },
                 $configurationPath
             )
@@ -162,7 +165,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
         return $this;
     }
 
-    protected function createFile(): self
+    protected function createFile(): int
     {
         $componentTypes = ComponentType::getAll();
         $componentType = array_search(
@@ -183,6 +186,6 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
         copy($source, $destination);
         $this->success($destination . ' created.');
 
-        return $this;
+        return $benchmarkType;
     }
 }
