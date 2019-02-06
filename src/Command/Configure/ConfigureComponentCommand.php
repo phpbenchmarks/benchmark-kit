@@ -11,8 +11,10 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-class ConfigureComponentCommand extends AbstractConfigureComponentCommand
+class ConfigureComponentCommand extends AbstractConfigureCommand
 {
+    use DefineVariableTrait;
+
     protected function configure()
     {
         parent::configure();
@@ -43,26 +45,62 @@ class ConfigureComponentCommand extends AbstractConfigureComponentCommand
             $this->createFile();
         }
 
-        $this->defineVariable(
-            '____NAMESPACE____',
-            function () {
-                return 'AbstractComponentConfiguration';
-            }
-        );
+        $this
+            ->defineStringVariable('____NAMESPACE____', 'AbstractComponentConfiguration', $configurationPath)
+            ->defineVariable(
+                '____PHPBENCHMARKS_COMPONENT_NAME____',
+                function () {
+                    return $this->question('Component name?');
+                },
+                $configurationPath
+            )
+            ->defineVariable(
+                '____PHPBENCHMARKS_COMPONENT_SLUG____',
+                function () {
+                    return $this->question('Component slug?');
+                },
+                $configurationPath
+            )
+            ->defineVariable(
+                '____PHPBENCHMARKS_BENCHMARK_URL____',
+                function () {
+                    return $this->question('Benchmark url, after host?', '/benchmark/helloworld');
+                },
+                $configurationPath
+            )
+            ->defineVariable(
+                '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____',
+                function () {
+                    do {
+                        $return = $this->question('Core dependency major version?');
+                    } while (is_numeric($return) === false);
 
-        $this->defineVariable(
-            '____PHPBENCHMARKS_COMPONENT_NAME____',
-            function () {
-                return $this->question('Component name?');
-            }
-        );
+                    return $return;
+                },
+                $configurationPath
+            )
+            ->defineVariable(
+                '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____',
+                function () {
+                    do {
+                        $return = $this->question('Core dependency minor version?');
+                    } while (is_numeric($return) === false);
 
-        $this->defineVariable(
-            '____PHPBENCHMARKS_COMPONENT_SLUG____',
-            function () {
-                return $this->question('Component slug?');
-            }
-        );
+                    return $return;
+                },
+                $configurationPath
+            )
+            ->defineVariable(
+                '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____',
+                function () {
+                    do {
+                        $return = $this->question('Core dependency patch version?');
+                    } while (is_numeric($return) === false);
+
+                    return $return;
+                },
+                $configurationPath
+            );
 
         foreach (PhpVersion::getAll() as $phpVersion) {
             $this->defineVariable(
@@ -71,56 +109,17 @@ class ConfigureComponentCommand extends AbstractConfigureComponentCommand
                     return $this->confirmationQuestion('Is PHP ' . $phpVersion . ' enabled?')
                         ? 'true'
                         : 'false';
-                }
+                },
+                $configurationPath
             );
         }
 
-        $this->defineVariable(
-            '____PHPBENCHMARKS_BENCHMARK_URL____',
-            function () {
-                return $this->question('Benchmark url, after host?', 'benchmark/helloworld');
-            }
-        );
-
-        $this->defineCodeDependencyName();
-
-        $this->defineVariable(
-            '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____',
-            function () {
-                do {
-                    $return = $this->question('Core dependency major version?');
-                } while (is_numeric($return) === false);
-
-                return $return;
-            }
-        );
-
-        $this->defineVariable(
-            '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____',
-            function () {
-                do {
-                    $return = $this->question('Core dependency minor version?');
-                } while (is_numeric($return) === false);
-
-                return $return;
-            }
-        );
-
-        $this->defineVariable(
-            '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____',
-            function () {
-                do {
-                    $return = $this->question('Core dependency patch version?');
-                } while (is_numeric($return) === false);
-
-                return $return;
-            }
-        );
+        $this->defineCodeDependencyName($configurationPath);
 
         return $this;
     }
 
-    protected function defineCodeDependencyName(): self
+    protected function defineCodeDependencyName(string $configurationPath): self
     {
         $this->defineVariable(
             '____PHPBENCHMARKS_CORE_DEPENDENCY_NAME____',
@@ -156,7 +155,8 @@ class ConfigureComponentCommand extends AbstractConfigureComponentCommand
                 }
 
                 return $return;
-            }
+            },
+            $configurationPath
         );
 
         return $this;

@@ -13,6 +13,7 @@ use App\{
     Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
     Command\Configure\ConfigureDirectoryCommand,
     Command\Configure\ConfigureInitBenchmarkCommand,
+    Command\Configure\ConfigureReadmeCommand,
     Command\Configure\ConfigureResponseBodyCommand,
     Command\Configure\ConfigureVhostCommand,
     Command\Validate\ValidateAllCommand,
@@ -35,6 +36,7 @@ $application->add(new ConfigureComponentCommand());
 $application->add(new ConfigureComponentSourceCodeUrlsCommand());
 $application->add(new ConfigureDirectoryCommand());
 $application->add(new ConfigureInitBenchmarkCommand());
+$application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigureResponseBodyCommand());
 $application->add(new ConfigureVhostCommand());
 

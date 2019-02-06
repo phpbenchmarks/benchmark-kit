@@ -35,12 +35,10 @@ Go to [community page](http://www.phpbenchmarks.com/en/community) to see the Hal
 
 We do not follow semantic version for this repository. Here is an explanation about our versioning system:
 
-`W` Benchmarked component (Symfony, Laravel, Twig etc) major version
+`W` Benchmarked framework major version
 
-`X` Benchmarked component minor version
+`X` Benchmarked framework minor version
 
-`Y` Benchmarked component bugfix version
+`Y` Benchmarked framework bugfix version
 
-`Z` Benchmark type: `1` Hello World, `3` REST API, `4` Templating small overload, `5` Templating big overload
-
-Note that all components do not have all benchmark types.
+`Z` Benchmark type: `1` Hello World, `3` REST API

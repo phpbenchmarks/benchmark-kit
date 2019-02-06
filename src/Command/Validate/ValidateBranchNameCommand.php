@@ -41,7 +41,7 @@ class ValidateBranchNameCommand extends AbstractCommand
             $this->execAndGetOutput(
                 'cd ' . $this->getInstallationPath() . ' && ' . $cmd,
                 'Can\'t get git branch name.'
-            )[0];
+            )[0] ?? null;
         $expectedGitBranch =
             ComponentConfiguration::getComponentSlug()
             . '_'

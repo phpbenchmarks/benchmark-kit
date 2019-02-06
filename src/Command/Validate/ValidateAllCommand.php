@@ -27,6 +27,7 @@ class ValidateAllCommand extends AbstractCommand
             ->runCommand('validate:configuration:component:sourceCodeUrls')
             ->runCommand('validate:configuration:initBenchmark')
             ->runCommand('validate:configuration:responseBody')
-            ->runCommand('validate:configuration:vhost');
+            ->runCommand('validate:configuration:vhost')
+            ->runCommand('configure:readme');
     }
 }

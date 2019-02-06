@@ -42,7 +42,7 @@ class BenchmarkValidateCommand extends AbstractCommand
     {
         $url =
             'http://'
-            . $this->getHost($phpVersion)
+            . $this->getHost($phpVersion, false)
             . ComponentConfiguration::getBenchmarkUrl();
 
         $this

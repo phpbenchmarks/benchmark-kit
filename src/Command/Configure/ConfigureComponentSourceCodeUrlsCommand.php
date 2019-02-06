@@ -11,8 +11,10 @@ use App\{
 };
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureComponentCommand
+class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
 {
+    use DefineVariableTrait;
+
     protected function configure()
     {
         parent::configure();
@@ -63,7 +65,8 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureComponent
                 $url['variable'],
                 function () use ($url) {
                     return $url['url'];
-                }
+                },
+                $this->getConfigurationPath() . '/AbstractComponentConfiguration.php'
             );
         }
 
