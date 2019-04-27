@@ -103,7 +103,7 @@ class BenchmarkType
 
     public static function getUpperCamelCaseName(int $type): string
     {
-        return static::getConfiguration($type, 'upperCamelCase');
+        return static::getConfiguration($type, 'upperCamelCaseName');
     }
 
     public static function getDefaultBenchmarkUrl(int $type): string
