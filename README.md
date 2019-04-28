@@ -8,7 +8,7 @@ Benchmark kit is a tool to add a framework or a template engine benchmark on [ph
 
 Documentation
 -
-
+ * [Changelog](changelog.md)
  * [Understand repositories and branches](documentation/repositoriesAndBranches.md)
 
 Requirements
@@ -26,7 +26,7 @@ Installation
 # you can install it where you want, ~/benchmarkKit used for the example
 mkdir ~/benchmarkKit
 cd ~/benchmarkKit
-echo '{"require": {"phpbenchmarks/benchmark-kit": "^2.0"}}' > composer.json
+echo '{"require": {"phpbenchmarks/benchmark-kit": "^3.0"}}' > composer.json
 
 # you can use your local composer installation, of the official Docker container
 docker run --rm -v $(pwd):/app composer/composer update --no-dev
@@ -101,7 +101,8 @@ You can call `configure:all` to create all of them, or use the one your need.
 
 Note the `phpbench composer:update` command. We need a `composer.lock` per PHP version,
 because some dependencies are installed in different versions depending on the version of PHP.
-Use `phpbench composer:update` to switch between PHP version, and create `composer.lock.phpX.Y`.
+
+Use `phpbench composer:update` to switch between PHP version, and create `.phpbenchmarks/composer.lock.phpX.Y`.
 
 ```bash
 phpbench composer:update
@@ -116,7 +117,7 @@ Choose the component type and benchmark type you want to code:
 
 * Framework
   * [Hello world benchmark](documentation/framework/helloWorld.md)
-  * REST API benchmark (coming soon)
+  * [REST API benchmark](documentation/framework/restApi.md)
 * Template engine
   * Hello world benchmark (coming soon)
 
