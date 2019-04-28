@@ -59,7 +59,14 @@ class BenchmarkValidateCommand extends AbstractCommand
         $this
             ->title('Validation of ' . $urlWithPort)
             ->definePhpCliVersion($phpVersion)
-            ->exec('cd /var/www/phpbenchmarks && ./.phpbenchmarks/initBenchmark.sh')
+            ->exec(
+                'cd '
+                . $this->getInstallationPath()
+                . ' && cp .phpbenchmarks/composer.lock.php'
+                . $phpVersion
+                . ' composer.lock'
+            )
+            ->exec('cd ' . $this->getInstallationPath() . ' && ./.phpbenchmarks/initBenchmark.sh')
             ->success('.phpbenchmarks/initBenchmark.sh executed.');
 
         $curl = curl_init();

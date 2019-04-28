@@ -26,7 +26,7 @@ Installation
 # you can install it where you want, ~/benchmarkKit used for the example
 mkdir ~/benchmarkKit
 cd ~/benchmarkKit
-echo '{"require": {"phpbenchmarks/benchmark-kit": "^3.0"}}' > composer.json
+echo '{"require": {"phpbenchmarks/benchmark-kit": "^3.0.1"}}' > composer.json
 
 # you can use your local composer installation, of the official Docker container
 docker run --rm -v $(pwd):/app composer/composer update --no-dev

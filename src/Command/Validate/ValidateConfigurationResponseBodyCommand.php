@@ -32,11 +32,13 @@ class ValidateConfigurationResponseBodyCommand extends AbstractCommand
             $filePath = $this->getResponseBodyPath() . '/' . $file;
             $fileRelativePath = '.phpbenchmarks/responseBody/' . $file;
             $this->assertFileExist($filePath, $fileRelativePath);
-            // 7,621 is the smallest size possible for the final json, without any space or new line
+
+            $minSize = BenchmarkType::getResponseBodyFileMinSize(ComponentConfiguration::getBenchmarkType());
+            $minSizeFormated = number_format($minSize, 0, '.', ',');
             $fileSize = filesize($filePath);
-            ($fileSize < 7621)
-                ? $this->error('File ' . $fileRelativePath . ' size must be at least 7,621 bytes.')
-                : $this->success('File ' . $fileRelativePath . ' size is >= 7,621 bytes.');
+            ($fileSize < $minSize)
+                ? $this->error('File ' . $fileRelativePath . ' size must be at least ' . $minSizeFormated . ' bytes.')
+                : $this->success('File ' . $fileRelativePath . ' size is >= ' . $minSizeFormated . ' bytes.');
         }
 
         return $this;

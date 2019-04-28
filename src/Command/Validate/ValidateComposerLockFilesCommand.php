@@ -18,7 +18,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
         $this
             ->setName('validate:composer:lock')
-            ->setDescription('Validate dependencies in composer.lock.phpX.Y')
+            ->setDescription('Validate dependencies in .phpbenchmarks/composer.lock.phpX.Y')
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
 
@@ -41,8 +41,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
         foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
             $this->title('Validation of .phpbenchmarks/composer.lock.php' . $phpVersion);
 
-            $lockFile = 'composer.lock.php' . $phpVersion;
-            $lockPath = $this->getInstallationPath() . '/' . $lockFile;
+            $lockPath = $this->getInstallationPath() . '/.phpbenchmarks/composer.lock.php' . $phpVersion;
             is_file($lockPath)
                 ?
                     $this->error(

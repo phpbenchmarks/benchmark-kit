@@ -26,7 +26,7 @@ class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
                 false,
                 'File has been created but is very basic. Don\'t forget to edit it.'
             )
-            ->exec('chmod +x /var/www/phpbenchmarks/.phpbenchmarks/initBenchmark.sh')
+            ->exec('chmod +x ' . $this->getInstallationPath() . '/.phpbenchmarks/initBenchmark.sh')
             ->success('Make .phpbenchmarks/initBenchmark.sh executable.')
             ->runCommand('validate:configuration:initBenchmark');
 
