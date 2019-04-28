@@ -43,7 +43,7 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
 
     protected function createVhostFile(string $phpVersionWithoutDot): self
     {
-        $source = '/var/www/phpbenchmarks/.phpbenchmarks/vhost.conf';
+        $source = $this->getInstallationPath() . '/.phpbenchmarks/vhost.conf';
         $destination = $this->getVhostFilePath($phpVersionWithoutDot);
         $copied = copy($source, $destination);
         if ($copied === false) {

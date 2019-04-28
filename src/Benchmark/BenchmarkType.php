@@ -20,6 +20,7 @@ class BenchmarkType
             'slug' => 'hello-world',
             'defaultBenchmarkUrl' => '/benchmark/helloworld',
             'responseBodyFiles' => ['responseBody.txt'],
+            'responseBodyFileMinSize' => 13,
             'sourceCodeUrlIds' => ['route', 'controller']
         ],
         self::REST_API => [
@@ -28,6 +29,7 @@ class BenchmarkType
             'slug' => 'rest-api',
             'defaultBenchmarkUrl' => '/benchmark/rest',
             'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
+            'responseBodyFileMinSize' => 7621,
             'sourceCodeUrlIds' => [
                 'route',
                 'controller',
@@ -114,6 +116,11 @@ class BenchmarkType
     public static function getResponseBodyFiles(int $type): array
     {
         return static::getConfiguration($type, 'responseBodyFiles');
+    }
+
+    public static function getResponseBodyFileMinSize(int $type): int
+    {
+        return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
     public static function getSourceCodeUrlIds(int $type): array

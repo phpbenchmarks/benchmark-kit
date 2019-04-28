@@ -1,3 +1,8 @@
+### [3.0.1](../../compare/3.0.0...3.0.1) - 2018-04-28
+
+- Fix responseBody file size verification.
+- Fix `.phpbenchmarks/composer.lock.php` was not copied to `composer.lock` before composer install.
+
 ### [3.0.0](../../compare/2.0.0...3.0.0) - 2018-04-28
 
 - Move `composer.lock.php*` to .phpbenchmarks directory.
