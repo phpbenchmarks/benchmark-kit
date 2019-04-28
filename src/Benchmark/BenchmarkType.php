@@ -29,7 +29,7 @@ class BenchmarkType
             'slug' => 'rest-api',
             'defaultBenchmarkUrl' => '/benchmark/rest',
             'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
-            'responseBodyFileMinSize' => 7621,
+            'responseBodyFileMinSize' => 7541,
             'sourceCodeUrlIds' => [
                 'route',
                 'controller',
