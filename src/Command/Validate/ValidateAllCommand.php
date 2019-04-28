@@ -8,7 +8,7 @@ use App\Command\AbstractCommand;
 
 class ValidateAllCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

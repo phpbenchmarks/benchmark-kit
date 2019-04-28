@@ -6,12 +6,13 @@ namespace App\Command\Configure;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
 class ConfigureResponseBodyCommand extends AbstractConfigureCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -20,7 +21,7 @@ class ConfigureResponseBodyCommand extends AbstractConfigureCommand
             ->setDescription('Create .phpbenchmarks/responseBody files');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $this
             ->title('Creation of .phpbenchmarks/responseBody files')

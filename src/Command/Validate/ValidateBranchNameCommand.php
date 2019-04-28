@@ -12,7 +12,7 @@ use App\{
 
 class ValidateBranchNameCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

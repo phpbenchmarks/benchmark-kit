@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Command\Validate;
 
 use App\{
+    Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
 
 class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -21,7 +22,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $phpVersion = $this->getInput()->getArgument('phpVersion');
         if (is_string($phpVersion) && in_array($phpVersion, PhpVersion::getAll()) === false) {
@@ -38,7 +39,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateDisabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of composer.lock.php' . $phpVersion);
+            $this->title('Validation of .phpbenchmarks/composer.lock.php' . $phpVersion);
 
             $lockFile = 'composer.lock.php' . $phpVersion;
             $lockPath = $this->getInstallationPath() . '/' . $lockFile;
@@ -57,9 +58,9 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateEnabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getEnabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of composer.lock.php' . $phpVersion);
+            $this->title('Validation of .phpbenchmarks/composer.lock.php' . $phpVersion);
 
-            $lockFile = 'composer.lock.php' . $phpVersion;
+            $lockFile = '.phpbenchmarks/composer.lock.php' . $phpVersion;
             $lockPath = $this->getInstallationPath() . '/' . $lockFile;
             if (is_readable($lockPath) === false) {
                 $this->error('File does not exist. Call "phpbench composer:update" to create it.');

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
+use App\Command\AbstractCommand;
+
 class ConfigureVhostCommand extends AbstractConfigureCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -15,7 +17,7 @@ class ConfigureVhostCommand extends AbstractConfigureCommand
             ->setDescription('Create .phpbenchmarks/vhost.conf, create phpXY.benchmark.loc vhosts and reload nginx');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $this
             ->title('Creation of .phpbenchmarks/vhost.conf')

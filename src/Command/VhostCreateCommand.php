@@ -11,7 +11,7 @@ use App\{
 
 class VhostCreateCommand extends AbstractComposerFilesCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

@@ -123,7 +123,7 @@ fi
 
 currentAction=
 
-lastConfigurationPath="$(dirname $0)/var/lastConfiguration.sh"
+lastConfigurationPath="$KIT_ROOT_PATH/var/lastConfiguration.sh"
 if [ -f "$lastConfigurationPath" ]; then
     source $lastConfigurationPath
 fi

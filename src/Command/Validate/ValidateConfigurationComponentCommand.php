@@ -14,7 +14,7 @@ use App\{
 
 class ValidateConfigurationComponentCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

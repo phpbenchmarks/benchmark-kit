@@ -50,7 +50,7 @@ abstract class AbstractCommand extends Command
         return $this->skipSourceCodeUrls;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('validate-prod', 'p', null, 'Validate data for prod instead of dev')

@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Command\Configure;
 
 use AbstractComponentConfiguration\AbstractComponentConfiguration;
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\{
+    Command\AbstractCommand,
+    ComponentConfiguration\ComponentConfiguration
+};
 
 class ConfigureReadmeCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -20,7 +23,7 @@ class ConfigureReadmeCommand extends AbstractConfigureCommand
             ->setDescription('Create README.md');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $this->title('Creation of README.md');
 

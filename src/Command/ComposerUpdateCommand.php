@@ -11,13 +11,15 @@ use App\{
 
 class ComposerUpdateCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
         $this
             ->setName('composer:update')
-            ->setDescription('Execute composer update for all enabled PHP versions and create composer.lock.phpX.Y')
+            ->setDescription(
+                'Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer.lock.phpX.Y'
+            )
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
 
@@ -32,9 +34,12 @@ class ComposerUpdateCommand extends AbstractCommand
                 ->exec('cd ' . $this->getInstallationPath() . ' && composer update --ansi')
                 ->success('Composer update done.')
                 ->exec(
-                    'cd ' . $this->getInstallationPath() . ' && mv composer.lock composer.lock.php' . $phpVersion
+                    'cd '
+                    . $this->getInstallationPath()
+                    . ' && mv composer.lock .phpbenchmarks/composer.lock.php'
+                    . $phpVersion
                 )
-                ->success('Moving composer.lock to composer.lock.php' . $phpVersion . '.');
+                ->success('Moving composer.lock to .phpbenchmarks/composer.lock.php' . $phpVersion . '.');
         }
 
         $this->runCommand('validate:composer:lock', ['phpVersion' => $this->getInput()->getArgument('phpVersion')]);

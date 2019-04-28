@@ -6,6 +6,7 @@ namespace App\Command\Configure;
 
 use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
+    Command\AbstractCommand,
     Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
     ComponentConfiguration\ComponentConfiguration
 };
@@ -15,7 +16,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -27,7 +28,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
             ->addOption('skip-component-creation', null, null, 'Skip component creation ()');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         if ($this->getInput()->getOption('skip-component-creation') === false) {
             $this->runCommand('configure:component');

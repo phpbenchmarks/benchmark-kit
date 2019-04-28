@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Command\Validate;
 
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\{
+    Command\AbstractCommand,
+    ComponentConfiguration\ComponentConfiguration
+};
 
 class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -17,7 +20,7 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
             ->setDescription('Validate dependencies in composer.json');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $this->title('Validation of composer.json');
 

@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\Command\Configure;
 
 use AbstractComponentConfiguration\AbstractComponentConfiguration;
-use App\{Benchmark\BenchmarkType,
+use App\{
+    Benchmark\BenchmarkType,
+    Command\AbstractCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
-    PhpVersion\PhpVersion};
+    PhpVersion\PhpVersion
+};
 
 class ConfigureComponentCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -23,7 +26,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
             ->setDescription('Create .phpbenchmarks/AbstractComponentConfiguration.php and configure it');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         $this
             ->title('Creation of .phpbenchmarks/AbstractComponentConfiguration.php')

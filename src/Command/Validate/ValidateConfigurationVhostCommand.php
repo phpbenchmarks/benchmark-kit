@@ -11,7 +11,7 @@ class ValidateConfigurationVhostCommand extends AbstractCommand
     /** @var ?string */
     protected $vhostContent;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
