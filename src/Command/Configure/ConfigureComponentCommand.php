@@ -176,7 +176,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
             $componentTypes
         );
 
-        $benchmarkTypes = BenchmarkType::getAll();
+        $benchmarkTypes = BenchmarkType::getByComponentType($componentType);
         $benchmarkType = array_search(
             $this->choiceQuestion('Benchmark type?', $benchmarkTypes),
             $benchmarkTypes

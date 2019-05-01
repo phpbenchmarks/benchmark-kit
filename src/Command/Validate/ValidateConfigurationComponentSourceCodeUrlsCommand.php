@@ -67,11 +67,14 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
                 . ' parameter to validate it.'
             );
         } else {
-            $expectedUrlIds = BenchmarkType::getSourceCodeUrlIds(ComponentConfiguration::getBenchmarkType());
+            $expectedUrlIds = BenchmarkType::getSourceCodeUrlIds(
+                ComponentConfiguration::getBenchmarkType(),
+                ComponentConfiguration::getComponentType()
+            );
             $urls = ComponentConfiguration::getSourceCodeUrls();
             foreach ($urls as $id => $url) {
                 if (in_array($id, $expectedUrlIds) === false) {
-                    $this->error('getSourceCodeUrls() return an array with unknown key ' . $id . '.');
+                    $this->error('getSourceCodeUrls() return an array with unknown key "' . $id . '".');
                 }
 
                 $violations = static::validateSourCodeUrl($url);
