@@ -1,3 +1,8 @@
+### [3.1.0](../../compare/3.0.2...3.1.0) - 2018-05-01
+
+- Add template engine kit
+- Fix source code urls questions
+
 ### [3.0.2](../../compare/3.0.1...3.0.2) - 2018-04-28
 
 - Change `responseBodyFileMinSize` for REST API for serializer who not escape `/`.

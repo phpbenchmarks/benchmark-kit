@@ -119,7 +119,7 @@ Choose the component type and benchmark type you want to code:
   * [Hello world benchmark](documentation/framework/helloWorld.md)
   * [REST API benchmark](documentation/framework/restApi.md)
 * Template engine
-  * Hello world benchmark (coming soon)
+  * [Hello world benchmark](documentation/templateEngine/helloWorld.md)
 
 Note that `all` component benchmarks needs to bo validated to make your component appear on [phpbenchmarks.com](http://www.phpbenchmarks.com).
 

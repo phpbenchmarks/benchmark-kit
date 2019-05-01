@@ -21,7 +21,11 @@ class BenchmarkType
             'defaultBenchmarkUrl' => '/benchmark/helloworld',
             'responseBodyFiles' => ['responseBody.txt'],
             'responseBodyFileMinSize' => 13,
-            'sourceCodeUrlIds' => ['route', 'controller']
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => ['entryPoint'],
+                ComponentType::FRAMEWORK => ['route', 'controller'],
+                ComponentType::TEMPLATE_ENGINE => ['entryPoint', 'template']
+            ]
         ],
         self::REST_API => [
             'name' => 'REST API',
@@ -31,13 +35,23 @@ class BenchmarkType
             'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
             'responseBodyFileMinSize' => 7541,
             'sourceCodeUrlIds' => [
-                'route',
-                'controller',
-                'randomizeLanguageDispatchEvent',
-                'randomizeLanguageEventListener',
-                'translations',
-                'translate',
-                'serialize'
+                ComponentType::PHP => [
+                    'entryPoint',
+                    'randomizeLanguageDispatchEvent',
+                    'randomizeLanguageEventListener',
+                    'translations',
+                    'translate',
+                    'serialize'
+                ],
+                ComponentType::FRAMEWORK => [
+                    'route',
+                    'controller',
+                    'randomizeLanguageDispatchEvent',
+                    'randomizeLanguageEventListener',
+                    'translations',
+                    'translate',
+                    'serialize'
+                ]
             ]
         ],
         self::TEMPLATING_SMALL_OVERLOAD => [
@@ -46,7 +60,9 @@ class BenchmarkType
             'slug' => 'templating-small-overload',
             'defaultBenchmarkUrl' => '/index.php',
             'responseBodyFiles' => ['responseBody.html'],
-            'sourceCodeUrlIds' => []
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => ['entryPoint']
+            ]
         ],
         self::TEMPLATING_BIG_OVERLOAD => [
             'name' => 'Template engine big overload',
@@ -54,7 +70,9 @@ class BenchmarkType
             'slug' => 'templating-big-overload',
             'defaultBenchmarkUrl' => '/index.php',
             'responseBodyFiles' => ['responseBody.html'],
-            'sourceCodeUrlIds' => []
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => ['entryPoint']
+            ]
         ]
     ];
 
@@ -75,6 +93,7 @@ class BenchmarkType
         return [
             ComponentType::PHP => [
                 static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD],
+                static::REST_API => $benchmarkTypes[static::REST_API],
                 static::TEMPLATING_SMALL_OVERLOAD => $benchmarkTypes[static::TEMPLATING_SMALL_OVERLOAD],
                 static::TEMPLATING_BIG_OVERLOAD => $benchmarkTypes[static::TEMPLATING_BIG_OVERLOAD]
             ],
@@ -123,9 +142,9 @@ class BenchmarkType
         return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
-    public static function getSourceCodeUrlIds(int $type): array
+    public static function getSourceCodeUrlIds(int $type, int $componentType): array
     {
-        return static::getConfiguration($type, 'sourceCodeUrlIds');
+        return static::getConfiguration($type, 'sourceCodeUrlIds')[$componentType];
     }
 
     /** @return mixed */

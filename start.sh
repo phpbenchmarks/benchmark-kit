@@ -54,7 +54,7 @@ function defineNginxPort {
     if [ "$lastNginxPort" != "" ]; then
         readonly defaultNginxPort="$lastNginxPort"
     else
-        readonly defaultNginxPort="80"
+        readonly defaultNginxPort="8080"
     fi
 
     echoAsk "nginx port? [$defaultNginxPort]"
