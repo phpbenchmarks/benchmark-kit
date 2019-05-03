@@ -17,14 +17,14 @@ class ValidateConfigurationInitBenchmarkCommand extends AbstractCommand
 
         $this
             ->setName('validate:configuration:initBenchmark')
-            ->setDescription('Validate .phpbenchmarks/initBenchmark.sh');
+            ->setDescription('Validate ' . $this->getInitBenchmarkFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of .phpbenchmarks/initBenchmark.sh')
-            ->assertFileExist($this->getConfigurationPath() . '/initBenchmark.sh', '.phpbenchmarks/initBenchmark.sh');
+            ->title('Validation of ' . $this->getInitBenchmarkFilePath(true))
+            ->assertFileExist($this->getInitBenchmarkFilePath(), $this->getInitBenchmarkFilePath(true));
 
         return $this;
     }

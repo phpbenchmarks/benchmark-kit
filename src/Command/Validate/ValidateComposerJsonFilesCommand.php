@@ -6,6 +6,7 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
 };
 
@@ -67,6 +68,10 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
 
     private function validateRequireComponent(array $data): self
     {
+        if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
+            return $this;
+        }
+
         if (is_null($data['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
             $this->error(
                 'It should require '

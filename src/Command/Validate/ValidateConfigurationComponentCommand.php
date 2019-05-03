@@ -20,13 +20,13 @@ class ValidateConfigurationComponentCommand extends AbstractCommand
 
         $this
             ->setName('validate:configuration:component')
-            ->setDescription('Validate .phpbenchmarks/AbstractComponentConfiguration.php');
+            ->setDescription('Validate ' . $this->getAbstractComponentConfigurationFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of .phpbenchmarks/AbstractComponentConfiguration.php')
+            ->title('Validation of ' . $this->getAbstractComponentConfigurationFilePath(true))
             ->assertInArray('getComponentType', ComponentType::getAll())
             ->assertCallMethod('getComponentName')
             ->assertCallMethod('getComponentSlug')

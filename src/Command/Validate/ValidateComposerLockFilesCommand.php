@@ -6,6 +6,7 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
@@ -18,12 +19,16 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
         $this
             ->setName('validate:composer:lock')
-            ->setDescription('Validate dependencies in .phpbenchmarks/composer.lock.phpX.Y')
+            ->setDescription('Validate dependencies in ' . $this->getComposerLockFilePath('X.Y', true))
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
 
     protected function doExecute(): AbstractCommand
     {
+        if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
+            return $this;
+        }
+
         $phpVersion = $this->getInput()->getArgument('phpVersion');
         if (is_string($phpVersion) && in_array($phpVersion, PhpVersion::getAll()) === false) {
             throw new \Exception('Invalid PHP version ' . $phpVersion . '.');
@@ -39,10 +44,8 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateDisabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of .phpbenchmarks/composer.lock.php' . $phpVersion);
-
-            $lockPath = $this->getInstallationPath() . '/.phpbenchmarks/composer.lock.php' . $phpVersion;
-            is_file($lockPath)
+            $this->title('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
+            is_file($this->getComposerLockFilePath($phpVersion))
                 ?
                     $this->error(
                         'File should not exist, as this PHP version is disabled by configuration.'
@@ -57,10 +60,9 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateEnabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getEnabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of .phpbenchmarks/composer.lock.php' . $phpVersion);
+            $this->title('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
 
-            $lockFile = '.phpbenchmarks/composer.lock.php' . $phpVersion;
-            $lockPath = $this->getInstallationPath() . '/' . $lockFile;
+            $lockPath = $this->getComposerLockFilePath($phpVersion);
             if (is_readable($lockPath) === false) {
                 $this->error('File does not exist. Call "phpbench composer:update" to create it.');
             }

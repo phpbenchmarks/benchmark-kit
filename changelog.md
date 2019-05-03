@@ -1,7 +1,7 @@
-### [3.1.0](../../compare/3.0.2...3.1.0) - 2018-05-01
+### [4.0.0](../../compare/3.0.2...4.0.0) - 2019-YY-ZZ
 
-- Add template engine kit
-- Fix source code urls questions
+- [BC Break] Move `composer.lock.phpX.Y` files from `.phpbenchmarks` to `.phpbenchmarks/composer`
+- Add ComponentType::JSON_SERIALIZER
 
 ### [3.0.2](../../compare/3.0.1...3.0.2) - 2018-04-28
 

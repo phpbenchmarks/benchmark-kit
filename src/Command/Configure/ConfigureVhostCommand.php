@@ -14,13 +14,15 @@ class ConfigureVhostCommand extends AbstractConfigureCommand
 
         $this
             ->setName('configure:vhost')
-            ->setDescription('Create .phpbenchmarks/vhost.conf, create phpXY.benchmark.loc vhosts and reload nginx');
+            ->setDescription(
+                'Create ' . $this->getVhostFilePath(true) . ' and phpXY.benchmark.loc vhosts then reload nginx'
+            );
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of .phpbenchmarks/vhost.conf')
+            ->title('Creation of ' . $this->getVhostFilePath(true))
             ->copyDefaultConfigurationFile('vhost.conf')
             ->runCommand('validate:configuration:vhost')
             ->runCommand('vhost:create');

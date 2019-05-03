@@ -1,29 +1,27 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\ComponentConfiguration;
 
 interface ComponentConfigurationInterface
 {
-    public static function getComponentType(): int;
-    public static function getComponentName(): string;
-    public static function getComponentSlug(): string;
+    public static function getComponentType();
+    public static function getComponentName();
+    public static function getComponentSlug();
 
-    public static function isPhp56Enabled(): bool;
-    public static function isPhp70Enabled(): bool;
-    public static function isPhp71Enabled(): bool;
-    public static function isPhp72Enabled(): bool;
-    public static function isPhp73Enabled(): bool;
+    public static function isPhp56Enabled();
+    public static function isPhp70Enabled();
+    public static function isPhp71Enabled();
+    public static function isPhp72Enabled();
+    public static function isPhp73Enabled();
 
-    public static function getBenchmarkUrl(): string;
+    public static function getBenchmarkUrl();
 
-    public static function getCoreDependencyName(): string;
-    public static function getCoreDependencyMajorVersion(): int;
-    public static function getCoreDependencyMinorVersion(): int;
-    public static function getCoreDependencyPatchVersion(): int;
+    public static function getCoreDependencyName();
+    public static function getCoreDependencyMajorVersion();
+    public static function getCoreDependencyMinorVersion();
+    public static function getCoreDependencyPatchVersion();
 
-    public static function getBenchmarkType(): int;
+    public static function getBenchmarkType();
 
-    public static function getSourceCodeUrls(): array;
+    public static function getSourceCodeUrls();
 }

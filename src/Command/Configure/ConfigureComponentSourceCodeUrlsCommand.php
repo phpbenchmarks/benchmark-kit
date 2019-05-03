@@ -24,7 +24,9 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
         $this
             ->setName('configure:component:sourceCodeUrls')
             ->setDescription(
-                'Create .phpbenchmarks/AbstractComponentConfiguration.php and configure getSourceCodeUrls()'
+                'Create '
+                . $this->getAbstractComponentConfigurationFilePath(true)
+                . ' and configure getSourceCodeUrls()'
             )
             ->addOption('skip-component-creation', null, null, 'Skip component creation ()');
     }
@@ -150,6 +152,42 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
             'serialize' => [
                 'question' => 'URL to code who serialize User?',
                 'variable' => '____PHPBENCHMARKS_SERIALIZE_SOURCE_CODE_URL____'
+            ],
+            'jsonSerialization' => [
+                'question' => 'URL to code who serialize data into JSON?',
+                'variable' => '____PHPBENCHMARKS_JSON_SERIALIZATION_CODE_URL____'
+            ],
+            'integerSerialization' => [
+                'question' => 'URL to code who serialize integer?',
+                'variable' => '____PHPBENCHMARKS_INTEGER_SERIALIZATION_CODE_URL____'
+            ],
+            'floatSerialization' => [
+                'question' => 'URL to code who serialize float?',
+                'variable' => '____PHPBENCHMARKS_FLOAT_SERIALIZATION_CODE_URL____'
+            ],
+            'stringSerialization' => [
+                'question' => 'URL to code who serialize string?',
+                'variable' => '____PHPBENCHMARKS_STRING_SERIALIZATION_CODE_URL____'
+            ],
+            'booleanSerialization' => [
+                'question' => 'URL to code who serialize boolean?',
+                'variable' => '____PHPBENCHMARKS_BOOLEAN_SERIALIZATION_CODE_URL____'
+            ],
+            'nullSerialization' => [
+                'question' => 'URL to code who serialize null?',
+                'variable' => '____PHPBENCHMARKS_NULL_SERIALIZATION_CODE_URL____'
+            ],
+            'arraySerialization' => [
+                'question' => 'URL to code who serialize array?',
+                'variable' => '____PHPBENCHMARKS_ARRAY_SERIALIZATION_CODE_URL____'
+            ],
+            'objectSerialization' => [
+                'question' => 'URL to code who serialize integer?',
+                'variable' => '____PHPBENCHMARKS_OBJECT_SERIALIZATION_CODE_URL____'
+            ],
+            'customSerializers' => [
+                'question' => 'URL to custom serializers?',
+                'variable' => '____PHPBENCHMARKS_CUSTOM_SERIALIZERS_CODE_URL____'
             ]
         ];
 

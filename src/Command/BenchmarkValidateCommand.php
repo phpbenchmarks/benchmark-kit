@@ -6,7 +6,9 @@ namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkType,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Command\Validate\ValidateComposerLockFilesCommand,
+    Component\ComponentType
 };
 
 class BenchmarkValidateCommand extends AbstractCommand
@@ -45,29 +47,49 @@ class BenchmarkValidateCommand extends AbstractCommand
 
     protected function validateForPhpVersion(string $phpVersion): self
     {
+        $benchmarkUrl = ComponentConfiguration::getBenchmarkUrl();
+        $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
+            ComponentConfiguration::getComponentType()
+        );
+        if (is_string($showResultsQueryParameter)) {
+            $benchmarkUrl .= (strpos($benchmarkUrl, '?') === false) ? '?' : '&';
+            $benchmarkUrl .= $showResultsQueryParameter;
+        }
+
         $url =
             'http://'
             . $this->getHost($phpVersion, false)
             . '/'
-            . ComponentConfiguration::getBenchmarkUrl();
+            . $benchmarkUrl;
+
         $urlWithPort =
             'http://'
             . $this->getHost($phpVersion)
             . '/'
-            . ComponentConfiguration::getBenchmarkUrl();
+            . $benchmarkUrl;
 
         $this
             ->title('Validation of ' . $urlWithPort)
             ->definePhpCliVersion($phpVersion)
             ->exec(
+                'cp '
+                . $this->getComposerLockFilePath($phpVersion)
+                . ' '
+                . $this->getInstallationPath()
+                . '/composer.lock'
+            )
+            ->exec(
                 'cd '
                 . $this->getInstallationPath()
-                . ' && cp .phpbenchmarks/composer.lock.php'
-                . $phpVersion
-                . ' composer.lock'
+                . ' && ./'
+                . $this->getInitBenchmarkFilePath(true)
             )
-            ->exec('cd ' . $this->getInstallationPath() . ' && ./.phpbenchmarks/initBenchmark.sh')
-            ->success('.phpbenchmarks/initBenchmark.sh executed.');
+            ->exec(
+                'rm '
+                . $this->getInstallationPath()
+                . '/composer.lock'
+            )
+            ->success($this->getInitBenchmarkFilePath(true) . ' executed.');
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -102,7 +124,7 @@ class BenchmarkValidateCommand extends AbstractCommand
             file_put_contents('/tmp/benchmark.body', $body);
             $this
                 ->warning('You canse use "diff /tmp/benchmark.body ' . $responseFile . '" to view differences.')
-                ->error('Invalid body, it should be equal to a file in .phpbenchmarks/responseBody.');
+                ->error('Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.');
         }
 
         return $this;

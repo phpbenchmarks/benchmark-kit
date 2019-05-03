@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\{Benchmark\BenchmarkType,
+use App\{
+    Benchmark\BenchmarkType,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     Exception\HiddenValidationException,
-    Exception\ValidationException};
+    Exception\ValidationException
+};
 use Symfony\Component\Console\{
     Command\Command,
     Input\ArrayInput,
@@ -139,14 +141,39 @@ abstract class AbstractCommand extends Command
         return '/var/www/phpbenchmarks';
     }
 
-    protected function getConfigurationPath(): string
+    protected function getConfigurationPath(bool $relative = false): string
     {
-        return $this->getInstallationPath() . '/.phpbenchmarks';
+        return ($relative ? null: $this->getInstallationPath() . '/') . '.phpbenchmarks';
     }
 
-    protected function getResponseBodyPath(): string
+    protected function getResponseBodyPath(bool $relative = false): string
     {
-        return $this->getConfigurationPath() . '/responseBody';
+        return $this->getConfigurationPath($relative) . '/responseBody';
+    }
+
+    protected function getComposerPath(bool $relative = false): string
+    {
+        return $this->getConfigurationPath($relative) . '/composer';
+    }
+
+    protected function getAbstractComponentConfigurationFilePath(bool $relative = false): string
+    {
+        return $this->getConfigurationPath($relative) . '/AbstractComponentConfiguration.php';
+    }
+
+    protected function getInitBenchmarkFilePath(bool $relative = false): string
+    {
+        return $this->getConfigurationPath($relative) . '/initBenchmark.sh';
+    }
+
+    protected function getVhostFilePath(bool $relative = false): string
+    {
+        return $this->getConfigurationPath($relative) . '/vhost.conf';
+    }
+
+    protected function getComposerLockFilePath(string $version, bool $relative = false): string
+    {
+        return $this->getComposerPath($relative) . '/composer.lock.php' . $version;
     }
 
     protected function getDefaultConfigurationPath(int $componentType = null): string
@@ -154,7 +181,7 @@ abstract class AbstractCommand extends Command
         return
             __DIR__
             . '/../DefaultConfiguration/'
-            . ComponentType::getCamelCaseName($componentType ?? ComponentConfiguration::getComponentType())
+            . ComponentType::getUpperCamelCaseName($componentType ?? ComponentConfiguration::getComponentType())
             . '/MainRepository';
     }
 

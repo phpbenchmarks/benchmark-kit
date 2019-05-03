@@ -86,15 +86,16 @@ To make your benchmark work you will need some files into `.phpbenchmarks` direc
 All this files can be created and configured with `phpbench` commands:
 
 ```
-composer:update                     Execute composer update for all enabled PHP versions and create composer.lock.phpX.Y
+composer:update                     Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer/composer.lock.phpX.Y
 
 configure:all                       Call all configure commands
 configure:component                 Create .phpbenchmarks/AbstractComponentConfiguration.php and configure it
 configure:component:sourceCodeUrls  Create .phpbenchmarks/AbstractComponentConfiguration.php and configure getSourceCodeUrls()
-configure:directory                 Create .phpbenchmarks and .phpbenchmarks/responseBody directories
+configure:directory                 Create .phpbenchmarks directory and subdirectories
 configure:initBenchmark             Create .phpbenchmarks/initBenchmark.sh
+configure:readme                    Create README.md
 configure:responseBody              Create .phpbenchmarks/responseBody files
-configure:vhost                     Create .phpbenchmarks/vhost.conf, create phpXY.benchmark.loc vhosts and reload nginx
+configure:vhost                     Create .phpbenchmarks/vhost.conf and phpXY.benchmark.loc vhosts then reload nginx
 ```
 
 You can call `configure:all` to create all of them, or use the one your need.
@@ -102,12 +103,25 @@ You can call `configure:all` to create all of them, or use the one your need.
 Note the `phpbench composer:update` command. We need a `composer.lock` per PHP version,
 because some dependencies are installed in different versions depending on the version of PHP.
 
-Use `phpbench composer:update` to switch between PHP version, and create `.phpbenchmarks/composer.lock.phpX.Y`.
+Use `phpbench composer:update` to switch between PHP version, and create `.phpbenchmarks/composer/composer.lock.phpX.Y`.
 
 ```bash
 phpbench composer:update
 # you can specify a version of php
 phpbench composer:update 7.1
+```
+
+You can validate each part of your configuration with `phpbench` commands:
+```
+validate:all                                     Call all validate commands
+validate:branch:name                             Validate branch name: component_X.Y_benchmark-type_prepare
+validate:composer:json                           Validate dependencies in composer.json
+validate:composer:lock                           Validate dependencies in .phpbenchmarks/composer/composer.lock.phpX.Y
+validate:configuration:component                 Validate .phpbenchmarks/AbstractComponentConfiguration.php
+validate:configuration:component:sourceCodeUrls  Validate .phpbenchmarks/AbstractComponentConfiguration.php::getSourceCodeUrls()
+validate:configuration:initBenchmark             Validate .phpbenchmarks/initBenchmark.sh
+validate:configuration:responseBody              Validate .phpbenchmarks/responseBody files
+validate:configuration:vhost                     Validate .phpbenchmarks/vhost.conf
 ```
 
 #4 Add required features for benchmarks

@@ -37,13 +37,17 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
 
         $this
             ->setName('validate:configuration:component:sourceCodeUrls')
-            ->setDescription('Validate .phpbenchmarks/AbstractComponentConfiguration.php::getSourceCodeUrls()');
+            ->setDescription(
+                'Validate ' . $this->getAbstractComponentConfigurationFilePath(true) . '::getSourceCodeUrls()'
+            );
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of .phpbenchmarks/AbstractComponentConfiguration.php::getSourceCodeUrls()')
+            ->title(
+                'Validation of ' . $this->getAbstractComponentConfigurationFilePath(true) . '::getSourceCodeUrls()'
+            )
             ->assertCodeSourceUrls();
 
         return $this;
@@ -97,7 +101,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
             $missingIds = array_diff($expectedUrlIds, array_keys($urls));
             if (count($missingIds) > 0) {
                 $this->error(
-                    'getSourceCodeUrls() return an array missing the key'
+                    'getSourceCodeUrls() return an array with missing key'
                     . (count($missingIds) === 1 ? null : 's')
                     . ' '
                     . implode(', ', $missingIds)
