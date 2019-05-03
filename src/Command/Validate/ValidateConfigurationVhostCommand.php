@@ -17,24 +17,19 @@ class ValidateConfigurationVhostCommand extends AbstractCommand
 
         $this
             ->setName('validate:configuration:vhost')
-            ->setDescription('Validate .phpbenchmarks/vhost.conf');
+            ->setDescription('Validate ' . $this->getVhostFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of .phpbenchmarks/vhost.conf')
-            ->assertFileExist($this->getVhostFilePath(), '.phpbenchmarks/vhost.conf')
+            ->title('Validation of ' . $this->getVhostFilePath(true))
+            ->assertFileExist($this->getVhostFilePath(), $this->getVhostFilePath(true))
             ->assertContainsVariable('____HOST____')
             ->assertContainsVariable('____INSTALLATION_PATH____')
             ->assertContainsVariable('____PHP_FPM_SOCK____');
 
         return $this;
-    }
-
-    protected function getVhostFilePath(): string
-    {
-        return $this->getConfigurationPath() . '/vhost.conf';
     }
 
     protected function assertContainsVariable(string $name): self

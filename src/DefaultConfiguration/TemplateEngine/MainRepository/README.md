@@ -8,7 +8,7 @@
 
 You will find lot of benchmarks for PHP frameworks and template engines on [phpbenchmarks.com](http://www.phpbenchmarks.com).
 
-Benchmarks results are available for Apache Bench and Siege, and PHP 5.6 to 7.3.
+Benchmarks results are available from PHP 5.6 to latest version.
 
 Our benchmarking protocol is available on [benchmarking protocol page](http://www.phpbenchmarks.com/en/documentation/benchmarking-protocol).
 

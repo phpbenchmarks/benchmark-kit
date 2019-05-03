@@ -14,29 +14,35 @@ class ConfigureDirectoryCommand extends AbstractCommand
 
         $this
             ->setName('configure:directory')
-            ->setDescription('Create .phpbenchmarks and .phpbenchmarks/responseBody directories');
+            ->setDescription('Create ' . $this->getConfigurationPath(true) . ' directory and subdirectories');
     }
 
     protected function doExecute(): parent
     {
-        if (is_dir($this->getConfigurationPath()) === false || is_dir($this->getResponseBodyPath()) === false) {
-            $this->title('Creation of .phpbenchmarks directory');
+        if (
+            is_dir($this->getConfigurationPath()) === false
+            || is_dir($this->getResponseBodyPath()) === false
+            || is_dir($this->getComposerPath()) === false
+        ) {
+            $this->title('Creation of ' . $this->getConfigurationPath(true) . ' directory and subdirectories');
 
-            if (is_dir($this->getConfigurationPath()) === false) {
-                $created = mkdir($this->getConfigurationPath());
-                if ($created === false) {
-                    $this->error('Cannot create .phpbenchmarks directory.');
-                }
-                $this->success('.phpbenchmarks directory created.');
-            }
+            $this
+                ->createDirectory($this->getConfigurationPath())
+                ->createDirectory($this->getResponseBodyPath())
+                ->createDirectory($this->getComposerPath());
+        }
 
-            if (is_dir($this->getResponseBodyPath()) === false) {
-                $created = mkdir($this->getResponseBodyPath());
-                if ($created === false) {
-                    $this->error('Cannot create .phpbenchmarks/responseBody directory.');
-                }
-                $this->success('.phpbenchmarks/responseBody directory created.');
+        return $this;
+    }
+
+    protected function createDirectory(string $directory): self
+    {
+        if (is_dir($directory) === false) {
+            $created = mkdir($directory);
+            if ($created === false) {
+                $this->error('Cannot create ' . $directory . ' directory.');
             }
+            $this->success($directory . ' directory created.');
         }
 
         return $this;

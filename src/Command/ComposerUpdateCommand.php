@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\{
+    Command\Validate\ValidateComposerLockFilesCommand,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
@@ -18,7 +19,8 @@ class ComposerUpdateCommand extends AbstractCommand
         $this
             ->setName('composer:update')
             ->setDescription(
-                'Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer.lock.phpX.Y'
+                'Execute composer update for all enabled PHP versions and create '
+                . $this->getComposerLockFilePath('X.Y', true)
             )
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
@@ -36,10 +38,14 @@ class ComposerUpdateCommand extends AbstractCommand
                 ->exec(
                     'cd '
                     . $this->getInstallationPath()
-                    . ' && mv composer.lock .phpbenchmarks/composer.lock.php'
-                    . $phpVersion
+                    . ' && mv composer.lock '
+                    . $this->getComposerLockFilePath($phpVersion, true)
                 )
-                ->success('Moving composer.lock to .phpbenchmarks/composer.lock.php' . $phpVersion . '.');
+                ->success(
+                    'Move composer.lock to '
+                    . $this->getComposerLockFilePath($phpVersion, true)
+                    . '.'
+                );
         }
 
         $this->runCommand('validate:composer:lock', ['phpVersion' => $this->getInput()->getArgument('phpVersion')]);
@@ -59,7 +65,9 @@ class ComposerUpdateCommand extends AbstractCommand
                         ?
                             'PHP '
                             . $phpVersion
-                            . ' is disabled. Enable it into .phpbenchmarks/AbstractComponentConfiguration.php.'
+                            . ' is disabled. Enable it into '
+                            . $this->getAbstractComponentConfigurationFilePath(true)
+                            . '.'
                         : 'Invalid PHP version ' . $phpVersion . '.'
                 );
             }

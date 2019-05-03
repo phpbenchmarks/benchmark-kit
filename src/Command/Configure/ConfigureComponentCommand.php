@@ -23,13 +23,17 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
 
         $this
             ->setName('configure:component')
-            ->setDescription('Create .phpbenchmarks/AbstractComponentConfiguration.php and configure it');
+            ->setDescription(
+                'Create '
+                . $this->getAbstractComponentConfigurationFilePath(true)
+                . ' and configure it'
+            );
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of .phpbenchmarks/AbstractComponentConfiguration.php')
+            ->title('Creation of ' . $this->getAbstractComponentConfigurationFilePath(true))
             ->createConfiguration()
             ->runCommand('validate:configuration:component');
 
@@ -185,9 +189,8 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
         $source =
             $this->getTypedDefaultConfigurationPath($componentType, $benchmarkType)
             . '/AbstractComponentConfiguration.php';
-        $destination = $this->getInstallationPath() . '/.phpbenchmarks/AbstractComponentConfiguration.php';
-        copy($source, $destination);
-        $this->success($destination . ' created.');
+        copy($source, $this->getAbstractComponentConfigurationFilePath());
+        $this->success($this->getAbstractComponentConfigurationFilePath(true) . ' created.');
 
         return $benchmarkType;
     }

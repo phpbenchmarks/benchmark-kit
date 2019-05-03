@@ -18,13 +18,13 @@ class ConfigureResponseBodyCommand extends AbstractConfigureCommand
 
         $this
             ->setName('configure:responseBody')
-            ->setDescription('Create .phpbenchmarks/responseBody files');
+            ->setDescription('Create ' . $this->getResponseBodyPath(true) . ' files');
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of .phpbenchmarks/responseBody files')
+            ->title('Creation of ' . $this->getResponseBodyPath(true) . ' files')
             ->copyResponseBodyFiles()
             ->runCommand('validate:configuration:responseBody');
 

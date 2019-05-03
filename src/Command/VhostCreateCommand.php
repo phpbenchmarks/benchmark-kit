@@ -36,15 +36,15 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
         return $this;
     }
 
-    protected function getVhostFilePath(string $phpVersionWithoutDot): string
+    protected function getPhpVersionVhostFilePath(string $phpVersionWithoutDot): string
     {
         return '/etc/nginx/sites-enabled/php' . $phpVersionWithoutDot . '.benchmark.loc.conf';
     }
 
     protected function createVhostFile(string $phpVersionWithoutDot): self
     {
-        $source = $this->getInstallationPath() . '/.phpbenchmarks/vhost.conf';
-        $destination = $this->getVhostFilePath($phpVersionWithoutDot);
+        $source = $this->getVhostFilePath();
+        $destination = $this->getPhpVersionVhostFilePath($phpVersionWithoutDot);
         $copied = copy($source, $destination);
         if ($copied === false) {
             $this->error('Error while copying ' . $source . ' to ' . $destination . '.');
@@ -56,7 +56,7 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
 
     protected function defineVhostVariables(string $phpVersion, string $phpVersionWithoutDot): self
     {
-        $vhostFile = $this->getVhostFilePath($phpVersionWithoutDot);
+        $vhostFile = $this->getPhpVersionVhostFilePath($phpVersionWithoutDot);
         $content = file_get_contents($vhostFile);
         if ($content === false) {
             $this->error('Error while reading ' . $vhostFile . '.');

@@ -14,20 +14,20 @@ class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
 
         $this
             ->setName('configure:initBenchmark')
-            ->setDescription('Create .phpbenchmarks/initBenchmark.sh');
+            ->setDescription('Create ' . $this->getInitBenchmarkFilePath(true));
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of .phpbenchmarks/initBenchmark.sh')
+            ->title('Creation of ' . $this->getInitBenchmarkFilePath(true))
             ->copyDefaultConfigurationFile(
                 'initBenchmark.sh',
                 false,
                 'File has been created but is very basic. Don\'t forget to edit it.'
             )
-            ->exec('chmod +x ' . $this->getInstallationPath() . '/.phpbenchmarks/initBenchmark.sh')
-            ->success('Make .phpbenchmarks/initBenchmark.sh executable.')
+            ->exec('chmod +x ' . $this->getInitBenchmarkFilePath())
+            ->success('Make ' . $this->getInitBenchmarkFilePath(true) . ' executable.')
             ->runCommand('validate:configuration:initBenchmark');
 
         return $this;

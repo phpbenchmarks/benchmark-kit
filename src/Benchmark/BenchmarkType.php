@@ -12,6 +12,9 @@ class BenchmarkType
     public const REST_API = 3;
     public const TEMPLATING_SMALL_OVERLOAD = 4;
     public const TEMPLATING_BIG_OVERLOAD = 5;
+    public const JSON_SERIALIZATION_HELLO_WORLD = 6;
+    public const JSON_SERIALIZATION_SMALL_OVERLOAD = 7;
+    public const JSON_SERIALIZATION_BIG_OVERLOAD = 8;
 
     protected const CONFIGURATIONS = [
         self::HELLO_WORLD => [
@@ -73,6 +76,90 @@ class BenchmarkType
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => ['entryPoint']
             ]
+        ],
+        self::TEMPLATING_BIG_OVERLOAD => [
+            'name' => 'Template engine big overload',
+            'upperCamelCaseName' => 'TemplateEngineBigOverload',
+            'slug' => 'templating-big-overload',
+            'defaultBenchmarkUrl' => '/index.php',
+            'responseBodyFiles' => ['responseBody.html'],
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => ['entryPoint']
+            ]
+        ],
+        self::JSON_SERIALIZATION_HELLO_WORLD => [
+            'name' => 'Serialization of Hello world',
+            'upperCamelCaseName' => 'JsonSerializationHelloWorld',
+            'slug' => 'json-serialization-hello-world',
+            'defaultBenchmarkUrl' => 'index.php',
+            'responseBodyFiles' => ['responseBody.json'],
+            'responseBodyFileMinSize' => 17,
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => ['jsonSerialization'],
+                ComponentType::JSON_SERIALIZER => ['jsonSerialization']
+            ]
+        ],
+        self::JSON_SERIALIZATION_SMALL_OVERLOAD => [
+            'name' => 'Small deserialization',
+            'upperCamelCaseName' => 'JsonSerializationSmallOverload',
+            'slug' => 'json-serialization-small-overload',
+            'defaultBenchmarkUrl' => 'index.php',
+            'responseBodyFiles' => ['responseBody.json'],
+            'responseBodyFileMinSize' => 512000,
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => [
+                    'jsonSerialization',
+                    'integerSerialization',
+                    'floatSerialization',
+                    'stringSerialization',
+                    'booleanSerialization',
+                    'nullSerialization',
+                    'arraySerialization',
+                    'objectSerialization'
+                ],
+                ComponentType::JSON_SERIALIZER => [
+                    'jsonSerialization',
+                    'integerSerialization',
+                    'floatSerialization',
+                    'stringSerialization',
+                    'booleanSerialization',
+                    'nullSerialization',
+                    'arraySerialization',
+                    'objectSerialization',
+                    'customSerializers'
+                ]
+            ]
+        ],
+        self::JSON_SERIALIZATION_BIG_OVERLOAD => [
+            'name' => 'Big deserialization',
+            'upperCamelCaseName' => 'JsonSerializationBigOverload',
+            'slug' => 'json-serialization-big-overload',
+            'defaultBenchmarkUrl' => 'index.php',
+            'responseBodyFiles' => ['responseBody.json'],
+            'responseBodyFileMinSize' => 5241001,
+            'sourceCodeUrlIds' => [
+                ComponentType::PHP => [
+                    'jsonSerialization',
+                    'integerSerialization',
+                    'floatSerialization',
+                    'stringSerialization',
+                    'booleanSerialization',
+                    'nullSerialization',
+                    'arraySerialization',
+                    'objectSerialization'
+                ],
+                ComponentType::JSON_SERIALIZER => [
+                    'jsonSerialization',
+                    'integerSerialization',
+                    'floatSerialization',
+                    'stringSerialization',
+                    'booleanSerialization',
+                    'nullSerialization',
+                    'arraySerialization',
+                    'objectSerialization',
+                    'customSerializers'
+                ]
+            ]
         ]
     ];
 
@@ -82,7 +169,19 @@ class BenchmarkType
             static::HELLO_WORLD => static::getConfiguration(static::HELLO_WORLD, 'name'),
             static::REST_API => static::getConfiguration(static::REST_API, 'name'),
             static::TEMPLATING_SMALL_OVERLOAD => static::getConfiguration(static::TEMPLATING_SMALL_OVERLOAD, 'name'),
-            static::TEMPLATING_BIG_OVERLOAD => static::getConfiguration(static::TEMPLATING_BIG_OVERLOAD, 'name')
+            static::TEMPLATING_BIG_OVERLOAD => static::getConfiguration(static::TEMPLATING_BIG_OVERLOAD, 'name'),
+            static::JSON_SERIALIZATION_HELLO_WORLD => static::getConfiguration(
+                static::JSON_SERIALIZATION_HELLO_WORLD,
+                'name'
+            ),
+            static::JSON_SERIALIZATION_SMALL_OVERLOAD => static::getConfiguration(
+                static::JSON_SERIALIZATION_SMALL_OVERLOAD,
+                'name'
+            ),
+            static::JSON_SERIALIZATION_BIG_OVERLOAD => static::getConfiguration(
+                static::JSON_SERIALIZATION_BIG_OVERLOAD,
+                'name'
+            )
         ];
     }
 
@@ -95,7 +194,10 @@ class BenchmarkType
                 static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD],
                 static::REST_API => $benchmarkTypes[static::REST_API],
                 static::TEMPLATING_SMALL_OVERLOAD => $benchmarkTypes[static::TEMPLATING_SMALL_OVERLOAD],
-                static::TEMPLATING_BIG_OVERLOAD => $benchmarkTypes[static::TEMPLATING_BIG_OVERLOAD]
+                static::TEMPLATING_BIG_OVERLOAD => $benchmarkTypes[static::TEMPLATING_BIG_OVERLOAD],
+                static::JSON_SERIALIZATION_HELLO_WORLD => $benchmarkTypes[static::JSON_SERIALIZATION_HELLO_WORLD],
+                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
+                static::JSON_SERIALIZATION_BIG_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_BIG_OVERLOAD]
             ],
             ComponentType::FRAMEWORK => [
                 static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD],
@@ -103,6 +205,11 @@ class BenchmarkType
             ],
             ComponentType::TEMPLATE_ENGINE => [
                 static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD]
+            ],
+            ComponentType::JSON_SERIALIZER => [
+                static::JSON_SERIALIZATION_HELLO_WORLD => $benchmarkTypes[static::JSON_SERIALIZATION_HELLO_WORLD],
+                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
+                static::JSON_SERIALIZATION_BIG_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_BIG_OVERLOAD]
             ]
         ];
     }

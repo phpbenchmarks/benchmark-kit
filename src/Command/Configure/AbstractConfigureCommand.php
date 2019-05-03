@@ -25,7 +25,10 @@ abstract class AbstractConfigureCommand extends AbstractCommand
 
         if (
             file_exists($destinationFile) === false
-            || $this->confirmationQuestion('.phpbenchmarks/' . $file . ' already exist. Overwrite it?', false)
+            || $this->confirmationQuestion(
+                $this->getConfigurationPath(true) . '/' . $file . ' already exist. Overwrite it?',
+                false
+            )
         ) {
             $copied = copy($sourceFile, $destinationFile);
             if ($copied === false) {
@@ -33,10 +36,13 @@ abstract class AbstractConfigureCommand extends AbstractCommand
                     'Error while copying '
                     . $sourceFile
                     . ' to '
-                    . '.phpbenchmarks/' . $file . '.'
+                    . $this->getConfigurationPath(true)
+                    . '/'
+                    . $file
+                    . '.'
                 );
             }
-            $this->success('.phpbenchmarks/' . $file . ' created.');
+            $this->success($this->getConfigurationPath(true) . '/' . $file . ' created.');
             if (is_string($copyWarning)) {
                 $this->warning($copyWarning);
             }
