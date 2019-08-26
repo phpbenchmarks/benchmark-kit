@@ -20,7 +20,7 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
             ->setDescription('Create nginx vhosts phpXY.benchmark.loc');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): AbstractCommand
     {
         foreach (PhpVersion::getAll() as $phpVersion) {
             $this->title('Create ' . $this->getHost($phpVersion) . ' virtual host');
