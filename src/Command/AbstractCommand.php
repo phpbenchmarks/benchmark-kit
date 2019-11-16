@@ -143,7 +143,7 @@ abstract class AbstractCommand extends Command
 
     protected function getConfigurationPath(bool $relative = false): string
     {
-        return ($relative ? null: $this->getInstallationPath() . '/') . '.phpbenchmarks';
+        return ($relative ? null : $this->getInstallationPath() . '/') . '.phpbenchmarks';
     }
 
     protected function getResponseBodyPath(bool $relative = false): string

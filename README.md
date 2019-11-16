@@ -6,36 +6,43 @@
 
 Benchmark kit is a tool to add a framework or a template engine benchmark on [phpbenchmarks.com](http://www.phpbenchmarks.com).
 
-Documentation
--
+## Documentation
+
  * [Changelog](changelog.md)
  * [Understand repositories and branches](documentation/repositoriesAndBranches.md)
 
-Requirements
--
+## Requirements
 
 You will need this dependencies to make it work:
 * Linux to use Docker and bash scripts
 * [Docker ^18.06](https://docs.docker.com/install/)
 * [docker-compose ^1.12](https://docs.docker.com/compose/install/)
 
-Installation
--
+## Installation
 
 ```bash
-# you can install it where you want, ~/benchmarkKit used for the example
+# You can install it where you want, ~/benchmarkKit used for the example
 mkdir ~/benchmarkKit
 cd ~/benchmarkKit
-echo '{"require": {"phpbenchmarks/benchmark-kit": "^3.0.2"}}' > composer.json
 
-# you can use your local composer installation, of the official Docker container
-docker run --rm -v $(pwd):/app composer/composer update --no-dev
-# in Docker container, composer update is called with root user, so change permissions to current user
-sudo chown -R $USER:$USER vendor
+# You can use your local composer installation, of the official Docker container
+docker run --rm -v $(pwd):/app --user ${UID}:${GROUPS[0]} composer/composer require phpbenchmarks/benchmark-kit 3.1.*
 ```
 
-Benchmark kit commands
--
+## Start Benchmark kit Docker container
+
+```bash
+./vendor/phpbenchmarks/benchmark-kit/bin/start
+```
+
+After starting container, you should be inside it in CLI.
+
+If you leave it, and want to re-enter:
+```bash
+./vendor/phpbenchmarks/benchmark-kit/bin/dockerBash
+```
+
+## Benchmark kit commands
 
 When you are inside benchmark kit Docker container, you can use `phpbench` to list benchmark kit commands.
 
@@ -48,8 +55,7 @@ Almost all commands accept this options:
 phpbench benchmark:validate --skip-branch-name --skip-source-code-urls
 ```
 
-#1 Ask us to create repositories
--
+## #1 Ask us to create repositories
 
 You can ask us to create repositories with [contact form](http://www.phpbenchmarks.com/en/contact?subject=create-benchmark-repositories).
 
@@ -59,8 +65,7 @@ and `your github username` to allow you to commit on this repositories.
 We will send you an email when repositories will be created.
 
 
-#2 Start benchmark kit
--
+## #2 Start benchmark kit
 
 To start benchmark kit Docker container, you have to call `./vendor/bin/start.sh`.
 
@@ -74,8 +79,7 @@ You can pass this directory as parameter to this script.
 ./vendor/bin/start.sh /foo/code
 ```
 
-#3 Initialize code
--
+## #3 Initialize code
 
 To make your benchmark work you will need some files into `.phpbenchmarks` directory:
 * `AbstractComponentConfiguration.php`: configuration of benchmarked component.
@@ -124,7 +128,7 @@ validate:configuration:responseBody              Validate .phpbenchmarks/respons
 validate:configuration:vhost                     Validate .phpbenchmarks/vhost.conf
 ```
 
-#4 Add required features for benchmarks
+## #4 Add required feaures for benchmarks
 -
 
 Choose the component type and benchmark type you want to code:
@@ -137,8 +141,7 @@ Choose the component type and benchmark type you want to code:
 
 Note that `all` component benchmarks needs to bo validated to make your component appear on [phpbenchmarks.com](http://www.phpbenchmarks.com).
 
-#5 Test and validate your code
--
+## #5 Test and validate your code
 
 Docker container provide a domain for each PHP version, from 5.6 to 7.3:
 * http://php56.benchmark.loc
@@ -151,8 +154,7 @@ You can use them to test your code.
 
 When you think it's ok, use `phpbench benchmark:validate` to validate it.
 
-#6 Submit your code
--
+## #6 Submit your code
 
 When `phpbench benchmark:validate` say it's good,
 you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact?subject=launch-benchmark).

@@ -1,3 +1,6 @@
+# This container should represent the benchmark server who is not dockerised
+# So everything is installed into one container
+
 FROM ubuntu:18.04
 
 RUN apt-get update \

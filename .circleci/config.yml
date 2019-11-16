@@ -1,0 +1,29 @@
+version: '2.1'
+
+jobs:
+    phpcs:
+        docker:
+            - image: steevanb/php-code-sniffs:3.0.0
+        working_directory: /var/phpcs
+        steps:
+            - checkout
+            - run:
+                  name: phpcs
+                  command: bin/phpcs
+
+    phpcf:
+        docker:
+            - image: steevanb/php-code-fixer:2.0.19
+        working_directory: /var/php-code-fixer
+        steps:
+            - checkout
+            - run:
+                  name: phpcf
+                  command: bin/phpcf
+
+workflows:
+    version: '2.1'
+    CI:
+        jobs:
+            - phpcs
+            - phpcf
