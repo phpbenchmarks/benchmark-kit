@@ -9,21 +9,22 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-class VhostCreateCommand extends AbstractComposerFilesCommand
+final class VhostCreateCommand extends AbstractComposerFilesCommand
 {
+    /** @var string */
+    protected static $defaultName = 'vhost:create';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('vhost:create')
-            ->setDescription('Create nginx vhosts phpXY.benchmark.loc');
+        $this->setDescription('Create nginx vhosts phpXY.benchmark.loc');
     }
 
     protected function doExecute(): AbstractCommand
     {
         foreach (PhpVersion::getAll() as $phpVersion) {
-            $this->title('Create ' . $this->getHost($phpVersion) . ' virtual host');
+            $this->outputTitle('Create ' . $this->getHost($phpVersion) . ' virtual host');
             $phpVersionWithoutDot = str_replace('.', null, $phpVersion);
 
             $this
@@ -31,35 +32,35 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
                 ->defineVhostVariables($phpVersion, $phpVersionWithoutDot);
         }
 
-        $this->nginxReload();
+        $this->reloadNginx();
 
         return $this;
     }
 
-    protected function getPhpVersionVhostFilePath(string $phpVersionWithoutDot): string
+    private function getPhpVersionVhostFilePath(string $phpVersionWithoutDot): string
     {
         return '/etc/nginx/sites-enabled/php' . $phpVersionWithoutDot . '.benchmark.loc.conf';
     }
 
-    protected function createVhostFile(string $phpVersionWithoutDot): self
+    private function createVhostFile(string $phpVersionWithoutDot): self
     {
         $source = $this->getVhostFilePath();
         $destination = $this->getPhpVersionVhostFilePath($phpVersionWithoutDot);
         $copied = copy($source, $destination);
         if ($copied === false) {
-            $this->error('Error while copying ' . $source . ' to ' . $destination . '.');
+            $this->throwError('Error while copying ' . $source . ' to ' . $destination . '.');
         }
-        $this->success('Create ' . $destination . '.');
+        $this->outputSuccess('Create ' . $destination . '.');
 
         return $this;
     }
 
-    protected function defineVhostVariables(string $phpVersion, string $phpVersionWithoutDot): self
+    private function defineVhostVariables(string $phpVersion, string $phpVersionWithoutDot): self
     {
         $vhostFile = $this->getPhpVersionVhostFilePath($phpVersionWithoutDot);
         $content = file_get_contents($vhostFile);
         if ($content === false) {
-            $this->error('Error while reading ' . $vhostFile . '.');
+            $this->throwError('Error while reading ' . $vhostFile . '.');
         }
 
         $host = $this->getHost($phpVersion, false);
@@ -70,23 +71,23 @@ class VhostCreateCommand extends AbstractComposerFilesCommand
 
         $writed = file_put_contents($vhostFile, $content);
         if ($writed === false) {
-            $this->error('Error while writing ' . $vhostFile . '.');
+            $this->throwError('Error while writing ' . $vhostFile . '.');
         }
 
         $this
-            ->success('____HOST____ replaced by ' . $host . '.')
-            ->success('____INSTALLATION_PATH____ replaced by ' . $this->getInstallationPath() . '.')
-            ->success('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
+            ->outputSuccess('____HOST____ replaced by ' . $host . '.')
+            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . $this->getInstallationPath() . '.')
+            ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
 
         return $this;
     }
 
-    protected function nginxReload(): self
+    private function reloadNginx(): self
     {
         $this
-            ->title('Reload nginx configuration')
+            ->outputTitle('Reload nginx configuration')
             ->exec('sudo /usr/sbin/service nginx reload')
-            ->success('Nginx configuration reloaded.');
+            ->outputSuccess('Nginx configuration reloaded.');
 
         return $this;
     }

@@ -10,30 +10,31 @@ use App\{
     ComponentConfiguration\ComponentConfiguration
 };
 
-class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
+final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:composer:json';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:composer:json')
-            ->setDescription('Validate dependencies in composer.json');
+        $this->setDescription('Validate dependencies in composer.json');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $this->title('Validation of composer.json');
+        $this->outputTitle('Validation of composer.json');
 
         $composerJsonFile = $this->getInstallationPath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
-            $this->error('File does not exist.');
+            $this->throwError('File does not exist.');
         }
 
         try {
             $data = json_decode(file_get_contents($composerJsonFile), true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
-            $this->error('Error while parsing: ' . $e->getMessage());
+            $this->throwError('Error while parsing: ' . $e->getMessage());
         }
 
         $this
@@ -48,9 +49,9 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
     private function validateName(array $data): self
     {
         ($data['name'] ?? null) === 'phpbenchmarks/' . ComponentConfiguration::getComponentSlug()
-            ? $this->success('Name ' . $data['name'] . ' is valid.')
+            ? $this->outputSuccess('Name ' . $data['name'] . ' is valid.')
             :
-                $this->error(
+                $this->throwError(
                     'Repository name must be "phpbenchmarks/' . ComponentConfiguration::getComponentSlug() . '".'
                 );
 
@@ -60,8 +61,8 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
     private function validateLicense(array $data): self
     {
         ($data['license'] ?? null) === 'proprietary'
-            ? $this->success('License ' . $data['license'] . ' is valid.')
-            : $this->error('License must be "proprietary".');
+            ? $this->outputSuccess('License ' . $data['license'] . ' is valid.')
+            : $this->throwError('License must be "proprietary".');
 
         return $this;
     }
@@ -73,7 +74,7 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
         }
 
         if (is_null($data['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
-            $this->error(
+            $this->throwError(
                 'It should require '
                 . ComponentConfiguration::getCoreDependencyName()
                 . '. See README.md for more informations.'
@@ -86,7 +87,7 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
             || $data['require'][ComponentConfiguration::getCoreDependencyName()]
                 === 'v' . ComponentConfiguration::getCoreDependencyVersion()
         ) {
-            $this->success(
+            $this->outputSuccess(
                 'Require '
                 . ComponentConfiguration::getCoreDependencyName()
                 . ': '
@@ -94,7 +95,7 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
                 . '.'
             );
         } else {
-            $this->error(
+            $this->throwError(
                 'It should require '
                 . ComponentConfiguration::getCoreDependencyName()
                 . ': '
@@ -122,11 +123,11 @@ class ValidateComposerJsonFilesCommand extends AbstractComposerFilesCommand
             }
 
             $isBranchValid
-                ? $this->success('Require ' . $commonRepository . ': ' . $branch . '.')
+                ? $this->outputSuccess('Require ' . $commonRepository . ': ' . $branch . '.')
                 :
                     $this
-                        ->warning('You can add --skip-branch-name parameter to skip this validation.')
-                        ->error(
+                        ->outputWarning('You can add --skip-branch-name parameter to skip this validation.')
+                        ->throwError(
                             'It should require '
                             . $commonRepository
                             . ': '

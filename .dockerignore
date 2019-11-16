@@ -1,0 +1,7 @@
+/.circleci/
+/var/
+/.gitignore
+/composer.json
+/composer.lock
+/phpcs.bootstrap.local.php
+/phpcs.bootstrap.php

@@ -4,51 +4,49 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
     ComponentConfiguration\ComponentConfiguration
 };
+use PhpBenchmarks\BenchmarkConfiguration\Configuration;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
+final class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
+
+    /** @var string */
+    protected static $defaultName = 'configure:configuration-class:source-code-urls';
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setName('configure:component:sourceCodeUrls')
-            ->setDescription(
-                'Create '
-                . $this->getAbstractComponentConfigurationFilePath(true)
-                . ' and configure getSourceCodeUrls()'
-            )
-            ->addOption('skip-component-creation', null, null, 'Skip component creation ()');
+            ->setDescription('Create ' . $this->getConfigurationFilePath(true) . ' and configure getSourceCodeUrls()')
+            ->addOption('skip-class-creation', null, null, 'Skip Configuration class creation');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        if ($this->getInput()->getOption('skip-component-creation') === false) {
-            $this->runCommand('configure:component');
+        if ($this->getInput()->getOption('skip-class-creation') === false) {
+            $this->runCommand(ConfigureConfigurationClassCommand::getDefaultName());
         }
 
         if ($this->skipSourceCodeUrls() === false) {
             $this
-                ->title('Configuration of AbstractComponentConfiguration::getSourceCodeUrls()')
+                ->outputTitle('Configuration of Configuration::getSourceCodeUrls()')
                 ->defineSourceCodeUrls();
         }
 
         return $this;
     }
 
-    protected function defineSourceCodeUrls(): self
+    private function defineSourceCodeUrls(): self
     {
-        $reflection = new \ReflectionClass(AbstractComponentConfiguration::class);
+        $reflection = new \ReflectionClass(Configuration::class);
         $method = $reflection->getMethod('getSourceCodeUrls');
 
         $classCode = file($reflection->getFileName());
@@ -70,14 +68,14 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
                 function () use ($url) {
                     return $url['url'];
                 },
-                $this->getConfigurationPath() . '/AbstractComponentConfiguration.php'
+                $this->getConfigurationFilePath()
             );
         }
 
         return $this;
     }
 
-    protected function getSourceCodeUrls(): array
+    private function getSourceCodeUrls(): array
     {
         $return = $this->getSourceCodeUrlsToAsk(
             ComponentConfiguration::getBenchmarkType(),
@@ -95,10 +93,10 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
                     foreach ($violations as $violation) {
                         $errors[] = $violation->getMessage();
                     }
-                    $this->warning(implode(', ', $errors));
+                    $this->outputWarning(implode(', ', $errors));
                 }
 
-                $url['url'] = $this->question(
+                $url['url'] = $this->askQuestion(
                     $url['question'],
                     substr($url['url'] ?? '', 0, 4) === '____' ? null : $url['url']
                 );
@@ -114,7 +112,7 @@ class ConfigureComponentSourceCodeUrlsCommand extends AbstractConfigureCommand
         return $return;
     }
 
-    protected function getSourceCodeUrlsToAsk(int $benchmarkType, int $componentType, array $defaultUrls): array
+    private function getSourceCodeUrlsToAsk(int $benchmarkType, int $componentType, array $defaultUrls): array
     {
         $availableUrls = [
             'entryPoint' => [

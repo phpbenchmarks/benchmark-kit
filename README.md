@@ -20,31 +20,36 @@ You will need this dependencies to make it work:
 
 ## Installation
 
+Add vhosts for each PHP version:
 ```bash
-# You can install it where you want, ~/benchmarkKit used for the example
-mkdir ~/benchmarkKit
-cd ~/benchmarkKit
-
-# You can use your local composer installation, of the official Docker container
-docker run --rm -v $(pwd):/app --user ${UID}:${GROUPS[0]} composer/composer require phpbenchmarks/benchmark-kit 3.1.*
+echo "127.0.0.1 php56.benchmark.loc" >> /etc/hosts
+echo "127.0.0.1 php70.benchmark.loc" >> /etc/hosts
+echo "127.0.0.1 php71.benchmark.loc" >> /etc/hosts
+echo "127.0.0.1 php72.benchmark.loc" >> /etc/hosts
+echo "127.0.0.1 php73.benchmark.loc" >> /etc/hosts
 ```
 
 ## Start Benchmark kit Docker container
 
 ```bash
-./vendor/phpbenchmarks/benchmark-kit/bin/start
-```
-
-After starting container, you should be inside it in CLI.
-
-If you leave it, and want to re-enter:
-```bash
-./vendor/phpbenchmarks/benchmark-kit/bin/dockerBash
+# If container is already running, you need to stop it mannualy
+docker stop phpbenchmarks_benchmark-kit
+docker run \
+    -p 127.0.0.1:8080:80 \
+    -e NGINX_PORT=8080 \
+    -v ~/dev/info-droid/phpbenchmarks/benchmark/cake-php:/var/www/benchmark \
+    -it \
+    -d \
+    --name=phpbenchmarks_benchmark-kit \
+    --rm \
+    phpbenchmarks/benchmark-kit
 ```
 
 ## Benchmark kit commands
 
-When you are inside benchmark kit Docker container, you can use `phpbench` to list benchmark kit commands.
+```bash
+docker exec -it phpbenchmarks_benchmark-kit bin/console
+```
 
 Almost all commands accept this options:
 * `--skip-branch-name`: don't validate git branch name, usefull while you are in development and repositories are not created yet.
@@ -52,7 +57,7 @@ Almost all commands accept this options:
 * `--validate-prod`: you should not need it, it's used when we test your code before benchmarking it.
 
 ```bash
-phpbench benchmark:validate --skip-branch-name --skip-source-code-urls
+docker exec -it phpbenchmarks_benchmark-kit benchmark:validate --skip-branch-name --skip-source-code-urls
 ```
 
 ## #1 Ask us to create repositories
@@ -82,7 +87,7 @@ You can pass this directory as parameter to this script.
 ## #3 Initialize code
 
 To make your benchmark work you will need some files into `.phpbenchmarks` directory:
-* `AbstractComponentConfiguration.php`: configuration of benchmarked component.
+* `Configuration.php`: configuration of benchmarked component.
 * `initBenchmark.sh`: called before the benchmark to initialize everything (composer install, cache warmup etc).
 * `vhost.conf`: nginx virtual host configuration.
 * `responseBody/`: benchmark url body will be compared to files in this directory to validate it's content.
@@ -93,8 +98,8 @@ All this files can be created and configured with `phpbench` commands:
 composer:update                     Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer/composer.lock.phpX.Y
 
 configure:all                       Call all configure commands
-configure:component                 Create .phpbenchmarks/AbstractComponentConfiguration.php and configure it
-configure:component:sourceCodeUrls  Create .phpbenchmarks/AbstractComponentConfiguration.php and configure getSourceCodeUrls()
+configure:component                 Create .phpbenchmarks/Configuration.php and configure it
+configure:component:sourceCodeUrls  Create .phpbenchmarks/Configuration.php and configure getSourceCodeUrls()
 configure:directory                 Create .phpbenchmarks directory and subdirectories
 configure:initBenchmark             Create .phpbenchmarks/initBenchmark.sh
 configure:readme                    Create README.md
@@ -121,8 +126,8 @@ validate:all                                     Call all validate commands
 validate:branch:name                             Validate branch name: component_X.Y_benchmark-type_prepare
 validate:composer:json                           Validate dependencies in composer.json
 validate:composer:lock                           Validate dependencies in .phpbenchmarks/composer/composer.lock.phpX.Y
-validate:configuration:component                 Validate .phpbenchmarks/AbstractComponentConfiguration.php
-validate:configuration:component:sourceCodeUrls  Validate .phpbenchmarks/AbstractComponentConfiguration.php::getSourceCodeUrls()
+validate:configuration:class                     Validate .phpbenchmarks/Configuration.php
+validate:configuration:class:sourceCodeUrls      Validate .phpbenchmarks/Configuration.php::getSourceCodeUrls()
 validate:configuration:initBenchmark             Validate .phpbenchmarks/initBenchmark.sh
 validate:configuration:responseBody              Validate .phpbenchmarks/responseBody files
 validate:configuration:vhost                     Validate .phpbenchmarks/vhost.conf

@@ -12,12 +12,12 @@ use App\{
 
 abstract class AbstractComposerFilesCommand extends AbstractCommand
 {
-    protected function getCommonRepositoryName()
+    protected function getCommonRepositoryName(): string
     {
         return 'phpbenchmarks/' . ComponentConfiguration::getComponentSlug() . '-common';
     }
 
-    protected function getCommonDevBranchName()
+    protected function getCommonDevBranchName(): string
     {
         return
             'dev-'
@@ -29,7 +29,7 @@ abstract class AbstractComposerFilesCommand extends AbstractCommand
             . '_prepare';
     }
 
-    protected function getCommonProdBranchPrefix()
+    protected function getCommonProdBranchPrefix(): string
     {
         return
             ComponentConfiguration::getCoreDependencyMajorVersion()

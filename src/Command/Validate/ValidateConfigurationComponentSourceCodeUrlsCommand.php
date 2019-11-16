@@ -17,8 +17,11 @@ use Symfony\Component\Validator\{
     Validation
 };
 
-class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractCommand
+final class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:configuration-class:source-code-urls';
+
     public static function validateSourCodeUrl($url): ConstraintViolationListInterface
     {
         return Validation::createValidator()->validate(
@@ -35,19 +38,13 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
     {
         parent::configure();
 
-        $this
-            ->setName('validate:configuration:component:sourceCodeUrls')
-            ->setDescription(
-                'Validate ' . $this->getAbstractComponentConfigurationFilePath(true) . '::getSourceCodeUrls()'
-            );
+        $this->setDescription('Validate ' . $this->getConfigurationFilePath(true) . '::getSourceCodeUrls()');
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title(
-                'Validation of ' . $this->getAbstractComponentConfigurationFilePath(true) . '::getSourceCodeUrls()'
-            )
+            ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true) . '::getSourceCodeUrls()')
             ->assertCodeSourceUrls();
 
         return $this;
@@ -56,16 +53,16 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
     protected function onError(): parent
     {
         $this
-            ->warning('You can call "phpbench configure:component:sourceCodeUrls" to configure it.')
-            ->warning('You can add --skip-source-code-urls parameter to skip this validation.');
+            ->outputWarning('You can call "phpbench configure:component:sourceCodeUrls" to configure it.')
+            ->outputWarning('You can add --skip-source-code-urls parameter to skip this validation.');
 
         return $this;
     }
 
-    protected function assertCodeSourceUrls(): self
+    private function assertCodeSourceUrls(): self
     {
         if ($this->skipSourceCodeUrls()) {
-            $this->warning(
+            $this->outputWarning(
                 'Code source urls are not validated.'
                 . ' Don\'t forget to remove --skip-source-code-urls'
                 . ' parameter to validate it.'
@@ -78,7 +75,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
             $urls = ComponentConfiguration::getSourceCodeUrls();
             foreach ($urls as $id => $url) {
                 if (in_array($id, $expectedUrlIds) === false) {
-                    $this->error('getSourceCodeUrls() return an array with unknown key "' . $id . '".');
+                    $this->throwError('getSourceCodeUrls() return an array with unknown key "' . $id . '".');
                 }
 
                 $violations = static::validateSourCodeUrl($url);
@@ -87,7 +84,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
                     foreach ($violations as $violation) {
                         $errors[] = $violation->getMessage();
                     }
-                    $this->error(
+                    $this->throwError(
                         'getSourceCodeUrls() value "'
                         . $url
                         . '" for key "'
@@ -100,7 +97,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
 
             $missingIds = array_diff($expectedUrlIds, array_keys($urls));
             if (count($missingIds) > 0) {
-                $this->error(
+                $this->throwError(
                     'getSourceCodeUrls() return an array with missing key'
                     . (count($missingIds) === 1 ? null : 's')
                     . ' '
@@ -109,7 +106,7 @@ class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractComman
                 );
             }
 
-            $this->success('getSourceCodeUrls() return valid urls.');
+            $this->outputSuccess('getSourceCodeUrls() return valid urls.');
         }
 
         return $this;

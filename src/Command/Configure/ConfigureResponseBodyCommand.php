@@ -7,31 +7,33 @@ namespace App\Command\Configure;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Validate\ValidateConfigurationResponseBodyCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
-class ConfigureResponseBodyCommand extends AbstractConfigureCommand
+final class ConfigureResponseBodyCommand extends AbstractConfigureCommand
 {
+    /** @var string */
+    protected static $defaultName = 'configure:response-body';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('configure:responseBody')
-            ->setDescription('Create ' . $this->getResponseBodyPath(true) . ' files');
+        $this->setDescription('Create ' . $this->getResponseBodyPath(true) . ' files');
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of ' . $this->getResponseBodyPath(true) . ' files')
+            ->outputTitle('Creation of ' . $this->getResponseBodyPath(true) . ' files')
             ->copyResponseBodyFiles()
-            ->runCommand('validate:configuration:responseBody');
+            ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName());
 
         return $this;
     }
 
-    protected function copyResponseBodyFiles(): self
+    private function copyResponseBodyFiles(): self
     {
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
             $this->copyDefaultConfigurationFile('responseBody/' . $file, true);

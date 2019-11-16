@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
     Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
-class ConfigureReadmeCommand extends AbstractConfigureCommand
+final class ConfigureReadmeCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
+
+    /** @var string */
+    protected static $defaultName = 'configure:readme';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('configure:readme')
-            ->setDescription('Create README.md');
+        $this->setDescription('Create README.md');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $this->title('Creation of README.md');
+        $this->outputTitle('Creation of README.md');
 
         $readmePath = $this->getInstallationPath() . '/README.md';
         $copied = copy($this->getDefaultConfigurationPath() . '/README.md', $readmePath);
         if ($copied === false) {
-            $this->error('Error while copying README.md.');
+            $this->throwError('Error while copying README.md.');
         }
-        $this->success('README.md copied.');
+        $this->outputSuccess('README.md copied.');
 
         $this
             ->defineStringVariable(

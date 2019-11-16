@@ -25,14 +25,14 @@ abstract class AbstractConfigureCommand extends AbstractCommand
 
         if (
             file_exists($destinationFile) === false
-            || $this->confirmationQuestion(
+            || $this->askConfirmationQuestion(
                 $this->getConfigurationPath(true) . '/' . $file . ' already exist. Overwrite it?',
                 false
             )
         ) {
             $copied = copy($sourceFile, $destinationFile);
             if ($copied === false) {
-                $this->error(
+                $this->throwError(
                     'Error while copying '
                     . $sourceFile
                     . ' to '
@@ -42,9 +42,9 @@ abstract class AbstractConfigureCommand extends AbstractCommand
                     . '.'
                 );
             }
-            $this->success($this->getConfigurationPath(true) . '/' . $file . ' created.');
+            $this->outputSuccess($this->getConfigurationPath(true) . '/' . $file . ' created.');
             if (is_string($copyWarning)) {
-                $this->warning($copyWarning);
+                $this->outputWarning($copyWarning);
             }
         }
 

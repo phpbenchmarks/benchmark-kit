@@ -6,24 +6,22 @@ namespace App\Command\Validate;
 
 use App\Command\AbstractCommand;
 
-class ValidateConfigurationInitBenchmarkCommand extends AbstractCommand
+final class ValidateConfigurationInitBenchmarkCommand extends AbstractCommand
 {
-    /** @var ?string */
-    protected $vhostContent;
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:init-benchmark';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:configuration:initBenchmark')
-            ->setDescription('Validate ' . $this->getInitBenchmarkFilePath(true));
+        $this->setDescription('Validate ' . $this->getInitBenchmarkFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of ' . $this->getInitBenchmarkFilePath(true))
+            ->outputTitle('Validation of ' . $this->getInitBenchmarkFilePath(true))
             ->assertFileExist($this->getInitBenchmarkFilePath(), $this->getInitBenchmarkFilePath(true));
 
         return $this;

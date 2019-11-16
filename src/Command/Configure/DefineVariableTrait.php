@@ -8,7 +8,7 @@ use App\Command\AbstractCommand;
 
 trait DefineVariableTrait
 {
-    abstract protected function success(string $message): AbstractCommand;
+    abstract protected function outputSuccess(string $message): AbstractCommand;
 
     protected function defineVariable(string $name, callable $getValue, string $file): self
     {
@@ -17,7 +17,7 @@ trait DefineVariableTrait
         if (strpos($content, $name) !== false) {
             $value = call_user_func($getValue);
             file_put_contents($file, str_replace($name, $value, $content));
-            $this->success($name . ' defined to ' . $value . '.');
+            $this->outputSuccess($name . ' defined to ' . $value . '.');
         }
 
         return $this;

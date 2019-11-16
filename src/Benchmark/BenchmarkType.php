@@ -77,16 +77,6 @@ class BenchmarkType
                 ComponentType::PHP => ['entryPoint']
             ]
         ],
-        self::TEMPLATING_BIG_OVERLOAD => [
-            'name' => 'Template engine big overload',
-            'upperCamelCaseName' => 'TemplateEngineBigOverload',
-            'slug' => 'templating-big-overload',
-            'defaultBenchmarkUrl' => '/index.php',
-            'responseBodyFiles' => ['responseBody.html'],
-            'sourceCodeUrlIds' => [
-                ComponentType::PHP => ['entryPoint']
-            ]
-        ],
         self::JSON_SERIALIZATION_HELLO_WORLD => [
             'name' => 'Serialization of Hello world',
             'upperCamelCaseName' => 'JsonSerializationHelloWorld',

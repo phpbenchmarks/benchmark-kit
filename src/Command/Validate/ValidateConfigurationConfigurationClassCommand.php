@@ -12,25 +12,26 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-class ValidateConfigurationComponentCommand extends AbstractCommand
+final class ValidateConfigurationConfigurationClassCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:configuration-class';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:configuration:component')
-            ->setDescription('Validate ' . $this->getAbstractComponentConfigurationFilePath(true));
+        $this->setDescription('Validate ' . $this->getConfigurationFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of ' . $this->getAbstractComponentConfigurationFilePath(true))
+            ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true))
             ->assertInArray('getComponentType', ComponentType::getAll())
             ->assertCallMethod('getComponentName')
             ->assertCallMethod('getComponentSlug')
-            ->assertPhpVersionsEnabled()
+            ->assertPhpVersionsCompatibles()
             ->assertCallMethod('getBenchmarkUrl')
             ->assertCallMethod('getCoreDependencyName')
             ->assertCallMethod('getCoreDependencyMajorVersion')
@@ -46,12 +47,12 @@ class ValidateConfigurationComponentCommand extends AbstractCommand
 
     protected function onError(): parent
     {
-        $this->warning('You can call "phpbench configure:component" to create AbstractComponentConfiguration class.');
+        $this->outputWarning('You can call "phpbench configure:component" to create Configuration class.');
 
         return $this;
     }
 
-    protected function assertInArray(string $method, array $allowedValues): self
+    private function assertInArray(string $method, array $allowedValues): self
     {
         $value = ComponentConfiguration::{$method}();
         if (array_key_exists($value, $allowedValues) === false) {
@@ -59,14 +60,14 @@ class ValidateConfigurationComponentCommand extends AbstractCommand
             foreach ($allowedValues as $allowedValue => $allowedValueDescription) {
                 $allowedValuesError[] = $allowedValue . ' (' . $allowedValueDescription . ')';
             }
-            $this->error($method . '() should return a data among ' . implode(', ', $allowedValuesError) . '.');
+            $this->throwError($method . '() should return a data among ' . implode(', ', $allowedValuesError) . '.');
         }
-        $this->success($method . '() return ' . $value . ' (' . $allowedValues[$value] . ').');
+        $this->outputSuccess($method . '() return ' . $value . ' (' . $allowedValues[$value] . ').');
 
         return $this;
     }
 
-    protected function assertCallMethod(string $method): self
+    private function assertCallMethod(string $method): self
     {
         $value = ComponentConfiguration::{$method}();
         if (is_bool($value)) {
@@ -74,15 +75,15 @@ class ValidateConfigurationComponentCommand extends AbstractCommand
         } else {
             $valueStr = $value;
         }
-        $this->success($method . '() return ' . $valueStr . '.');
+        $this->outputSuccess($method . '() return ' . $valueStr . '.');
 
         return $this;
     }
 
-    protected function assertPhpVersionsEnabled(): self
+    private function assertPhpVersionsCompatibles(): self
     {
         foreach (PhpVersion::getAllWithoutDot() as $phpVersion) {
-            $this->assertCallMethod('isPhp' . $phpVersion . 'Enabled');
+            $this->assertCallMethod('isPhp' . $phpVersion . 'Compatible');
         }
 
         return $this;
