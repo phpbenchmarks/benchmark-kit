@@ -1,10 +1,7 @@
 /.idea/
-
 /vendor/
-
 /src/vendor/
 /var/
 !/var/.gitkeep
-
-/docker/vhost.conf
 /docker/.env
+/phpcs.bootstrap.local.php

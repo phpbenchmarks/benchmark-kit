@@ -3,8 +3,6 @@ version: '3'
 services:
     phpbenchmarks_benchmark_kit:
         container_name: phpbenchmarks_benchmark_kit
-        networks:
-            - benchmark_kit
         tty: true
         build:
             context: ../
@@ -24,20 +22,3 @@ services:
             - php71.benchmark.loc:127.0.0.1
             - php72.benchmark.loc:127.0.0.1
             - php73.benchmark.loc:127.0.0.1
-
-    steevanb_phpcs:
-        container_name: steevanb_phpcs
-        networks:
-            - phpcs
-        build:
-            context: ../
-            dockerfile: vendor/steevanb/docker-php-code-sniffs/Dockerfile
-            args:
-                PHPCS_BOOTSTRAP: docker/phpcs.bootstrap.php
-                PHPCS_PARAMETERS: --warning-severity=0 --ignore=vendor
-        volumes:
-            - ../src:/var/phpcs:ro
-
-networks:
-    benchmark_kit: ~
-    phpcs: ~

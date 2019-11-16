@@ -73,7 +73,9 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                 function () use ($benchmarkType) {
                     return $this->question(
                         'Benchmark url, after host?',
-                        BenchmarkType::getDefaultBenchmarkUrl($benchmarkType ?? ComponentConfiguration::getBenchmarkType())
+                        BenchmarkType::getDefaultBenchmarkUrl(
+                            $benchmarkType ?? ComponentConfiguration::getBenchmarkType()
+                        )
                     );
                 },
                 $configurationPath

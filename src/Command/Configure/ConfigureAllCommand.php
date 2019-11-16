@@ -32,7 +32,10 @@ class ConfigureAllCommand extends AbstractCommand
     protected function warningSourceCodeUrls(): self
     {
         if ($this->skipSourceCodeUrls() === false) {
-            $this->warning('You can skip source code urls configuration with --skip-source-code-urls parameter.', false);
+            $this->warning(
+                'You can skip source code urls configuration with --skip-source-code-urls parameter.',
+                false
+            );
         }
 
         return $this;
