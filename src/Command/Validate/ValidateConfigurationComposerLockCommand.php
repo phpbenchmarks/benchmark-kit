@@ -11,14 +11,16 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
+final class ValidateConfigurationComposerLockCommand extends AbstractComposerFilesCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:composer:lock';
+
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setName('validate:composer:lock')
             ->setDescription('Validate dependencies in ' . $this->getComposerLockFilePath('X.Y', true))
             ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
     }
@@ -44,14 +46,14 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateDisabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
+            $this->outputTitle('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
             is_file($this->getComposerLockFilePath($phpVersion))
                 ?
-                    $this->error(
+                    $this->throwError(
                         'File should not exist, as this PHP version is disabled by configuration.'
                         . ' See README.md for more informations.'
                     )
-                : $this->success('File does not exist.');
+                : $this->outputSuccess('File does not exist.');
         }
 
         return $this;
@@ -60,17 +62,17 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
     private function validateEnabledPhpVersions(): self
     {
         foreach ($this->getPhpVersions(ComponentConfiguration::getEnabledPhpVersions()) as $phpVersion) {
-            $this->title('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
+            $this->outputTitle('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
 
             $lockPath = $this->getComposerLockFilePath($phpVersion);
             if (is_readable($lockPath) === false) {
-                $this->error('File does not exist. Call "phpbench composer:update" to create it.');
+                $this->throwError('File does not exist. Call "phpbench composer:update" to create it.');
             }
 
             try {
                 $data = json_decode(file_get_contents($lockPath), true, 512, JSON_THROW_ON_ERROR);
             } catch (\Throwable $e) {
-                $this->error('Error while parsing: ' . $e->getMessage());
+                $this->throwError('Error while parsing: ' . $e->getMessage());
             }
 
             $this
@@ -92,7 +94,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
                     $package['version'] !== ComponentConfiguration::getCoreDependencyVersion()
                     && $package['version'] !== 'v' . ComponentConfiguration::getCoreDependencyVersion()
                 ) {
-                    $this->error(
+                    $this->throwError(
                         'Package '
                         . ComponentConfiguration::getCoreDependencyName()
                         . ' version should be '
@@ -102,7 +104,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
                         . ' found.'
                     );
                 } else {
-                    $this->success(
+                    $this->outputSuccess(
                         'Package '
                         . ComponentConfiguration::getCoreDependencyName()
                         . ' version is '
@@ -115,7 +117,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
         }
 
         if ($packageFound === false) {
-            $this->error('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
+            $this->throwError('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
         }
 
         return $this;
@@ -142,11 +144,11 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
 
                     $isValidBranch
                         ?
-                            $this->success(
+                            $this->outputSuccess(
                                 'Package ' . $commonRepositoryName . ' version is ' . $commonExpectedVersion . '.'
                             )
                         :
-                            $this->error(
+                            $this->throwError(
                                 'Package '
                                 . $commonRepositoryName
                                 . ' version should be '
@@ -159,7 +161,7 @@ class ValidateComposerLockFilesCommand extends AbstractComposerFilesCommand
             }
 
             if ($packageFound === false) {
-                $this->error('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
+                $this->throwError('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
             }
         }
 

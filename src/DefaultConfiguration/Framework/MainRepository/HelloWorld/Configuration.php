@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ____NAMESPACE____;
+namespace PhpBenchmarks\BenchmarkConfiguration;
 
-abstract class AbstractComponentConfiguration
+class Configuration
 {
     public static function getComponentType(): int
     {
-        return 3;
+        return 2;
     }
 
     public static function getComponentName(): string
@@ -21,29 +21,29 @@ abstract class AbstractComponentConfiguration
         return '____PHPBENCHMARKS_COMPONENT_SLUG____';
     }
 
-    public static function isPhp56Enabled(): bool
+    public static function isPhp56Compatible(): bool
     {
-        return ____PHPBENCHMARKS_PHP56_ENABLED____;
+        return ____PHPBENCHMARKS_PHP56_COMPATIBLE____;
     }
 
-    public static function isPhp70Enabled(): bool
+    public static function isPhp70Compatible(): bool
     {
-        return ____PHPBENCHMARKS_PHP70_ENABLED____;
+        return ____PHPBENCHMARKS_PHP70_COMPATIBLE____;
     }
 
-    public static function isPhp71Enabled(): bool
+    public static function isPhp71Compatible(): bool
     {
-        return ____PHPBENCHMARKS_PHP71_ENABLED____;
+        return ____PHPBENCHMARKS_PHP71_COMPATIBLE____;
     }
 
-    public static function isPhp72Enabled(): bool
+    public static function isPhp72Compatible(): bool
     {
-        return ____PHPBENCHMARKS_PHP72_ENABLED____;
+        return ____PHPBENCHMARKS_PHP72_COMPATIBLE____;
     }
 
-    public static function isPhp73Enabled(): bool
+    public static function isPhp73Compatible(): bool
     {
-        return ____PHPBENCHMARKS_PHP73_ENABLED____;
+        return ____PHPBENCHMARKS_PHP73_COMPATIBLE____;
     }
 
     public static function getBenchmarkUrl(): string
@@ -79,8 +79,8 @@ abstract class AbstractComponentConfiguration
     public static function getSourceCodeUrls(): array
     {
         return [
-            'entryPoint' => '____PHPBENCHMARKS_ENTRY_POINT_URL____',
-            'template' => '____PHPBENCHMARKS_TEMPLATE_URL____'
+            'route' => '____PHPBENCHMARKS_ROUTE_SOURCE_CODE_URL____',
+            'controller' => '____PHPBENCHMARKS_CONTROLLER_SOURCE_CODE_URL____'
         ];
     }
 }

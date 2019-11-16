@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\{
-    Command\Validate\ValidateComposerLockFilesCommand,
+    Command\Validate\ValidateComposerJsonCommand,
+    Command\Validate\ValidateConfigurationComposerLockCommand,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
 
-class ComposerUpdateCommand extends AbstractCommand
+final class ComposerUpdateCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'composer:update';
+
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setName('composer:update')
             ->setDescription(
                 'Execute composer update for all enabled PHP versions and create '
                 . $this->getComposerLockFilePath('X.Y', true)
@@ -27,33 +30,36 @@ class ComposerUpdateCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this->runCommand('validate:composer:json');
+        $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
         foreach ($this->getPhpVersions() as $phpVersion) {
             $this
-                ->title('PHP ' . $phpVersion)
+                ->outputTitle('PHP ' . $phpVersion)
                 ->definePhpCliVersion($phpVersion)
                 ->exec('cd ' . $this->getInstallationPath() . ' && composer update --ansi')
-                ->success('Composer update done.')
+                ->outputSuccess('Composer update done.')
                 ->exec(
                     'cd '
-                    . $this->getInstallationPath()
-                    . ' && mv composer.lock '
-                    . $this->getComposerLockFilePath($phpVersion, true)
+                        . $this->getInstallationPath()
+                        . ' && mv composer.lock '
+                        . $this->getComposerLockFilePath($phpVersion, true)
                 )
-                ->success(
+                ->outputSuccess(
                     'Move composer.lock to '
-                    . $this->getComposerLockFilePath($phpVersion, true)
-                    . '.'
+                        . $this->getComposerLockFilePath($phpVersion, true)
+                        . '.'
                 );
         }
 
-        $this->runCommand('validate:composer:lock', ['phpVersion' => $this->getInput()->getArgument('phpVersion')]);
+        $this->runCommand(
+            ValidateConfigurationComposerLockCommand::getDefaultName(),
+            ['phpVersion' => $this->getInput()->getArgument('phpVersion')]
+        );
 
         return $this;
     }
 
-    protected function getPhpVersions(): array
+    private function getPhpVersions(): array
     {
         $phpVersion = $this->getInput()->getArgument('phpVersion');
         if ($phpVersion === null) {
@@ -66,7 +72,7 @@ class ComposerUpdateCommand extends AbstractCommand
                             'PHP '
                             . $phpVersion
                             . ' is disabled. Enable it into '
-                            . $this->getAbstractComponentConfigurationFilePath(true)
+                            . $this->getConfigurationFilePath(true)
                             . '.'
                         : 'Invalid PHP version ' . $phpVersion . '.'
                 );

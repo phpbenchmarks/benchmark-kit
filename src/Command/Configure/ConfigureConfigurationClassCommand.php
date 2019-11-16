@@ -4,47 +4,44 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use AbstractComponentConfiguration\AbstractComponentConfiguration;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Validate\ValidateConfigurationConfigurationClassCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
 
-class ConfigureComponentCommand extends AbstractConfigureCommand
+class ConfigureConfigurationClassCommand extends AbstractConfigureCommand
 {
     use DefineVariableTrait;
+
+    /** @var string */
+    protected static $defaultName = 'configure:configuration-class';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('configure:component')
-            ->setDescription(
-                'Create '
-                . $this->getAbstractComponentConfigurationFilePath(true)
-                . ' and configure it'
-            );
+        $this->setDescription('Create ' . $this->getConfigurationFilePath(true) . ' and configure it');
     }
 
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->title('Creation of ' . $this->getAbstractComponentConfigurationFilePath(true))
+            ->outputTitle('Creation of ' . $this->getConfigurationFilePath(true))
             ->createConfiguration()
-            ->runCommand('validate:configuration:component');
+            ->runCommand(ValidateConfigurationConfigurationClassCommand::getDefaultName());
 
         return $this;
     }
 
     protected function createConfiguration(): self
     {
-        $configurationPath = $this->getConfigurationPath() . '/AbstractComponentConfiguration.php';
+        $configurationPath = $this->getConfigurationFilePath();
         if (is_file($configurationPath)) {
-            $this->copyDefaultConfigurationFile('AbstractComponentConfiguration.php', true);
+            $this->copyDefaultConfigurationFile('Configuration.php', true);
         }
 
         $benchmarkType = null;
@@ -53,25 +50,24 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
         }
 
         $this
-            ->defineStringVariable('____NAMESPACE____', 'AbstractComponentConfiguration', $configurationPath)
             ->defineVariable(
                 '____PHPBENCHMARKS_COMPONENT_NAME____',
                 function () {
-                    return $this->question('Component name?');
+                    return $this->askQuestion('Component name (exemple: Symfony, Zend Framework)?');
                 },
                 $configurationPath
             )
             ->defineVariable(
                 '____PHPBENCHMARKS_COMPONENT_SLUG____',
                 function () {
-                    return $this->question('Component slug?');
+                    return $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
                 },
                 $configurationPath
             )
             ->defineVariable(
                 '____PHPBENCHMARKS_BENCHMARK_URL____',
                 function () use ($benchmarkType) {
-                    return $this->question(
+                    return $this->askQuestion(
                         'Benchmark url, after host?',
                         BenchmarkType::getDefaultBenchmarkUrl(
                             $benchmarkType ?? ComponentConfiguration::getBenchmarkType()
@@ -84,7 +80,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                 '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____',
                 function () {
                     do {
-                        $return = $this->question('Core dependency major version?');
+                        $return = $this->askQuestion('Core dependency major version?');
                     } while (is_numeric($return) === false);
 
                     return $return;
@@ -95,7 +91,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                 '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____',
                 function () {
                     do {
-                        $return = $this->question('Core dependency minor version?');
+                        $return = $this->askQuestion('Core dependency minor version?');
                     } while (is_numeric($return) === false);
 
                     return $return;
@@ -106,7 +102,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                 '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____',
                 function () {
                     do {
-                        $return = $this->question('Core dependency patch version?');
+                        $return = $this->askQuestion('Core dependency patch version?');
                     } while (is_numeric($return) === false);
 
                     return $return;
@@ -116,9 +112,9 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
 
         foreach (PhpVersion::getAll() as $phpVersion) {
             $this->defineVariable(
-                '____PHPBENCHMARKS_PHP' . str_replace('.', null, $phpVersion) . '_ENABLED____',
+                '____PHPBENCHMARKS_PHP' . str_replace('.', null, $phpVersion) . '_COMPATIBLE____',
                 function () use ($phpVersion) {
-                    return $this->confirmationQuestion('Is PHP ' . $phpVersion . ' enabled?')
+                    return $this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')
                         ? 'true'
                         : 'false';
                 },
@@ -146,7 +142,7 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                             JSON_THROW_ON_ERROR
                         );
                     } catch (\Throwable $e) {
-                        $this->error('Error while parsing: ' . $e->getMessage());
+                        $this->throwError('Error while parsing: ' . $e->getMessage());
                     }
 
                     $choices = array_keys($data['require'] ?? []);
@@ -159,9 +155,9 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
                             unset($choices[$key]);
                         }
                     }
-                    $return = $this->choiceQuestion('Which dependency is the core of the component?', $choices);
+                    $return = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);
                 } else {
-                    $return = $this->question(
+                    $return = $this->askQuestion(
                         'Core dependency name of component? Example: symfony/framework-bundle, cakephp/cakephp'
                     );
                 }
@@ -178,21 +174,21 @@ class ConfigureComponentCommand extends AbstractConfigureCommand
     {
         $componentTypes = ComponentType::getAll();
         $componentType = array_search(
-            $this->choiceQuestion('Component type?', $componentTypes),
+            $this->askChoiceQuestion('Component type?', $componentTypes),
             $componentTypes
         );
 
         $benchmarkTypes = BenchmarkType::getByComponentType($componentType);
         $benchmarkType = array_search(
-            $this->choiceQuestion('Benchmark type?', $benchmarkTypes),
+            $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes),
             $benchmarkTypes
         );
 
         $source =
             $this->getTypedDefaultConfigurationPath($componentType, $benchmarkType)
-            . '/AbstractComponentConfiguration.php';
-        copy($source, $this->getAbstractComponentConfigurationFilePath());
-        $this->success($this->getAbstractComponentConfigurationFilePath(true) . ' created.');
+            . '/Configuration.php';
+        copy($source, $this->getConfigurationFilePath());
+        $this->outputSuccess($this->getConfigurationFilePath(true) . ' created.');
 
         return $benchmarkType;
     }

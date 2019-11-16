@@ -10,23 +10,21 @@ use App\{
     ComponentConfiguration\ComponentConfiguration
 };
 
-class ValidateConfigurationResponseBodyCommand extends AbstractCommand
+final class ValidateConfigurationResponseBodyCommand extends AbstractCommand
 {
-    /** @var ?string */
-    protected $vhostContent;
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:response-body';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:configuration:responseBody')
-            ->setDescription('Validate ' . $this->getResponseBodyPath(true) . ' files');
+        $this->setDescription('Validate ' . $this->getResponseBodyPath(true) . ' files');
     }
 
     protected function doExecute(): parent
     {
-        $this->title('Validation of ' . $this->getResponseBodyPath(true) . ' files');
+        $this->outputTitle('Validation of ' . $this->getResponseBodyPath(true) . ' files');
 
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
             $filePath = $this->getResponseBodyPath() . '/' . $file;
@@ -38,7 +36,7 @@ class ValidateConfigurationResponseBodyCommand extends AbstractCommand
             $fileSize = filesize($filePath);
             ($fileSize < $minSize)
                 ?
-                    $this->error(
+                    $this->throwError(
                         'File '
                         . $fileRelativePath
                         . ' size must be at least '
@@ -47,7 +45,7 @@ class ValidateConfigurationResponseBodyCommand extends AbstractCommand
                         . number_format($fileSize, 0, '.', ',')
                         . '.'
                     )
-                : $this->success('File ' . $fileRelativePath . ' size is >= ' . $minSizeFormated . ' bytes.');
+                : $this->outputSuccess('File ' . $fileRelativePath . ' size is >= ' . $minSizeFormated . ' bytes.');
         }
 
         return $this;

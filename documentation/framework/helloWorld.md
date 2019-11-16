@@ -12,7 +12,7 @@ Features
 
 Don't forget this features as to be coded in [common repository](../repositoriesAndBranches.md).
 
-* A route with the url `benchmark/helloworld`. [Example](https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world/Resources/config/routing.yml).
+* A route with the url `/benchmark/helloworld`. [Example](https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world/Resources/config/routing.yml).
 * A controller called by this route. [Example](https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world/Controller/HelloWorldController.php).
 * This controller should write `Hello World !` in response body as fast as possible. [Example](https://github.com/phpbenchmarks/symfony-common/blob/symfony_4_hello-world/Controller/HelloWorldController.php#L13).
 

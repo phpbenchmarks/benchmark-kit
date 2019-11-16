@@ -10,20 +10,21 @@ use App\{
     ComponentConfiguration\ComponentConfiguration
 };
 
-class ValidateBranchNameCommand extends AbstractCommand
+final class ValidateBranchNameCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:branch:name';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:branch:name')
-            ->setDescription('Validate branch name: component_X.Y_benchmark-type_prepare');
+        $this->setDescription('Validate branch name: component_X.Y_benchmark-type_prepare');
     }
 
     protected function doExecute(): parent
     {
-        $this->title('Validation of git branch name');
+        $this->outputTitle('Validation of git branch name');
 
         if ($this->skipBranchName() === false) {
             $this->validateBranchName();
@@ -32,7 +33,7 @@ class ValidateBranchNameCommand extends AbstractCommand
         return $this;
     }
 
-    protected function validateBranchName(): self
+    private function validateBranchName(): self
     {
         $cmd =
             'git branch --no-color 2> /dev/null'
@@ -56,11 +57,11 @@ class ValidateBranchNameCommand extends AbstractCommand
 
         if ($branchName !== $expectedGitBranch) {
             $this
-                ->warning('You can add --skip-branch-name parameter to skip this validation.')
-                ->warning('You can add --validate-prod parameter to remove "_prepare" suffix in branch name.')
-                ->error('Branch name should be ' . $expectedGitBranch . ' but is ' . $branchName . '.');
+                ->outputWarning('You can add --skip-branch-name parameter to skip this validation.')
+                ->outputWarning('You can add --validate-prod parameter to remove "_prepare" suffix in branch name.')
+                ->throwError('Branch name should be ' . $expectedGitBranch . ' but is ' . $branchName . '.');
         }
-        $this->success('Branch name is ' . $branchName . '.');
+        $this->outputSuccess('Branch name is ' . $branchName . '.');
 
         return $this;
     }

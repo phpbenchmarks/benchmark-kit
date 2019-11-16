@@ -3,14 +3,14 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use App\{
     Command\ComposerUpdateCommand,
     Command\BenchmarkValidateCommand,
     Command\Configure\ConfigureAllCommand,
-    Command\Configure\ConfigureComponentCommand,
     Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
+    Command\Configure\ConfigureConfigurationClassCommand,
     Command\Configure\ConfigureDirectoryCommand,
     Command\Configure\ConfigureInitBenchmarkCommand,
     Command\Configure\ConfigureReadmeCommand,
@@ -18,10 +18,10 @@ use App\{
     Command\Configure\ConfigureVhostCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateBranchNameCommand,
-    Command\Validate\ValidateComposerJsonFilesCommand,
-    Command\Validate\ValidateComposerLockFilesCommand,
-    Command\Validate\ValidateConfigurationComponentCommand,
+    Command\Validate\ValidateComposerJsonCommand,
     Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
+    Command\Validate\ValidateConfigurationComposerLockCommand,
+    Command\Validate\ValidateConfigurationConfigurationClassCommand,
     Command\Validate\ValidateConfigurationInitBenchmarkCommand,
     Command\Validate\ValidateConfigurationResponseBodyCommand,
     Command\Validate\ValidateConfigurationVhostCommand,
@@ -32,7 +32,7 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $application->add(new ConfigureAllCommand());
-$application->add(new ConfigureComponentCommand());
+$application->add(new ConfigureConfigurationClassCommand());
 $application->add(new ConfigureComponentSourceCodeUrlsCommand());
 $application->add(new ConfigureDirectoryCommand());
 $application->add(new ConfigureInitBenchmarkCommand());
@@ -42,9 +42,9 @@ $application->add(new ConfigureVhostCommand());
 
 $application->add(new ValidateAllCommand());
 $application->add(new ValidateBranchNameCommand());
-$application->add(new ValidateComposerJsonFilesCommand());
-$application->add(new ValidateComposerLockFilesCommand());
-$application->add(new ValidateConfigurationComponentCommand());
+$application->add(new ValidateComposerJsonCommand());
+$application->add(new ValidateConfigurationComposerLockCommand());
+$application->add(new ValidateConfigurationConfigurationClassCommand());
 $application->add(new ValidateConfigurationComponentSourceCodeUrlsCommand());
 $application->add(new ValidateConfigurationInitBenchmarkCommand());
 $application->add(new ValidateConfigurationResponseBodyCommand());

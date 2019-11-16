@@ -6,28 +6,28 @@ namespace App\Command\Validate;
 
 use App\Command\AbstractCommand;
 
-class ValidateAllCommand extends AbstractCommand
+final class ValidateAllCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:all';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('validate:all')
-            ->setDescription('Call all validate commands');
+        $this->setDescription('Call all validate commands');
     }
 
     protected function doExecute(): parent
     {
         return $this
-            ->runCommand('validate:branch:name')
-            ->runCommand('validate:composer:json')
-            ->runCommand('validate:composer:lock')
-            ->runCommand('validate:configuration:component')
-            ->runCommand('validate:configuration:component:sourceCodeUrls')
-            ->runCommand('validate:configuration:initBenchmark')
-            ->runCommand('validate:configuration:responseBody')
-            ->runCommand('validate:configuration:vhost')
-            ->runCommand('configure:readme');
+            ->runCommand(ValidateBranchNameCommand::getDefaultName())
+            ->runCommand(ValidateComposerJsonCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationComposerLockCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationConfigurationClassCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationComponentSourceCodeUrlsCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationVhostCommand::getDefaultName());
     }
 }

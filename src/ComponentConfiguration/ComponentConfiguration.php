@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\ComponentConfiguration;
 
 use App\PhpVersion\PhpVersion;
-use AbstractComponentConfiguration\AbstractComponentConfiguration;
+use PhpBenchmarks\BenchmarkConfiguration\Configuration;
 
-class ComponentConfiguration extends AbstractComponentConfiguration implements ComponentConfigurationInterface
+class ComponentConfiguration extends Configuration implements ComponentConfigurationInterface
 {
     public static function getCoreDependencyVersion(): string
     {
@@ -22,19 +22,19 @@ class ComponentConfiguration extends AbstractComponentConfiguration implements C
     public static function getEnabledPhpVersions(): array
     {
         $return = [];
-        if (static::isPhp56Enabled()) {
+        if (static::isPhp56Compatible()) {
             $return[] = PhpVersion::PHP_56;
         }
-        if (static::isPhp70Enabled()) {
+        if (static::isPhp70Compatible()) {
             $return[] = PhpVersion::PHP_70;
         }
-        if (static::isPhp71Enabled()) {
+        if (static::isPhp71Compatible()) {
             $return[] = PhpVersion::PHP_71;
         }
-        if (static::isPhp72Enabled()) {
+        if (static::isPhp72Compatible()) {
             $return[] = PhpVersion::PHP_72;
         }
-        if (static::isPhp73Enabled()) {
+        if (static::isPhp73Compatible()) {
             $return[] = PhpVersion::PHP_73;
         }
 
@@ -44,19 +44,19 @@ class ComponentConfiguration extends AbstractComponentConfiguration implements C
     public static function getDisabledPhpVersions(): array
     {
         $return = [];
-        if (static::isPhp56Enabled() === false) {
+        if (static::isPhp56Compatible() === false) {
             $return[] = PhpVersion::PHP_56;
         }
-        if (static::isPhp70Enabled() === false) {
+        if (static::isPhp70Compatible() === false) {
             $return[] = PhpVersion::PHP_70;
         }
-        if (static::isPhp71Enabled() === false) {
+        if (static::isPhp71Compatible() === false) {
             $return[] = PhpVersion::PHP_71;
         }
-        if (static::isPhp72Enabled() === false) {
+        if (static::isPhp72Compatible() === false) {
             $return[] = PhpVersion::PHP_72;
         }
-        if (static::isPhp73Enabled() === false) {
+        if (static::isPhp73Compatible() === false) {
             $return[] = PhpVersion::PHP_73;
         }
 

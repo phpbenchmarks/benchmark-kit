@@ -6,8 +6,11 @@ namespace App\Command\Validate;
 
 use App\Command\AbstractCommand;
 
-class ValidateConfigurationVhostCommand extends AbstractCommand
+final class ValidateConfigurationVhostCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'validate:configuration:vhost';
+
     /** @var ?string */
     protected $vhostContent;
 
@@ -15,15 +18,13 @@ class ValidateConfigurationVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this
-            ->setName('validate:configuration:vhost')
-            ->setDescription('Validate ' . $this->getVhostFilePath(true));
+        $this->setDescription('Validate ' . $this->getVhostFilePath(true));
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->title('Validation of ' . $this->getVhostFilePath(true))
+            ->outputTitle('Validation of ' . $this->getVhostFilePath(true))
             ->assertFileExist($this->getVhostFilePath(), $this->getVhostFilePath(true))
             ->assertContainsVariable('____HOST____')
             ->assertContainsVariable('____INSTALLATION_PATH____')
@@ -32,16 +33,16 @@ class ValidateConfigurationVhostCommand extends AbstractCommand
         return $this;
     }
 
-    protected function assertContainsVariable(string $name): self
+    private function assertContainsVariable(string $name): self
     {
         if ($this->vhostContent === null) {
             $this->vhostContent = file_get_contents($this->getVhostFilePath());
         }
 
         if (strpos($this->vhostContent, $name) === false) {
-            $this->error('File should contains ' . $name . ' variable.');
+            $this->throwError('File should contains ' . $name . ' variable.');
         }
-        $this->success('File contains ' . $name . ' variable.');
+        $this->outputSuccess('File contains ' . $name . ' variable.');
 
         return $this;
     }

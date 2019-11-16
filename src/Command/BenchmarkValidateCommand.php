@@ -6,30 +6,28 @@ namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\Validate\ValidateAllCommand,
     ComponentConfiguration\ComponentConfiguration,
-    Command\Validate\ValidateComposerLockFilesCommand,
     Component\ComponentType
 };
 
-class BenchmarkValidateCommand extends AbstractCommand
+final class BenchmarkValidateCommand extends AbstractCommand
 {
-    /** @var ?string */
-    protected $vhostContent;
+    /** @var string */
+    protected static $defaultName = 'benchmark:validate';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('benchmark:validate')
-            ->setDescription('Validate configurations and features for a benchmark');
+        $this->setDescription('Validate configurations and features for a benchmark');
     }
 
     protected function doExecute(): parent
     {
         $this
-            ->runCommand('validate:all')
-            ->runCommand('vhost:create');
+            ->runCommand(ValidateAllCommand::getDefaultName())
+            ->runCommand(VhostCreateCommand::getDefaultName());
 
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
@@ -45,7 +43,7 @@ class BenchmarkValidateCommand extends AbstractCommand
         return parent::onError();
     }
 
-    protected function validateForPhpVersion(string $phpVersion): self
+    private function validateForPhpVersion(string $phpVersion): self
     {
         $benchmarkUrl = ComponentConfiguration::getBenchmarkUrl();
         $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
@@ -59,17 +57,15 @@ class BenchmarkValidateCommand extends AbstractCommand
         $url =
             'http://'
             . $this->getHost($phpVersion, false)
-            . '/'
             . $benchmarkUrl;
 
         $urlWithPort =
             'http://'
             . $this->getHost($phpVersion)
-            . '/'
             . $benchmarkUrl;
 
         $this
-            ->title('Validation of ' . $urlWithPort)
+            ->outputTitle('Validation of ' . $urlWithPort)
             ->definePhpCliVersion($phpVersion)
             ->exec(
                 'cp '
@@ -89,7 +85,7 @@ class BenchmarkValidateCommand extends AbstractCommand
                 . $this->getInstallationPath()
                 . '/composer.lock'
             )
-            ->success($this->getInitBenchmarkFilePath(true) . ' executed.');
+            ->outputSuccess($this->getInitBenchmarkFilePath(true) . ' executed.');
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -99,22 +95,23 @@ class BenchmarkValidateCommand extends AbstractCommand
         curl_close($curl);
 
         if ($httpCode !== 200) {
-            $this->error('Http code should be 200 but is ' . $httpCode . '.');
+            $this->throwError('Http code should be 200 but is ' . $httpCode . '.');
         }
-        $this->success('Http code is 200.');
 
-        $this->validateBody($body);
+        $this
+            ->outputSuccess('Http code is 200.')
+            ->validateBody($body);
 
         return $this;
     }
 
-    protected function validateBody(string $body): self
+    private function validateBody(string $body): self
     {
         $validated = false;
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
             $responseFile = $this->getResponseBodyPath() . '/' . $file;
             if ($body === file_get_contents($responseFile)) {
-                $this->success('Body is equal to ' . $responseFile . ' content.');
+                $this->outputSuccess('Body is equal to ' . $responseFile . ' content.');
                 $validated = true;
                 break;
             }
@@ -123,8 +120,8 @@ class BenchmarkValidateCommand extends AbstractCommand
         if ($validated === false) {
             file_put_contents('/tmp/benchmark.body', $body);
             $this
-                ->warning('You canse use "diff /tmp/benchmark.body ' . $responseFile . '" to view differences.')
-                ->error('Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.');
+                ->outputWarning('You canse use "diff /tmp/benchmark.body ' . $responseFile . '" to view differences.')
+                ->throwError('Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.');
         }
 
         return $this;

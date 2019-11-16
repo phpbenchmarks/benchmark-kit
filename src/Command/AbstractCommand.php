@@ -31,10 +31,13 @@ abstract class AbstractCommand extends Command
     /** @var OutputInterface */
     private $output;
 
+    /** @var bool */
     private $validateProd = true;
 
+    /** @var bool */
     private $skipBranchName = true;
 
+    /** @var bool */
     private $skipSourceCodeUrls = false;
 
     public function validateProd(): bool
@@ -74,7 +77,7 @@ abstract class AbstractCommand extends Command
         } catch (HiddenValidationException $e) {
             $return = 1;
         } catch (\Throwable $e) {
-            $this->showError($e->getMessage());
+            $this->outputError($e->getMessage());
             $this->onError();
 
             $return = 1;
@@ -99,7 +102,7 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function title(string $title): self
+    protected function outputTitle(string $title): self
     {
         $this->output->writeln("\e[44m " . $title . " \e[00m");
 
@@ -107,7 +110,7 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function success(string $message): self
+    protected function outputSuccess(string $message): self
     {
         $this->output->writeln("  \e[42m > \e[00m " . $message);
 
@@ -115,7 +118,7 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function warning(string $message, bool $indent = true): self
+    protected function outputWarning(string $message, bool $indent = true): self
     {
         $prefix = $indent ? "  \e[43m > \e[00m " : null;
         $this->output->writeln($prefix . "\e[43m " . $message . " \e[00m");
@@ -123,13 +126,13 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    protected function error(string $error = null): void
+    protected function throwError(string $error = null): void
     {
         throw new ValidationException($error);
     }
 
     /** @return $this */
-    protected function showError(string $error): self
+    protected function outputError(string $error): self
     {
         $this->output->writeln("  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m" . $error . "\e[00m");
 
@@ -138,7 +141,7 @@ abstract class AbstractCommand extends Command
 
     protected function getInstallationPath(): string
     {
-        return '/var/www/phpbenchmarks';
+        return '/var/www/benchmark';
     }
 
     protected function getConfigurationPath(bool $relative = false): string
@@ -156,9 +159,9 @@ abstract class AbstractCommand extends Command
         return $this->getConfigurationPath($relative) . '/composer';
     }
 
-    protected function getAbstractComponentConfigurationFilePath(bool $relative = false): string
+    protected function getConfigurationFilePath(bool $relative = false): string
     {
-        return $this->getConfigurationPath($relative) . '/AbstractComponentConfiguration.php';
+        return $this->getConfigurationPath($relative) . '/Configuration.php';
     }
 
     protected function getInitBenchmarkFilePath(bool $relative = false): string
@@ -205,7 +208,7 @@ abstract class AbstractCommand extends Command
     {
         exec($command, $return, $returnCode);
         if ($returnCode > 0) {
-            $this->error($error);
+            $this->throwError($error);
         }
 
         return $return;
@@ -243,7 +246,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    protected function confirmationQuestion(string $question, bool $default = true): bool
+    protected function askConfirmationQuestion(string $question, bool $default = true): bool
     {
         return $this
             ->getHelper('question')
@@ -260,7 +263,7 @@ abstract class AbstractCommand extends Command
             );
     }
 
-    protected function question(string $question, string $default = null): ?string
+    protected function askQuestion(string $question, string $default = null): ?string
     {
         return $this
             ->getHelper('question')
@@ -277,7 +280,7 @@ abstract class AbstractCommand extends Command
             );
     }
 
-    protected function choiceQuestion(string $question, array $choices): string
+    protected function askChoiceQuestion(string $question, array $choices): string
     {
         return $this
             ->getHelper('question')
@@ -297,9 +300,9 @@ abstract class AbstractCommand extends Command
     protected function assertFileExist(string $filePath, string $shortFilePath): self
     {
         if (is_readable($filePath) === false) {
-            $this->error('File ' . $shortFilePath . ' does not exist. Use "phpbench configure:all" to create it.');
+            $this->throwError('File ' . $shortFilePath . ' does not exist. Use "phpbench configure:all" to create it.');
         }
-        $this->success('File ' . $shortFilePath . ' exist.');
+        $this->outputSuccess('File ' . $shortFilePath . ' exist.');
 
         return $this;
     }
@@ -308,8 +311,8 @@ abstract class AbstractCommand extends Command
     {
         return
             'php'
-            . str_replace('.', null, $phpVersion)
-            . '.benchmark.loc'
-            . ($addPort ? ':' . getenv('NGINX_PORT') : null);
+                . str_replace('.', null, $phpVersion)
+                . '.benchmark.loc'
+                . ($addPort ? ':' . getenv('NGINX_PORT') : null);
     }
 }

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+readonly DOCKER_DIRECTORY=$(realpath $(dirname $(realpath $0)))
+readonly TAG="phpbenchmarks/benchmark-kit"
+
+docker build ${DOCKER_DIRECTORY}/.. --file=docker/Dockerfile --tag=${TAG}
+
+if [ "$1" == "--push" ]; then
+    docker login --username=phpbenchmarks
+    docker push ${TAG}
+fi

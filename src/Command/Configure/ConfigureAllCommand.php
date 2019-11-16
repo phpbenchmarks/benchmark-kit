@@ -4,35 +4,43 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Command\ComposerUpdateCommand
+};
 
-class ConfigureAllCommand extends AbstractCommand
+final class ConfigureAllCommand extends AbstractCommand
 {
+    /** @var string */
+    protected static $defaultName = 'configure:all';
+
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->setName('configure:all')
-            ->setDescription('Call all configure commands');
+        $this->setDescription('Call all configure commands and composer:update');
     }
 
     protected function doExecute(): parent
     {
         return $this
-            ->runCommand('configure:directory')
-            ->runCommand('configure:component')
-            ->warningSourceCodeUrls()
-            ->runCommand('configure:component:sourceCodeUrls', ['--skip-component-creation' => true])
-            ->runCommand('configure:initBenchmark')
-            ->runCommand('configure:vhost')
-            ->runCommand('configure:responseBody');
+            ->runCommand(ConfigureDirectoryCommand::getDefaultName())
+            ->runCommand(ConfigureConfigurationClassCommand::getDefaultName())
+            ->outputWarningSourceCodeUrls()
+            ->runCommand(
+                ConfigureComponentSourceCodeUrlsCommand::getDefaultName(),
+                ['--skip-class-creation' => true]
+            )
+            ->runCommand(ConfigureInitBenchmarkCommand::getDefaultName())
+            ->runCommand(ConfigureVhostCommand::getDefaultName())
+            ->runCommand(ConfigureResponseBodyCommand::getDefaultName())
+            ->runCommand(ComposerUpdateCommand::getDefaultName());
     }
 
-    protected function warningSourceCodeUrls(): self
+    private function outputWarningSourceCodeUrls(): self
     {
         if ($this->skipSourceCodeUrls() === false) {
-            $this->warning(
+            $this->outputWarning(
                 'You can skip source code urls configuration with --skip-source-code-urls parameter.',
                 false
             );
