@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Benchmark;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\AbstractCommand,
     Command\Validate\ValidateAllCommand,
+    Command\Vhost\VhostCreateCommand,
     ComponentConfiguration\ComponentConfiguration,
     Component\ComponentType
 };
@@ -25,22 +27,13 @@ final class BenchmarkValidateCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this
-            ->runCommand(ValidateAllCommand::getDefaultName())
-            ->runCommand(VhostCreateCommand::getDefaultName());
+        $this->runCommand(ValidateAllCommand::getDefaultName());
 
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
         }
 
         return $this;
-    }
-
-    protected function onError(): parent
-    {
-        $this->definePhpCliVersion('7.3');
-
-        return parent::onError();
     }
 
     private function validateForPhpVersion(string $phpVersion): self
@@ -54,38 +47,12 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $benchmarkUrl .= $showResultsQueryParameter;
         }
 
-        $url =
-            'http://'
-            . $this->getHost($phpVersion, false)
-            . $benchmarkUrl;
-
-        $urlWithPort =
-            'http://'
-            . $this->getHost($phpVersion)
-            . $benchmarkUrl;
+        $url = 'http://' . VhostCreateCommand::HOST . $benchmarkUrl;
+        $urlWithPort = 'http://' . VhostCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
 
         $this
-            ->outputTitle('Validation of ' . $urlWithPort)
-            ->definePhpCliVersion($phpVersion)
-            ->exec(
-                'cp '
-                . $this->getComposerLockFilePath($phpVersion)
-                . ' '
-                . $this->getInstallationPath()
-                . '/composer.lock'
-            )
-            ->exec(
-                'cd '
-                . $this->getInstallationPath()
-                . ' && ./'
-                . $this->getInitBenchmarkFilePath(true)
-            )
-            ->exec(
-                'rm '
-                . $this->getInstallationPath()
-                . '/composer.lock'
-            )
-            ->outputSuccess($this->getInitBenchmarkFilePath(true) . ' executed.');
+            ->runCommand(BenchmarkInitBenchmarkCommand::getDefaultName(), ['phpVersion' => $phpVersion])
+            ->outputTitle('Validation of ' . $urlWithPort);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -118,10 +85,9 @@ final class BenchmarkValidateCommand extends AbstractCommand
         }
 
         if ($validated === false) {
-            file_put_contents('/tmp/benchmark.body', $body);
-            $this
-                ->outputWarning('You canse use "diff /tmp/benchmark.body ' . $responseFile . '" to view differences.')
-                ->throwError('Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.');
+            $this->throwError(
+                'Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.'
+            );
         }
 
         return $this;

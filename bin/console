@@ -6,8 +6,9 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\{
-    Command\ComposerUpdateCommand,
-    Command\BenchmarkValidateCommand,
+    Command\Benchmark\BenchmarkInitBenchmarkCommand,
+    Command\Benchmark\BenchmarkValidateCommand,
+    Command\Composer\ComposerUpdateCommand,
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
     Command\Configure\ConfigureConfigurationClassCommand,
@@ -16,6 +17,7 @@ use App\{
     Command\Configure\ConfigureReadmeCommand,
     Command\Configure\ConfigureResponseBodyCommand,
     Command\Configure\ConfigureVhostCommand,
+    Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateBranchNameCommand,
     Command\Validate\ValidateComposerJsonCommand,
@@ -25,11 +27,16 @@ use App\{
     Command\Validate\ValidateConfigurationInitBenchmarkCommand,
     Command\Validate\ValidateConfigurationResponseBodyCommand,
     Command\Validate\ValidateConfigurationVhostCommand,
-    Command\VhostCreateCommand
+    Command\Vhost\VhostCreateCommand
 };
 use Symfony\Component\Console\Application;
 
 $application = new Application();
+
+$application->add(new BenchmarkInitBenchmarkCommand());
+$application->add(new BenchmarkValidateCommand());
+
+$application->add(new ComposerUpdateCommand());
 
 $application->add(new ConfigureAllCommand());
 $application->add(new ConfigureConfigurationClassCommand());
@@ -39,6 +46,8 @@ $application->add(new ConfigureInitBenchmarkCommand());
 $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigureResponseBodyCommand());
 $application->add(new ConfigureVhostCommand());
+
+$application->add(new PhpVersionCliDefineCommand());
 
 $application->add(new ValidateAllCommand());
 $application->add(new ValidateBranchNameCommand());
@@ -50,8 +59,6 @@ $application->add(new ValidateConfigurationInitBenchmarkCommand());
 $application->add(new ValidateConfigurationResponseBodyCommand());
 $application->add(new ValidateConfigurationVhostCommand());
 
-$application->add(new BenchmarkValidateCommand());
-$application->add(new ComposerUpdateCommand());
 $application->add(new VhostCreateCommand());
 
 $application->run();

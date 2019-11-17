@@ -89,18 +89,18 @@ final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
         ) {
             $this->outputSuccess(
                 'Require '
-                . ComponentConfiguration::getCoreDependencyName()
-                . ': '
-                . $data['require'][ComponentConfiguration::getCoreDependencyName()]
-                . '.'
+                    . ComponentConfiguration::getCoreDependencyName()
+                    . ':'
+                    . $data['require'][ComponentConfiguration::getCoreDependencyName()]
+                    . '.'
             );
         } else {
             $this->throwError(
                 'It should require '
-                . ComponentConfiguration::getCoreDependencyName()
-                . ': '
-                . ComponentConfiguration::getCoreDependencyVersion()
-                . '. See README.md for more informations.'
+                    . ComponentConfiguration::getCoreDependencyName()
+                    . ': '
+                    . ComponentConfiguration::getCoreDependencyVersion()
+                    . '. See README.md for more informations.'
             );
         }
 

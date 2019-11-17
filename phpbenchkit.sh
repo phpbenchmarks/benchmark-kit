@@ -13,6 +13,14 @@ trap exitScript ERR
 readonly CONTAINER_NAME="phpbenchmarks_benchmark-kit"
 readonly DEFAULT_CONFIG_PATH="/tmp/phpbenchmarkkit.default.sh"
 
+function addHost() {
+    local HOST="benchmark-kit.loc"
+    if [ "$(cat /etc/hosts | grep -c ${HOST})" -eq 0 ]; then
+        echo -e "\e[32mAdd host ${HOST}\e[0m..."
+        sudo /bin/sh -c "echo \"127.0.0.1 ${HOST}\" >> /etc/hosts"
+    fi
+}
+
 function startContainer() {
     echo -e "\e[32mStart ${CONTAINER_NAME} container...\e[0m"
 
@@ -51,15 +59,9 @@ function startContainer() {
         -v ${sourceCodePath}:/var/www/benchmark \
         -e NGINX_PORT=${nginxPort} \
         phpbenchmarks/benchmark-kit
-
-    if [ -f "${sourceCodePath}/.phpbenchmarks/vhost.conf" ]; then
-        echo -e "\e[32mCreate vhosts.\e[0m"
-        docker exec -it --user=phpbenchmarks phpbenchmarks_benchmark-kit bin/console vhost:create
-    fi
 }
 
-function stopContainer()
-{
+function stopContainer() {
     if [ ${CONTAINER_STARTED} == 0 ]; then
         echo -e "\e[32mStop ${CONTAINER_NAME} container...\e[0m"
         docker stop phpbenchmarks_benchmark-kit
@@ -81,4 +83,6 @@ if [ "${CONTAINER_STARTED}" == 1 ]; then
     startContainer
 fi
 
-docker exec -it --user=phpbenchmarks phpbenchmarks_benchmark-kit bin/console $@
+addHost
+
+docker exec -it --user=phpbenchmarks phpbenchmarks_benchmark-kit /usr/bin/php7.3 bin/console $@

@@ -36,14 +36,6 @@ RUN \
 # Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
-# Add hosts
-RUN \
-    echo "php56.benchmark.loc 127.0.0.1" >> /etc/hosts \
-    && echo "php70.benchmark.loc 127.0.0.1" >> /etc/hosts \
-    && echo "php71.benchmark.loc 127.0.0.1" >> /etc/hosts \
-    && echo "php72.benchmark.loc 127.0.0.1" >> /etc/hosts \
-    && echo "php73.benchmark.loc 127.0.0.1" >> /etc/hosts
-
 # Install git alone, or it will ask some geographical configs, I don't know why
 RUN apt-get install -y git
 

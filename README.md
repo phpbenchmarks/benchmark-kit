@@ -13,52 +13,41 @@ Benchmark kit is a tool to add a framework or a template engine benchmark on [ph
 
 ## Requirements
 
-You will need this dependencies to make it work:
-* Linux to use Docker and bash scripts
-* [Docker ^18.06](https://docs.docker.com/install/)
-* [docker-compose ^1.12](https://docs.docker.com/compose/install/)
+You will need [Docker ^18.06](https://docs.docker.com/install/) to make it work.
 
 ## Installation
 
-Add vhosts for each PHP version:
+Everything you need to use benchmark kit is is [hpbenchkit.sh](phpbenchkit.sh).
+
+Install it as global bin and give it execute mode:
 ```bash
-echo "127.0.0.1 php56.benchmark.loc" >> /etc/hosts
-echo "127.0.0.1 php70.benchmark.loc" >> /etc/hosts
-echo "127.0.0.1 php71.benchmark.loc" >> /etc/hosts
-echo "127.0.0.1 php72.benchmark.loc" >> /etc/hosts
-echo "127.0.0.1 php73.benchmark.loc" >> /etc/hosts
+sudo wget https://raw.githubusercontent.com/phpbenchmarks/benchmark-kit/master/phpbenchkit.sh -O /usr/local/bin/phpbenchkit
+sudo chmod +x /usr/local/bin/phpbenchkit
 ```
 
-## Start Benchmark kit Docker container
-
+Then call `phpbenchkit`, it will add vhosts and run Docker benchmatk kit container:
 ```bash
-# If container is already running, you need to stop it mannualy
-docker stop phpbenchmarks_benchmark-kit
-docker run \
-    -p 127.0.0.1:8080:80 \
-    -e NGINX_PORT=8080 \
-    -v ~/dev/info-droid/phpbenchmarks/benchmark/cake-php:/var/www/benchmark \
-    -it \
-    -d \
-    --name=phpbenchmarks_benchmark-kit \
-    --rm \
-    phpbenchmarks/benchmark-kit
+# Add vhosts if needed, run Docker container and call bin/console to show available commands
+phpbenchkit
+
+# Restart Docker container
+phpbenchkit --restart
+
+# Stop Docker container
+phpbenchkit --stop
 ```
 
 ## Benchmark kit commands
 
+List available commands:
 ```bash
-docker exec -it phpbenchmarks_benchmark-kit bin/console
+phpbenchkit
 ```
 
 Almost all commands accept this options:
 * `--skip-branch-name`: don't validate git branch name, usefull while you are in development and repositories are not created yet.
 * `--skip-source-code-urls`: don't validate source code urls, usefull while you are in development.
 * `--validate-prod`: you should not need it, it's used when we test your code before benchmarking it.
-
-```bash
-docker exec -it phpbenchmarks_benchmark-kit benchmark:validate --skip-branch-name --skip-source-code-urls
-```
 
 ## #1 Ask us to create repositories
 
@@ -69,50 +58,32 @@ and `your github username` to allow you to commit on this repositories.
 
 We will send you an email when repositories will be created.
 
-
-## #2 Start benchmark kit
-
-To start benchmark kit Docker container, you have to call `./vendor/bin/start.sh`.
-
-Do not start is as root, use your user.
-
-It will ask you the directory where you code is located.
-You can pass this directory as parameter to this script.
-
-```bash
-./vendor/bin/start.sh
-./vendor/bin/start.sh /foo/code
-```
-
-## #3 Initialize code
+## #2 Initialize code
 
 To make your benchmark work you will need some files into `.phpbenchmarks` directory:
 * `Configuration.php`: configuration of benchmarked component.
 * `initBenchmark.sh`: called before the benchmark to initialize everything (composer install, cache warmup etc).
 * `vhost.conf`: nginx virtual host configuration.
 * `responseBody/`: benchmark url body will be compared to files in this directory to validate it's content.
+* `composer/composer.lock.phpX.Y`: created by `phpbenchkit composer:update` to install dependencies by PHP version.
 
-All this files can be created and configured with `phpbench` commands:
+All this files can be created and configured with `phpbenchkit` commands:
 
 ```
-composer:update                     Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer/composer.lock.phpX.Y
-
-configure:all                       Call all configure commands
-configure:component                 Create .phpbenchmarks/Configuration.php and configure it
-configure:component:sourceCodeUrls  Create .phpbenchmarks/Configuration.php and configure getSourceCodeUrls()
-configure:directory                 Create .phpbenchmarks directory and subdirectories
-configure:initBenchmark             Create .phpbenchmarks/initBenchmark.sh
-configure:readme                    Create README.md
-configure:responseBody              Create .phpbenchmarks/responseBody files
-configure:vhost                     Create .phpbenchmarks/vhost.conf and phpXY.benchmark.loc vhosts then reload nginx
+composer
+    composer:update                                 Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer/composer.lock.phpX.Y
+configure
+    configure:all                                   Call all configure commands and composer:update
+    configure:configuration-class                   Create .phpbenchmarks/Configuration.php and configure it
+    configure:configuration-class:source-code-urls  Create .phpbenchmarks/Configuration.php and configure getSourceCodeUrls()
+    configure:directory                             Create .phpbenchmarks directory and subdirectories
+    configure:initBenchmark                         Create .phpbenchmarks/initBenchmark.sh
+    configure:readme                                Create README.md
+    configure:response-body                         Create .phpbenchmarks/responseBody files
+    configure:vhost                                 Create .phpbenchmarks/vhost.conf
 ```
 
-You can call `configure:all` to create all of them, or use the one your need.
-
-Note the `phpbench composer:update` command. We need a `composer.lock` per PHP version,
-because some dependencies are installed in different versions depending on the version of PHP.
-
-Use `phpbench composer:update` to switch between PHP version, and create `.phpbenchmarks/composer/composer.lock.phpX.Y`.
+You can call `configure:all` to create all of them or use the one your need.
 
 ```bash
 phpbench composer:update
@@ -148,20 +119,18 @@ Note that `all` component benchmarks needs to bo validated to make your componen
 
 ## #5 Test and validate your code
 
-Docker container provide a domain for each PHP version, from 5.6 to 7.3:
-* http://php56.benchmark.loc
-* http://php70.benchmark.loc
-* http://php71.benchmark.loc
-* http://php72.benchmark.loc
-* http://php73.benchmark.loc
+Docker container provide a domain to test your code: `http://benchmark-kit.loc`.
 
-You can use them to test your code.
+To change PHP version (CLI and FPM):
+```bash
+phpbenchkit 
+```
 
 When you think it's ok, use `phpbench benchmark:validate` to validate it.
 
 ## #6 Submit your code
 
-When `phpbench benchmark:validate` say it's good,
-you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact?subject=launch-benchmark).
+When `phpbench benchmark:validate` say it's good, push your code,
+then you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact?subject=launch-benchmark).
 
 Thank you!
