@@ -6,13 +6,17 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Command\Composer\ComposerUpdateCommand,
+    Command\PhpVersionArgumentTrait,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
-    PhpVersion\PhpVersion
 };
+use Symfony\Component\Console\Input\InputArgument;
 
 final class ValidateConfigurationComposerLockCommand extends AbstractComposerFilesCommand
 {
+    use PhpVersionArgumentTrait;
+
     /** @var string */
     protected static $defaultName = 'validate:configuration:composer:lock';
 
@@ -22,7 +26,7 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
 
         $this
             ->setDescription('Validate dependencies in ' . $this->getComposerLockFilePath('X.Y', true))
-            ->addArgument('phpVersion', null, 'Version of PHP: 5.6, 7.0, 7.1, 7.2 or 7.3');
+            ->addPhpVersionArgument($this, InputArgument::OPTIONAL);
     }
 
     protected function doExecute(): AbstractCommand
@@ -31,12 +35,8 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
             return $this;
         }
 
-        $phpVersion = $this->getInput()->getArgument('phpVersion');
-        if (is_string($phpVersion) && in_array($phpVersion, PhpVersion::getAll()) === false) {
-            throw new \Exception('Invalid PHP version ' . $phpVersion . '.');
-        }
-
         $this
+            ->assertPhpVersionArgument($this, true)
             ->validateDisabledPhpVersions()
             ->validateEnabledPhpVersions();
 
@@ -51,7 +51,7 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
                 ?
                     $this->throwError(
                         'File should not exist, as this PHP version is disabled by configuration.'
-                        . ' See README.md for more informations.'
+                            . ' See README.md for more informations.'
                     )
                 : $this->outputSuccess('File does not exist.');
         }
@@ -66,7 +66,11 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
 
             $lockPath = $this->getComposerLockFilePath($phpVersion);
             if (is_readable($lockPath) === false) {
-                $this->throwError('File does not exist. Call "phpbench composer:update" to create it.');
+                $this->throwError(
+                    'File does not exist. Call "phpbenchkit '
+                        . ComposerUpdateCommand::getDefaultName()
+                        . '" to create it.'
+                );
             }
 
             try {
@@ -96,20 +100,20 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
                 ) {
                     $this->throwError(
                         'Package '
-                        . ComponentConfiguration::getCoreDependencyName()
-                        . ' version should be '
-                        . ComponentConfiguration::getCoreDependencyVersion()
-                        . ', '
-                        . $package['version']
-                        . ' found.'
+                            . ComponentConfiguration::getCoreDependencyName()
+                            . ' version should be '
+                            . ComponentConfiguration::getCoreDependencyVersion()
+                            . ', '
+                            . $package['version']
+                            . ' found.'
                     );
                 } else {
                     $this->outputSuccess(
                         'Package '
-                        . ComponentConfiguration::getCoreDependencyName()
-                        . ' version is '
-                        . ComponentConfiguration::getCoreDependencyVersion()
-                        . '.'
+                            . ComponentConfiguration::getCoreDependencyName()
+                            . ' version is '
+                            . ComponentConfiguration::getCoreDependencyVersion()
+                            . '.'
                     );
                     break;
                 }
@@ -150,12 +154,12 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
                         :
                             $this->throwError(
                                 'Package '
-                                . $commonRepositoryName
-                                . ' version should be '
-                                . $commonExpectedVersion
-                                . ' but is '
-                                . $package['version']
-                                . '. See README.md for more informations.'
+                                    . $commonRepositoryName
+                                    . ' version should be '
+                                    . $commonExpectedVersion
+                                    . ' but is '
+                                    . $package['version']
+                                    . '. See README.md for more informations.'
                             );
                 }
             }
@@ -170,7 +174,7 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
 
     private function getPhpVersions(array $phpVersions): array
     {
-        $phpVersion = $this->getInput()->getArgument('phpVersion');
+        $phpVersion = $this->getPhpVersionFromArgument($this);
         if (is_string($phpVersion)) {
             $return = in_array($phpVersion, $phpVersions) ? [$phpVersion] : [];
         } else {

@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkType,
+    Command\Configure\ConfigureAllCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     Exception\HiddenValidationException,
@@ -20,6 +21,7 @@ use Symfony\Component\Console\{
     Question\ConfirmationQuestion,
     Question\Question
 };
+use Symfony\Component\Process\Process;
 
 abstract class AbstractCommand extends Command
 {
@@ -197,6 +199,24 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
+    protected function runProcess(
+        array $commands,
+        int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
+        string $cwd = null
+    ): self {
+        (new Process($commands, $cwd ?? $this->getInstallationPath()))
+            ->mustRun(
+                function (string $type, string $line) use ($outputVerbosity) {
+                    if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {
+                        $this->getOutput()->writeln($line);
+                    }
+                }
+            );
+
+        return $this;
+    }
+
+    /** @return $this */
     protected function exec(string $command, string $error = 'Error'): self
     {
         $this->execAndGetOutput($command, $error);
@@ -212,14 +232,6 @@ abstract class AbstractCommand extends Command
         }
 
         return $return;
-    }
-
-    /** @return $this */
-    protected function definePhpCliVersion(string $version): self
-    {
-        $this->exec('sudo /usr/bin/update-alternatives --set php /usr/bin/php' . $version);
-
-        return $this;
     }
 
     /** @return $this */
@@ -300,19 +312,16 @@ abstract class AbstractCommand extends Command
     protected function assertFileExist(string $filePath, string $shortFilePath): self
     {
         if (is_readable($filePath) === false) {
-            $this->throwError('File ' . $shortFilePath . ' does not exist. Use "phpbench configure:all" to create it.');
+            $this->throwError(
+                'File '
+                    . $shortFilePath
+                    . ' does not exist. Use "phpbenchkit '
+                    . ConfigureAllCommand::getDefaultName()
+                    . '" to create it.'
+            );
         }
         $this->outputSuccess('File ' . $shortFilePath . ' exist.');
 
         return $this;
-    }
-
-    protected function getHost(string $phpVersion, bool $addPort = true): string
-    {
-        return
-            'php'
-                . str_replace('.', null, $phpVersion)
-                . '.benchmark.loc'
-                . ($addPort ? ':' . getenv('NGINX_PORT') : null);
     }
 }

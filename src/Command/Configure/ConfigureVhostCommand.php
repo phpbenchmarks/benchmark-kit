@@ -6,8 +6,7 @@ namespace App\Command\Configure;
 
 use App\{
     Command\AbstractCommand,
-    Command\Validate\ValidateConfigurationVhostCommand,
-    Command\VhostCreateCommand
+    Command\Validate\ValidateConfigurationVhostCommand
 };
 
 final class ConfigureVhostCommand extends AbstractConfigureCommand
@@ -19,9 +18,7 @@ final class ConfigureVhostCommand extends AbstractConfigureCommand
     {
         parent::configure();
 
-        $this->setDescription(
-            'Create ' . $this->getVhostFilePath(true) . ' and phpXY.benchmark.loc vhosts then reload nginx'
-        );
+        $this->setDescription('Create ' . $this->getVhostFilePath(true));
     }
 
     protected function doExecute(): AbstractCommand
@@ -29,8 +26,7 @@ final class ConfigureVhostCommand extends AbstractConfigureCommand
         $this
             ->outputTitle('Creation of ' . $this->getVhostFilePath(true))
             ->copyDefaultConfigurationFile('vhost.conf')
-            ->runCommand(ValidateConfigurationVhostCommand::getDefaultName())
-            ->runCommand(VhostCreateCommand::getDefaultName());
+            ->runCommand(ValidateConfigurationVhostCommand::getDefaultName());
 
         return $this;
     }

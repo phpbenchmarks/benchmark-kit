@@ -7,6 +7,7 @@ namespace App\Command\Validate;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Configure\ConfigureConfigurationClassCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
@@ -47,7 +48,11 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
 
     protected function onError(): parent
     {
-        $this->outputWarning('You can call "phpbench configure:component" to create Configuration class.');
+        $this->outputWarning(
+            'You can call "phpbenchkit '
+                . ConfigureConfigurationClassCommand::getDefaultName()
+                . '" to create Configuration class.'
+        );
 
         return $this;
     }

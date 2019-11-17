@@ -24,10 +24,10 @@ final class ValidateBranchNameCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this->outputTitle('Validation of git branch name');
-
         if ($this->skipBranchName() === false) {
-            $this->validateBranchName();
+            $this
+                ->outputTitle('Validation of git branch name')
+                ->validateBranchName();
         }
 
         return $this;

@@ -7,6 +7,7 @@ namespace App\Command\Validate;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Validator\{
@@ -53,7 +54,11 @@ final class ValidateConfigurationComponentSourceCodeUrlsCommand extends Abstract
     protected function onError(): parent
     {
         $this
-            ->outputWarning('You can call "phpbench configure:component:sourceCodeUrls" to configure it.')
+            ->outputWarning(
+                'You can call "phpbenchkit '
+                    . ConfigureComponentSourceCodeUrlsCommand::getDefaultName()
+                    . '" to configure it.'
+            )
             ->outputWarning('You can add --skip-source-code-urls parameter to skip this validation.');
 
         return $this;
