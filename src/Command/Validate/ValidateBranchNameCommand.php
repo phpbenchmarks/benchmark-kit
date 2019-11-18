@@ -63,12 +63,13 @@ final class ValidateBranchNameCommand extends AbstractCommand
     private function getBranchName(): string
     {
         $command =
-            'git branch --no-color 2> /dev/null'
+            'cd ' . $this->getInstallationPath()
+            . ' && git branch --no-color 2> /dev/null'
             . ' | sed -e \'/^[^*]/d\' -e \'s/* \(.*\)/(\1)/\' -e \'s/(//g\' -e \'s/)//g\'';
 
         // As command is tricky, I prefer using exec() instead of Process
         exec($command, $return, $returnCode);
-        if ($returnCode > 0) {
+        if ($returnCode > 0 || is_array($return) === false || count($return) !== 1) {
             $this->throwError('Can\'t get git branch name.');
         }
 
