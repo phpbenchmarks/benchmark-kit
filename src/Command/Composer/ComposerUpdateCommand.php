@@ -11,6 +11,7 @@ use App\{
     Command\Validate\ValidateConfigurationComposerLockCommand,
     ComponentConfiguration\ComponentConfiguration
 };
+use Symfony\Component\Console\Output\OutputInterface;
 
 final class ComposerUpdateCommand extends AbstractCommand
 {
@@ -35,14 +36,9 @@ final class ComposerUpdateCommand extends AbstractCommand
             $this
                 ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion])
                 ->outputTitle('Update Composer dependencies')
-                ->exec('cd ' . $this->getInstallationPath() . ' && composer update --ansi')
+                ->runProcess(['composer', 'update', '--ansi'], OutputInterface::VERBOSITY_VERBOSE)
                 ->outputSuccess('Composer update done.')
-                ->exec(
-                    'cd '
-                        . $this->getInstallationPath()
-                        . ' && mv composer.lock '
-                        . $this->getComposerLockFilePath($phpVersion, true)
-                )
+                ->runProcess(['mv', 'composer.lock', $this->getComposerLockFilePath($phpVersion, true)])
                 ->outputSuccess(
                     'Move composer.lock to '
                         . $this->getComposerLockFilePath($phpVersion, true)

@@ -217,24 +217,6 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function exec(string $command, string $error = 'Error'): self
-    {
-        $this->execAndGetOutput($command, $error);
-
-        return $this;
-    }
-
-    protected function execAndGetOutput(string $command, string $error = 'Error'): array
-    {
-        exec($command, $return, $returnCode);
-        if ($returnCode > 0) {
-            $this->throwError($error);
-        }
-
-        return $return;
-    }
-
-    /** @return $this */
     protected function runCommand(string $name, array $arguments = []): self
     {
         if ($this->validateProd()) {

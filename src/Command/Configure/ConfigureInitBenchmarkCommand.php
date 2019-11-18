@@ -30,7 +30,7 @@ final class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
                 false,
                 'File has been created but is very basic. Don\'t forget to edit it.'
             )
-            ->exec('chmod +x ' . $this->getInitBenchmarkFilePath())
+            ->runProcess(['chmod', '+x', $this->getInitBenchmarkFilePath()])
             ->outputSuccess('Make ' . $this->getInitBenchmarkFilePath(true) . ' executable.')
             ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName());
 
