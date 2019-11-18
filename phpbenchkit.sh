@@ -10,6 +10,7 @@ function exitScript() {
 set -e
 trap exitScript ERR
 
+readonly ROOT_DIR=$(realpath $(dirname $(realpath $0)))
 readonly CONTAINER_NAME="phpbenchmarks_benchmark-kit"
 readonly DEFAULT_CONFIG_PATH="/tmp/phpbenchmarkkit.default.sh"
 
@@ -50,6 +51,12 @@ function startContainer() {
     echo "defaultSourceCodePath=${sourceCodePath}" >> ${DEFAULT_CONFIG_PATH}
     echo "defaultNginxPort=${nginxPort}" >> ${DEFAULT_CONFIG_PATH}
 
+    if [ ${paramDev} == true ]; then
+        benchmarkKitVolume="-v ${ROOT_DIR}:/var/benchmark-kit"
+    else
+        benchmarkKitVolume=""
+    fi
+
     docker run \
         -it \
         -d \
@@ -57,6 +64,7 @@ function startContainer() {
         --rm \
         -p 127.0.0.1:${nginxPort}:80 \
         -v ${sourceCodePath}:/var/www/benchmark \
+        ${benchmarkKitVolume} \
         -e NGINX_PORT=${nginxPort} \
         phpbenchmarks/benchmark-kit
 }
@@ -68,21 +76,35 @@ function stopContainer() {
     fi
 }
 
-if [ "$1" == "--stop" ]; then
+paramStop=false
+paramRestart=false
+paramDev=false
+consoleParams=""
+for param in "$@"; do
+    if [ "$param" == "--stop" ]; then
+        paramStop=true
+    elif [ "$param" == "--restart" ]; then
+        paramRestart=true
+    elif [ "$param" == "--dev" ]; then
+        paramDev=true
+    else
+        consoleParams="${consoleParams} $param"
+    fi
+done
+
+
+if [ $paramStop == true ]; then
     stopContainer
     exit 0
 fi
 
-if [ "$1" == "--restart" ]; then
+if [ $paramRestart == true ]; then
     stopContainer
     startContainer
-    exit 0
-fi
-
-if [ "${CONTAINER_STARTED}" == 1 ]; then
+elif [ "${CONTAINER_STARTED}" == 1 ]; then
     startContainer
 fi
 
 addHost
 
-docker exec -it --user=phpbenchmarks phpbenchmarks_benchmark-kit /usr/bin/php7.3 bin/console $@
+docker exec -it --user=phpbenchmarks phpbenchmarks_benchmark-kit /usr/bin/php7.3 bin/console ${consoleParams}
