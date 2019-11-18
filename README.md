@@ -40,7 +40,7 @@ phpbenchkit --stop
 phpbenchkit --selfupdate
 ```
 
-## Benchmark kit commands
+## Benchmark kit commands
 
 List available commands:
 ```bash
@@ -108,7 +108,6 @@ validate:configuration:vhost                     Validate .phpbenchmarks/vhost.c
 ```
 
 ## #4 Add required feaures for benchmarks
--
 
 Choose the component type and benchmark type you want to code:
 
