@@ -117,7 +117,7 @@ final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
             $shouldRequire = $branchPrefix . 'z';
             $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
 
-            if ($isBranchValid === false && $this->validateProd() === false) {
+            if ($isBranchValid === false && $this->isValidateProd() === false) {
                 $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
                 $isBranchValid = ($data['require'][$commonRepository] ?? null) === $this->getCommonDevBranchName();
             }

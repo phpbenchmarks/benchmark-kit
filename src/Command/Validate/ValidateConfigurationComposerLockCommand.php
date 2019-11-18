@@ -141,7 +141,7 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
                     $shouldRequire = $branchPrefix . 'z';
                     $isBranchValid = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
 
-                    if ($isBranchValid === false && $this->validateProd() === false) {
+                    if ($isBranchValid === false && $this->isValidateProd() === false) {
                         $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
                         $isBranchValid = $package['version'] === $this->getCommonDevBranchName();
                     }

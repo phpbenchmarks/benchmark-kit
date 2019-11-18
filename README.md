@@ -23,7 +23,6 @@ Install it as global bin and give it execute mode:
 ```bash
 sudo wget https://raw.githubusercontent.com/phpbenchmarks/benchmark-kit/4.0.0/phpbenchkit.sh -O /usr/local/bin/phpbenchkit
 sudo chmod +x /usr/local/bin/phpbenchkit
-phpbenchkit --selfupdate
 ```
 
 Then call `phpbenchkit`, it will add vhosts and run Docker benchmatk kit container:

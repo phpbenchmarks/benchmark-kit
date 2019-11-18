@@ -6,7 +6,7 @@ namespace App\Command\Configure;
 
 use App\{
     Command\AbstractCommand,
-    Command\ComposerUpdateCommand
+    Command\Composer\ComposerUpdateCommand
 };
 
 final class ConfigureAllCommand extends AbstractCommand
@@ -34,6 +34,7 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigureInitBenchmarkCommand::getDefaultName())
             ->runCommand(ConfigureVhostCommand::getDefaultName())
             ->runCommand(ConfigureResponseBodyCommand::getDefaultName())
+            ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
     }
 

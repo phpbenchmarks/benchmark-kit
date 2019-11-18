@@ -79,6 +79,7 @@ RUN /usr/bin/update-alternatives --set php /usr/bin/php7.3
 COPY bin/console /var/benchmark-kit/bin/console
 COPY documentation /var/benchmark-kit/documentation
 COPY src /var/benchmark-kit/src
+COPY templates /var/benchmark-kit/templates
 COPY vendor /var/benchmark-kit/vendor
 COPY changelog.md /var/benchmark-kit/changelog.md
 COPY README.md /var/benchmark-kit/README.md
