@@ -137,26 +137,26 @@ final class ValidateConfigurationComposerLockCommand extends AbstractComposerFil
                 if ($package['name'] === $commonRepositoryName) {
                     $packageFound = true;
 
-                    if ($this->validateProd()) {
-                        $branchPrefix = $this->getCommonProdBranchPrefix();
-                        $commonExpectedVersion = $branchPrefix . 'z';
-                        $isValidBranch = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
-                    } else {
-                        $commonExpectedVersion = $this->getCommonDevBranchName();
-                        $isValidBranch = $package['version'] === $commonExpectedVersion;
+                    $branchPrefix = $this->getCommonProdBranchPrefix();
+                    $shouldRequire = $branchPrefix . 'z';
+                    $isBranchValid = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
+
+                    if ($isBranchValid === false && $this->validateProd() === false) {
+                        $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
+                        $isBranchValid = $package['version'] === $this->getCommonDevBranchName();
                     }
 
-                    $isValidBranch
+                    $isBranchValid
                         ?
                             $this->outputSuccess(
-                                'Package ' . $commonRepositoryName . ' version is ' . $commonExpectedVersion . '.'
+                                'Package ' . $commonRepositoryName . ' version is ' . $package['version'] . '.'
                             )
                         :
                             $this->throwError(
                                 'Package '
                                     . $commonRepositoryName
                                     . ' version should be '
-                                    . $commonExpectedVersion
+                                    . $shouldRequire
                                     . ' but is '
                                     . $package['version']
                                     . '. See README.md for more informations.'
