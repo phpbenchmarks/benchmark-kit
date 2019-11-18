@@ -42,7 +42,7 @@ abstract class AbstractCommand extends Command
     /** @var bool */
     private $skipSourceCodeUrls = false;
 
-    public function validateProd(): bool
+    public function isValidateProd(): bool
     {
         return $this->validateProd;
     }
@@ -219,7 +219,7 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function runCommand(string $name, array $arguments = []): self
     {
-        if ($this->validateProd()) {
+        if ($this->isValidateProd()) {
             $arguments['--validate-prod'] = true;
         }
         if ($this->skipBranchName()) {
@@ -305,5 +305,10 @@ abstract class AbstractCommand extends Command
         $this->outputSuccess('File ' . $shortFilePath . ' exist.');
 
         return $this;
+    }
+
+    protected function removeInstallationPathPrefix(string $path): string
+    {
+        return substr($path, strlen($this->getInstallationPath()) + 1);
     }
 }

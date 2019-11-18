@@ -10,6 +10,7 @@ use App\{
     Command\Benchmark\BenchmarkValidateCommand,
     Command\Composer\ComposerUpdateCommand,
     Command\Configure\ConfigureAllCommand,
+    Command\Configure\ConfigureCircleCiCommand,
     Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
     Command\Configure\ConfigureConfigurationClassCommand,
     Command\Configure\ConfigureDirectoryCommand,
@@ -39,6 +40,7 @@ $application->add(new BenchmarkValidateCommand());
 $application->add(new ComposerUpdateCommand());
 
 $application->add(new ConfigureAllCommand());
+$application->add(new ConfigureCircleCiCommand());
 $application->add(new ConfigureConfigurationClassCommand());
 $application->add(new ConfigureComponentSourceCodeUrlsCommand());
 $application->add(new ConfigureDirectoryCommand());

@@ -45,7 +45,7 @@ final class ValidateBranchNameCommand extends AbstractCommand
             . ComponentConfiguration::getCoreDependencyMinorVersion()
             . '_'
             . BenchmarkType::getSlug(ComponentConfiguration::getBenchmarkType());
-        if ($this->validateProd() === false) {
+        if ($this->isValidateProd() === false) {
             $expectedGitBranch .= '_prepare';
         }
 
