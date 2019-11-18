@@ -3,11 +3,38 @@
 set -e
 
 readonly DOCKER_DIRECTORY=$(realpath $(dirname $(realpath $0)))
-readonly TAG="phpbenchmarks/benchmark-kit"
+readonly IMAGE_NAME="phpbenchmarks/benchmark-kit"
 
-docker build ${DOCKER_DIRECTORY}/.. --file=docker/Dockerfile --tag=${TAG}
+dockerQuiet="-q"
+push=false
+for param in "$@"; do
+    if [ "${param}" == "-v" ]; then
+        dockerQuiet=""
+    elif [ "${param}" == "--push" ]; then
+        push=true
+    fi
+done
 
-if [ "$1" == "--push" ]; then
+echo -en "\e[44m Major version? \e[0m "
+read majorVersion
+
+echo -en "\e[44m Minor version? \e[0m "
+read minorVersion
+
+echo -en "\e[44m Bugfix version? \e[0m "
+read bugfixVersion
+
+readonly IMAGE_BUGFIX_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}.${bugfixVersion}
+readonly IMAGE_MINOR_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}
+readonly IMAGE_MAJOR_TAG=${IMAGE_NAME}:${majorVersion}
+
+docker build ${DOCKER_DIRECTORY}/.. --file=docker/Dockerfile --tag=${IMAGE_BUGFIX_TAG} ${dockerQuiet}
+docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MINOR_TAG}
+docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MAJOR_TAG}
+
+if [ ${push} == true ]; then
     docker login --username=phpbenchmarks
-    docker push ${TAG}
+    docker push ${IMAGE_BUGFIX_TAG}
+    docker push ${IMAGE_MINOR_TAG}
+    docker push ${IMAGE_MAJOR_TAG}
 fi
