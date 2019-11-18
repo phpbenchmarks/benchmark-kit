@@ -76,12 +76,13 @@ RUN \
 RUN /usr/bin/update-alternatives --set php /usr/bin/php7.3
 
 # Copy benchmark kit source code
-COPY --chown=phpbenchmarks bin/console /var/benchmark-kit/bin/console
-COPY --chown=phpbenchmarks documentation /var/benchmark-kit/documentation
-COPY --chown=phpbenchmarks src /var/benchmark-kit/src
-COPY --chown=phpbenchmarks vendor /var/benchmark-kit/vendor
-COPY --chown=phpbenchmarks changelog.md /var/benchmark-kit/changelog.md
-COPY --chown=phpbenchmarks README.md /var/benchmark-kit/README.md
+COPY bin/console /var/benchmark-kit/bin/console
+COPY documentation /var/benchmark-kit/documentation
+COPY src /var/benchmark-kit/src
+COPY vendor /var/benchmark-kit/vendor
+COPY changelog.md /var/benchmark-kit/changelog.md
+COPY README.md /var/benchmark-kit/README.md
+COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
 
 # Run
 WORKDIR /var/benchmark-kit
