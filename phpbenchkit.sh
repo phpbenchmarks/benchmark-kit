@@ -8,17 +8,19 @@ else
 fi
 
 function exitScript() {
-    echo -e "\e[41m Error, script canceled. \e[0m"
+    if [ "$?" != "0" ]; then
+        echo -e "\e[41m Error, script canceled. \e[0m"
+    fi
 }
 
 set -e
-trap exitScript ERR
+trap exitScript EXIT
 
 readonly ROOT_DIR=$(realpath $(dirname $(realpath $0)))
 readonly CONTAINER_NAME="phpbenchmarks_benchmark-kit"
+readonly SELFUPDATE_CONTAINER_NAME="${CONTAINER_NAME}_selfupdate"
 readonly DEFAULT_CONFIG_PATH="/tmp/phpbenchmarkkit.default.sh"
 readonly DOCKER_IMAGE_NAME="phpbenchmarks/benchmark-kit:4"
-readonly DOCKER_CONTAINER_NAME="phpbenchmarks_benchmark-kit"
 
 function addHost() {
     local HOST="benchmark-kit.loc"
@@ -66,7 +68,7 @@ function startContainer() {
     docker run \
         -it \
         -d \
-        --name=phpbenchmarks_benchmark-kit \
+        --name=$CONTAINER_NAME \
         --rm \
         -p 127.0.0.1:$nginxPort:80 \
         -v $sourceCodePath:/var/www/benchmark \
@@ -77,10 +79,22 @@ function startContainer() {
     containerStarted=true
 }
 
+function updatePhpBenchKitScript()
+{
+    docker run \
+        -it \
+        -d \
+        --name=$SELFUPDATE_CONTAINER_NAME \
+        --rm \
+        $DOCKER_IMAGE_NAME
+    docker cp $SELFUPDATE_CONTAINER_NAME:/var/benchmark-kit/phpbenchkit.sh $ROOT_DIR/$(basename $0)
+    docker stop $SELFUPDATE_CONTAINER_NAME
+}
+
 function stopContainer() {
     if [ $containerStarted == true ]; then
         echo -e "\e[32mStop $CONTAINER_NAME container...\e[0m"
-        docker stop phpbenchmarks_benchmark-kit
+        docker stop $CONTAINER_NAME
     fi
 }
 
@@ -105,9 +119,10 @@ done
 
 if [ $selfUpdate == true ]; then
     stopContainer
-    docker rmi $DOCKER_IMAGE_NAME
-    startContainer
-    docker cp $DOCKER_CONTAINER_NAME:/var/benchmark-kit/phpbenchkit.sh $ROOT_DIR/$(basename $0)
+    set +e
+    docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep phpbenchmarks/benchmark-kit)
+    set -e
+    updatePhpBenchKitScript
     exit 0
 fi
 
@@ -127,4 +142,4 @@ fi
 
 addHost
 
-docker exec -it --user=phpbenchmarks $DOCKER_CONTAINER_NAME /usr/bin/php7.3 bin/console $consoleParams
+docker exec -it --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.3 bin/console $consoleParams
