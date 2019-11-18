@@ -10,8 +10,8 @@ service php7.1-fpm start
 service php7.2-fpm start
 service php7.3-fpm start
 
-if [ "$1" == "--nginx-as-daemon" ]; then
-    nginx -g "daemon off;"
-else
+if [ "$1" == "--nginx-as-service" ]; then
     service nginx start
+else
+    nginx -g "daemon off;"
 fi
