@@ -35,14 +35,8 @@ final class ValidateBranchNameCommand extends AbstractCommand
 
     private function validateBranchName(): self
     {
-        $cmd =
-            'git branch --no-color 2> /dev/null'
-            . ' | sed -e \'/^[^*]/d\' -e \'s/* \(.*\)/(\1)/\' -e \'s/(//g\' -e \'s/)//g\'';
-        $branchName =
-            $this->execAndGetOutput(
-                'cd ' . $this->getInstallationPath() . ' && ' . $cmd,
-                'Can\'t get git branch name.'
-            )[0] ?? null;
+        $branchName = $this->getBranchName();
+
         $expectedGitBranch =
             ComponentConfiguration::getComponentSlug()
             . '_'
@@ -64,5 +58,20 @@ final class ValidateBranchNameCommand extends AbstractCommand
         $this->outputSuccess('Branch name is ' . $branchName . '.');
 
         return $this;
+    }
+
+    private function getBranchName(): string
+    {
+        $command =
+            'git branch --no-color 2> /dev/null'
+            . ' | sed -e \'/^[^*]/d\' -e \'s/* \(.*\)/(\1)/\' -e \'s/(//g\' -e \'s/)//g\'';
+
+        // As command is tricky, I prefer using exec() instead of Process
+        exec($command, $return, $returnCode);
+        if ($returnCode > 0) {
+            $this->throwError('Can\'t get git branch name.');
+        }
+
+        return $return[0];
     }
 }
