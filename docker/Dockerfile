@@ -86,4 +86,4 @@ COPY --chown=phpbenchmarks README.md /var/benchmark-kit/README.md
 # Run
 WORKDIR /var/benchmark-kit
 COPY --chown=phpbenchmarks docker/entrypoint.sh /var/entrypoint.sh
-ENTRYPOINT ["/var/entrypoint.sh", "--nginx-as-daemon"]
+ENTRYPOINT ["/var/entrypoint.sh"]
