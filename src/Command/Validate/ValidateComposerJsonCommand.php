@@ -113,17 +113,17 @@ final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
             $commonRepository = $this->getCommonRepositoryName();
             $commonVersion = $data['require'][$commonRepository] ?? null;
 
-            if ($this->validateProd()) {
-                $branchPrefix = $this->getCommonProdBranchPrefix();
-                $branch = $branchPrefix . 'z';
-                $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
-            } else {
-                $branch = $this->getCommonDevBranchName();
-                $isBranchValid = ($data['require'][$commonRepository] ?? null) === $branch;
+            $branchPrefix = $this->getCommonProdBranchPrefix();
+            $shouldRequire = $branchPrefix . 'z';
+            $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
+
+            if ($isBranchValid === false && $this->validateProd() === false) {
+                $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
+                $isBranchValid = ($data['require'][$commonRepository] ?? null) === $this->getCommonDevBranchName();
             }
 
             $isBranchValid
-                ? $this->outputSuccess('Require ' . $commonRepository . ': ' . $branch . '.')
+                ? $this->outputSuccess('Require ' . $commonRepository . ': ' . $commonVersion . '.')
                 :
                     $this
                         ->outputWarning('You can add --skip-branch-name parameter to skip this validation.')
@@ -131,7 +131,7 @@ final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
                             'It should require '
                             . $commonRepository
                             . ': '
-                            . $branch
+                            . $shouldRequire
                             . ' but is '
                             . $commonVersion
                             . '. See README.md for more informations.'
