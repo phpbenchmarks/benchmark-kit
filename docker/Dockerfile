@@ -85,6 +85,11 @@ COPY changelog.md /var/benchmark-kit/changelog.md
 COPY README.md /var/benchmark-kit/README.md
 COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
 
+# Configure nginx default page
+COPY docker/html /var/www/html
+COPY docker/nginx/default /etc/nginx/sites-available
+RUN rm /var/www/html/index.nginx-debian.html
+
 # Run
 WORKDIR /var/benchmark-kit
 COPY --chown=phpbenchmarks docker/entrypoint.sh /var/entrypoint.sh

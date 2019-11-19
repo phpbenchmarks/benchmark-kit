@@ -1,0 +1,12 @@
+body {
+    cursor: default;
+}
+
+.center {
+    text-align: center;
+}
+
+.bash {
+    background-color: #bfbfbf;
+    padding: 3px 5px;
+}
