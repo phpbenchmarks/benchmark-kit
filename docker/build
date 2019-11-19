@@ -28,6 +28,8 @@ readonly IMAGE_BUGFIX_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}.${bugfix
 readonly IMAGE_MINOR_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}
 readonly IMAGE_MAJOR_TAG=${IMAGE_NAME}:${majorVersion}
 
+composer install --no-dev
+
 docker build ${DOCKER_DIRECTORY}/.. --file=docker/Dockerfile --tag=${IMAGE_BUGFIX_TAG} ${dockerQuiet}
 docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MINOR_TAG}
 docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MAJOR_TAG}

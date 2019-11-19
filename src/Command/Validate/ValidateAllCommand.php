@@ -20,14 +20,19 @@ final class ValidateAllCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        return $this
+        $this
             ->runCommand(ValidateBranchNameCommand::getDefaultName())
             ->runCommand(ValidateComposerJsonCommand::getDefaultName())
             ->runCommand(ValidateConfigurationComposerLockCommand::getDefaultName())
             ->runCommand(ValidateConfigurationConfigurationClassCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationComponentSourceCodeUrlsCommand::getDefaultName())
             ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName())
             ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName())
             ->runCommand(ValidateConfigurationVhostCommand::getDefaultName());
+
+        if ($this->skipSourceCodeUrls() === false) {
+            $this->runCommand(ValidateConfigurationComponentSourceCodeUrlsCommand::getDefaultName());
+        }
+
+        return $this;
     }
 }
