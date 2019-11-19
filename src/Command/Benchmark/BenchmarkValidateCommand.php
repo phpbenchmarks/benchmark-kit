@@ -51,7 +51,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
         $urlWithPort = 'http://' . VhostCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
 
         $this
-            ->runCommand(BenchmarkInitBenchmarkCommand::getDefaultName(), ['phpVersion' => $phpVersion])
+            ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion])
             ->outputTitle('Validation of ' . $urlWithPort);
 
         $curl = curl_init();

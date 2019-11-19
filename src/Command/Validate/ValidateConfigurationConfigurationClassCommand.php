@@ -30,14 +30,14 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
         $this
             ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true))
             ->assertInArray('getComponentType', ComponentType::getAll())
-            ->assertCallMethod('getComponentName')
-            ->assertCallMethod('getComponentSlug')
+            ->assertCallMethod('getComponentName', '____PHPBENCHMARKS_COMPONENT_NAME____')
+            ->assertCallMethod('getComponentSlug', '____PHPBENCHMARKS_COMPONENT_SLUG____')
             ->assertPhpVersionsCompatibles()
-            ->assertCallMethod('getBenchmarkUrl')
-            ->assertCallMethod('getCoreDependencyName')
-            ->assertCallMethod('getCoreDependencyMajorVersion')
-            ->assertCallMethod('getCoreDependencyMinorVersion')
-            ->assertCallMethod('getCoreDependencyPatchVersion')
+            ->assertCallMethod('getBenchmarkUrl', '____PHPBENCHMARKS_BENCHMARK_URL____')
+            ->assertCallMethod('getCoreDependencyName', '____PHPBENCHMARKS_CORE_DEPENDENCY_NAME____')
+            ->assertCallMethod('getCoreDependencyMajorVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____')
+            ->assertCallMethod('getCoreDependencyMinorVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____')
+            ->assertCallMethod('getCoreDependencyPatchVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____')
             ->assertInArray(
                 'getBenchmarkType',
                 BenchmarkType::getByComponentType(ComponentConfiguration::getComponentType())
@@ -72,14 +72,17 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
         return $this;
     }
 
-    private function assertCallMethod(string $method): self
+    /** @param mixed $shouldNotReturn */
+    private function assertCallMethod(string $method, $shouldNotReturn): self
     {
         $value = ComponentConfiguration::{$method}();
-        if (is_bool($value)) {
-            $valueStr = $value ? 'true' : 'false';
-        } else {
-            $valueStr = $value;
+        if ($value === $shouldNotReturn) {
+            throw new \Exception(
+                'Configuration::' . $method . '() should not return ' . (string) $shouldNotReturn . '.'
+            );
         }
+
+        $valueStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
         $this->outputSuccess($method . '() return ' . $valueStr . '.');
 
         return $this;
@@ -88,7 +91,10 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
     private function assertPhpVersionsCompatibles(): self
     {
         foreach (PhpVersion::getAllWithoutDot() as $phpVersion) {
-            $this->assertCallMethod('isPhp' . $phpVersion . 'Compatible');
+            $this->assertCallMethod(
+                'isPhp' . $phpVersion . 'Compatible',
+                '____PHPBENCHMARKS_PHP' . $phpVersion . '_COMPATIBLE____'
+            );
         }
 
         return $this;

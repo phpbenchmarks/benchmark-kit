@@ -12,12 +12,12 @@ use App\{
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class BenchmarkInitBenchmarkCommand extends AbstractCommand
+final class BenchmarkInitCommand extends AbstractCommand
 {
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'benchmark:init-benchmark';
+    protected static $defaultName = 'benchmark:init';
 
     protected function configure(): void
     {
@@ -31,17 +31,17 @@ final class BenchmarkInitBenchmarkCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
+        $initBenchmarkShortPath = $this->removeInstallationPathPrefix($this->getInitBenchmarkFilePath());
 
-        $this
+        return $this
             ->assertPhpVersionArgument($this)
             ->runCommand(VhostCreateCommand::getDefaultName(), ['phpVersion' => $phpVersion])
             ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion])
-            ->outputTitle('Init benchmark for PHP ' . $phpVersion)
+            ->outputTitle('Prepare composer.lock')
             ->runProcess(['cp', $this->getComposerLockFilePath($phpVersion), 'composer.lock'])
             ->outputSuccess($this->getComposerLockFilePath($phpVersion, true) . ' copied to composer.lock.')
+            ->outputTitle('Call ' . $initBenchmarkShortPath)
             ->runProcess([$this->getInitBenchmarkFilePath()], OutputInterface::VERBOSITY_VERBOSE)
-            ->outputSuccess($this->getInitBenchmarkFilePath() . ' called.');
-
-        return $this;
+            ->outputSuccess($initBenchmarkShortPath . ' called.');
     }
 }
