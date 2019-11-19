@@ -3,40 +3,54 @@
 set -e
 
 readonly DOCKER_DIRECTORY=$(realpath $(dirname $(realpath $0)))
+readonly VERSION_PATH=$DOCKER_DIRECTORY/../src/Version.php
 readonly IMAGE_NAME="phpbenchmarks/benchmark-kit"
+
+readonly MAJOR_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::MAJOR;")
+readonly MINOR_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::MINOR;")
+readonly BUGFIX_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::BUGFIX;")
+
+readonly IMAGE_BUGFIX_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION.$BUGFIX_VERSION
+readonly IMAGE_MINOR_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION
+readonly IMAGE_MAJOR_TAG=$IMAGE_NAME:$MAJOR_VERSION
+
+echo -n "Image to build: $IMAGE_BUGFIX_TAG? [Y/n] "
+read validate
+if [ "$validate" != "" ] && [ "$validate" != "y" ] && [ "$validate" != "y" ]; then
+    exit 1
+fi
 
 dockerQuiet="-q"
 push=false
 for param in "$@"; do
-    if [ "${param}" == "-v" ]; then
+    if [ "$param" == "-v" ]; then
         dockerQuiet=""
-    elif [ "${param}" == "--push" ]; then
+    elif [ "$param" == "--push" ]; then
         push=true
     fi
 done
 
-echo -en "\e[44m Major version? \e[0m "
-read majorVersion
+echo "# composer install --no-dev"
+composer install --no-dev > /dev/null 2>&1
 
-echo -en "\e[44m Minor version? \e[0m "
-read minorVersion
+echo "Build image..."
+docker build $DOCKER_DIRECTORY/.. --file=docker/Dockerfile --tag=$IMAGE_BUGFIX_TAG $dockerQuiet > /dev/null
+docker tag $IMAGE_BUGFIX_TAG $IMAGE_MINOR_TAG
+docker tag $IMAGE_BUGFIX_TAG $IMAGE_MAJOR_TAG
 
-echo -en "\e[44m Bugfix version? \e[0m "
-read bugfixVersion
-
-readonly IMAGE_BUGFIX_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}.${bugfixVersion}
-readonly IMAGE_MINOR_TAG=${IMAGE_NAME}:${majorVersion}.${minorVersion}
-readonly IMAGE_MAJOR_TAG=${IMAGE_NAME}:${majorVersion}
-
-composer install --no-dev
-
-docker build ${DOCKER_DIRECTORY}/.. --file=docker/Dockerfile --tag=${IMAGE_BUGFIX_TAG} ${dockerQuiet}
-docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MINOR_TAG}
-docker tag ${IMAGE_BUGFIX_TAG} ${IMAGE_MAJOR_TAG}
-
-if [ ${push} == true ]; then
+if [ $push == true ]; then
+    echo "# docker login --username=phpbenchmarks"
     docker login --username=phpbenchmarks
-    docker push ${IMAGE_BUGFIX_TAG}
-    docker push ${IMAGE_MINOR_TAG}
-    docker push ${IMAGE_MAJOR_TAG}
+
+    echo "# docker push $IMAGE_BUGFIX_TAG"
+    docker push $IMAGE_BUGFIX_TAG > /dev/null
+
+    echo "# docker push $IMAGE_MINOR_TAG"
+    docker push $IMAGE_MINOR_TAG > /dev/null
+
+    echo "# docker push $IMAGE_MAJOR_TAG"
+    docker push $IMAGE_MAJOR_TAG > /dev/null
 fi
+
+echo "# composer install"
+composer install > /dev/null 2>&1
