@@ -14,13 +14,18 @@ trait DefineVariableTrait
     {
         $content = file_get_contents($file);
 
-        if (strpos($content, $name) !== false) {
+        if ($this->hasVariable($name, $file)) {
             $value = call_user_func($getValue);
             file_put_contents($file, str_replace($name, $value, $content));
             $this->outputSuccess($name . ' defined to ' . $value . '.');
         }
 
         return $this;
+    }
+
+    protected function hasVariable(string $name, string $file): bool
+    {
+        return is_int(strpos(file_get_contents($file), $name));
     }
 
     protected function defineStringVariable(string $name, string $value, string $file): self

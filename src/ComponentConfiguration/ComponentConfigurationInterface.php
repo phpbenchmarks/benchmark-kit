@@ -10,15 +10,7 @@ interface ComponentConfigurationInterface
 
     public static function getComponentSlug();
 
-    public static function isPhp56Compatible();
-
-    public static function isPhp70Compatible();
-
-    public static function isPhp71Compatible();
-
-    public static function isPhp72Compatible();
-
-    public static function isPhp73Compatible();
+    public static function isPhpCompatible(int $major, int $minor): bool;
 
     public static function getBenchmarkUrl();
 

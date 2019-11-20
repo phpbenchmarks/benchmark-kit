@@ -73,9 +73,9 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
     }
 
     /** @param mixed $shouldNotReturn */
-    private function assertCallMethod(string $method, $shouldNotReturn): self
+    private function assertCallMethod(string $method, $shouldNotReturn, $parameters = []): self
     {
-        $value = ComponentConfiguration::{$method}();
+        $value = ComponentConfiguration::{$method}(...$parameters);
         if ($value === $shouldNotReturn) {
             throw new \Exception(
                 'Configuration::' . $method . '() should not return ' . (string) $shouldNotReturn . '.'
@@ -83,17 +83,19 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
         }
 
         $valueStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
-        $this->outputSuccess($method . '() return ' . $valueStr . '.');
+        $this->outputSuccess($method . '(' . implode(', ', $parameters) . ') return ' . $valueStr . '.');
 
         return $this;
     }
 
     private function assertPhpVersionsCompatibles(): self
     {
-        foreach (PhpVersion::getAllWithoutDot() as $phpVersion) {
+        foreach (PhpVersion::getAll() as $phpVersion) {
+            $parts = explode('.', $phpVersion);
             $this->assertCallMethod(
-                'isPhp' . $phpVersion . 'Compatible',
-                '____PHPBENCHMARKS_PHP' . $phpVersion . '_COMPATIBLE____'
+                'isPhpCompatible',
+                '____PHPBENCHMARKS_PHP' . $phpVersion . '_COMPATIBLE____',
+                [(int) $parts[0], (int) $parts[1]]
             );
         }
 
