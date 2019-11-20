@@ -21,7 +21,7 @@ class Configuration
         return '{{ componentSlug }}';
     }
 
-    public static function isPhpCompatible(int $major, int $minor): bool
+    public static function isCompatibleWithPhp(int $major, int $minor): bool
     {
         return
             {{ compatiblesPhpVersions|raw }};

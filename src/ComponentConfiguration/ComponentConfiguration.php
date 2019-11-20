@@ -24,7 +24,7 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
         $return = [];
         foreach (PhpVersion::getAll() as $phpVersion) {
             $parts = explode('.', $phpVersion);
-            if (static::isPhpCompatible((int) $parts[0], (int) $parts[1])) {
+            if (static::isCompatibleWithPhp((int) $parts[0], (int) $parts[1])) {
                 $return[] = $phpVersion;
             }
         }
@@ -37,7 +37,7 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
         $return = [];
         foreach (PhpVersion::getAll() as $phpVersion) {
             $parts = explode('.', $phpVersion);
-            if (static::isPhpCompatible((int) $parts[0], (int) $parts[1]) === false) {
+            if (static::isCompatibleWithPhp((int) $parts[0], (int) $parts[1]) === false) {
                 $return[] = $phpVersion;
             }
         }
