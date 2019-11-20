@@ -11,8 +11,6 @@ use App\{
 
 final class ConfigureReadmeCommand extends AbstractCommand
 {
-    use DefineVariableTrait;
-
     /** @var string */
     protected static $defaultName = 'configure:readme';
 
