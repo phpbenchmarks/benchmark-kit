@@ -12,7 +12,7 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-class ConfigureConfigurationClassCommand extends AbstractConfigureCommand
+final class ConfigureConfigurationClassCommand extends AbstractCommand
 {
     use DefineVariableTrait;
 
@@ -28,171 +28,125 @@ class ConfigureConfigurationClassCommand extends AbstractConfigureCommand
 
     protected function doExecute(): AbstractCommand
     {
-        $this
-            ->outputTitle('Creation of ' . $this->getConfigurationFilePath(true))
-            ->createConfiguration();
+        $this->outputTitle('Creation of ' . $this->getConfigurationFilePath(true));
 
-        return $this;
+        $configurationPath = $this->getInstallationPath() . '/' . $this->getConfigurationFilePath(true);
+        if (file_exists($configurationPath)) {
+            unlink($configurationPath);
+            $this->outputSuccess('Remove file ' . $this->removeInstallationPathPrefix($configurationPath));
+        }
+
+        $componentType = $this->getComponentType();
+        $componentName = $this->askQuestion('Component name (exemple: Symfony, Zend Framework)?');
+        $componentSlug = $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
+
+        $benchmarkType = $this->getBenchmarkType($componentType);
+        $benchmarkUrl = $this->askQuestion(
+            'Benchmark url, after host?',
+            BenchmarkType::getDefaultBenchmarkUrl($benchmarkType)
+        );
+
+        $coreDependencyName = $this->getCoreDependencyName();
+        $coreDependencyMajorVersion = $this->askQuestionInt('Core dependency major version?');
+        $coreDependencyMinorVersion = $this->askQuestionInt('Core dependency minor version?');
+        $coreDependencyPatchVersion = $this->askQuestionInt('Core dependency patch version?');
+
+        $compatiblesPhpVersions = $this->getCompatiblesPhpVersions();
+
+        return $this
+            ->writeFileFromTemplate(
+                $this->getConfigurationFilePath(true),
+                [
+                    'componentType' => $componentType,
+                    'componentName' => $componentName,
+                    'componentSlug' => $componentSlug,
+                    'benchmarkUrl' => $benchmarkUrl,
+                    'coreDependencyName' => $coreDependencyName,
+                    'coreDependencyMajorVersion' => $coreDependencyMajorVersion,
+                    'coreDependencyMinorVersion' => $coreDependencyMinorVersion,
+                    'coreDependencyPatchVersion' => $coreDependencyPatchVersion,
+                    'benchmarkType' => $benchmarkType,
+                    'compatiblesPhpVersions' => $compatiblesPhpVersions
+                ],
+                $componentType,
+                $benchmarkType
+            );
     }
 
-    protected function createConfiguration(): self
+    private function askQuestionInt(string $question): int
     {
-        $configurationPath = $this->getConfigurationFilePath();
-        if (is_file($configurationPath)) {
-            $this->copyDefaultConfigurationFile('Configuration.php', true);
+        do {
+            $return = $this->askQuestion($question);
+        } while (is_numeric($return) === false);
+
+        return (int) $return;
+    }
+
+    private function getCompatiblesPhpVersions(): string
+    {
+        $compatibles = [];
+        foreach (PhpVersion::getAll() as $phpVersion) {
+            $parts = explode('.', $phpVersion);
+            if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')) {
+                $compatibles[] = '($major === ' . $parts[0] . ' && $minor === ' . $parts[1] . ')';
+            }
         }
 
-        $benchmarkType = null;
-        if (is_file($configurationPath) === false) {
-            $benchmarkType = $this->createFile();
-        }
+        return implode("\n" . '            || ', $compatibles);
+    }
 
-        $this
-            ->defineVariable(
-                '____PHPBENCHMARKS_COMPONENT_NAME____',
-                function () {
-                    return $this->askQuestion('Component name (exemple: Symfony, Zend Framework)?');
-                },
-                $configurationPath
-            )
-            ->defineVariable(
-                '____PHPBENCHMARKS_COMPONENT_SLUG____',
-                function () {
-                    return $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
-                },
-                $configurationPath
-            )
-            ->defineVariable(
-                '____PHPBENCHMARKS_BENCHMARK_URL____',
-                function () use ($benchmarkType) {
-                    return $this->askQuestion(
-                        'Benchmark url, after host?',
-                        BenchmarkType::getDefaultBenchmarkUrl(
-                            $benchmarkType ?? ComponentConfiguration::getBenchmarkType()
-                        )
-                    );
-                },
-                $configurationPath
-            )
-            ->defineVariable(
-                '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____',
-                function () {
-                    do {
-                        $return = $this->askQuestion('Core dependency major version?');
-                    } while (is_numeric($return) === false);
-
-                    return $return;
-                },
-                $configurationPath
-            )
-            ->defineVariable(
-                '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____',
-                function () {
-                    do {
-                        $return = $this->askQuestion('Core dependency minor version?');
-                    } while (is_numeric($return) === false);
-
-                    return $return;
-                },
-                $configurationPath
-            )
-            ->defineVariable(
-                '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____',
-                function () {
-                    do {
-                        $return = $this->askQuestion('Core dependency patch version?');
-                    } while (is_numeric($return) === false);
-
-                    return $return;
-                },
-                $configurationPath
-            )
-            ->defineCoreDependencyName($configurationPath);
-
-        if ($this->hasVariable('____PHPBENCHMARKS_PHP_COMPATIBLE____', $configurationPath)) {
-            $compatibles = [];
-            foreach (PhpVersion::getAll() as $phpVersion) {
-                $parts = explode('.', $phpVersion);
-                if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')) {
-                    $compatibles[] = '($major === ' . $parts[0] . ' && $minor === ' . $parts[1] . ')';
-                }
+    private function getCoreDependencyName(): string
+    {
+        $composerPath = $this->getInstallationPath() . '/composer.json';
+        if (is_file($composerPath)) {
+            try {
+                $data = json_decode(
+                    file_get_contents($composerPath),
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                );
+            } catch (\Throwable $e) {
+                $this->throwError('Error while parsing: ' . $e->getMessage());
             }
 
-            $this->defineVariable(
-                '____PHPBENCHMARKS_PHP_COMPATIBLE____',
-                function () use ($compatibles) {
-                    return implode("\n" . '            || ', $compatibles);
-                },
-                $configurationPath
+            $choices = array_keys($data['require'] ?? []);
+            foreach ($choices as $key => $choice) {
+                if (
+                    $choice === 'php'
+                    || substr($choice, 0, 4) === 'ext-'
+                    || substr($choice, 0, 14) === 'phpbenchmarks/'
+                ) {
+                    unset($choices[$key]);
+                }
+            }
+            $return = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);
+        } else {
+            $return = $this->askQuestion(
+                'Core dependency name of component? Example: symfony/framework-bundle, cakephp/cakephp'
             );
         }
 
-        return $this;
+        return $return;
     }
 
-    protected function defineCoreDependencyName(string $configurationPath): self
-    {
-        $this->defineVariable(
-            '____PHPBENCHMARKS_CORE_DEPENDENCY_NAME____',
-            function () {
-                $composerPath = $this->getInstallationPath() . '/composer.json';
-                if (is_file($composerPath)) {
-                    try {
-                        $data = json_decode(
-                            file_get_contents($composerPath),
-                            true,
-                            512,
-                            JSON_THROW_ON_ERROR
-                        );
-                    } catch (\Throwable $e) {
-                        $this->throwError('Error while parsing: ' . $e->getMessage());
-                    }
-
-                    $choices = array_keys($data['require'] ?? []);
-                    foreach ($choices as $key => $choice) {
-                        if (
-                            $choice === 'php'
-                            || substr($choice, 0, 4) === 'ext-'
-                            || substr($choice, 0, 14) === 'phpbenchmarks/'
-                        ) {
-                            unset($choices[$key]);
-                        }
-                    }
-                    $return = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);
-                } else {
-                    $return = $this->askQuestion(
-                        'Core dependency name of component? Example: symfony/framework-bundle, cakephp/cakephp'
-                    );
-                }
-
-                return $return;
-            },
-            $configurationPath
-        );
-
-        return $this;
-    }
-
-    protected function createFile(): int
+    private function getComponentType(): int
     {
         $componentTypes = ComponentType::getAll();
-        $componentType = array_search(
+
+        return array_search(
             $this->askChoiceQuestion('Component type?', $componentTypes),
             $componentTypes
         );
+    }
 
+    private function getBenchmarkType(int $componentType): int
+    {
         $benchmarkTypes = BenchmarkType::getByComponentType($componentType);
-        $benchmarkType = array_search(
+
+        return (int) array_search(
             $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes),
             $benchmarkTypes
         );
-
-        $source =
-            $this->getTypedDefaultConfigurationPath($componentType, $benchmarkType)
-            . '/Configuration.php';
-        copy($source, $this->getConfigurationFilePath());
-        $this->outputSuccess($this->getConfigurationFilePath(true) . ' created.');
-
-        return $benchmarkType;
     }
 }

@@ -11,9 +11,8 @@ use App\{
     Command\Composer\ComposerUpdateCommand,
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureCircleCiCommand,
-    Command\Configure\ConfigureComponentSourceCodeUrlsCommand,
+    Command\Configure\ConfigureConfigurationClassSourceCodeUrlsCommand,
     Command\Configure\ConfigureConfigurationClassCommand,
-    Command\Configure\ConfigureDirectoryCommand,
     Command\Configure\ConfigureInitBenchmarkCommand,
     Command\Configure\ConfigureReadmeCommand,
     Command\Configure\ConfigureResponseBodyCommand,
@@ -43,8 +42,7 @@ $application->add(new ComposerUpdateCommand());
 $application->add(new ConfigureAllCommand());
 $application->add(new ConfigureCircleCiCommand());
 $application->add(new ConfigureConfigurationClassCommand());
-$application->add(new ConfigureComponentSourceCodeUrlsCommand());
-$application->add(new ConfigureDirectoryCommand());
+$application->add(new ConfigureConfigurationClassSourceCodeUrlsCommand());
 $application->add(new ConfigureInitBenchmarkCommand());
 $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigureResponseBodyCommand());

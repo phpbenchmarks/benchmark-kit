@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use App\{
-    Command\AbstractCommand,
-    Command\Validate\ValidateConfigurationInitBenchmarkCommand
-};
+use App\Command\AbstractCommand;
 
-final class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
+final class ConfigureInitBenchmarkCommand extends AbstractCommand
 {
     /** @var string */
     protected static $defaultName = 'configure:initBenchmark';
@@ -23,17 +20,15 @@ final class ConfigureInitBenchmarkCommand extends AbstractConfigureCommand
 
     protected function doExecute(): AbstractCommand
     {
-        $this
-            ->outputTitle('Creation of ' . $this->getInitBenchmarkFilePath(true))
-            ->copyDefaultConfigurationFile(
-                'initBenchmark.sh',
-                false,
-                'File has been created but is very basic. Don\'t forget to edit it.'
+        $initBenchmarkRelativePath = $this->getInitBenchmarkFilePath(true);
+
+        return $this
+            ->outputTitle('Creation of ' . $initBenchmarkRelativePath)
+            ->writeFileFromTemplate($initBenchmarkRelativePath)
+            ->outputWarning(
+                'Default initBenchmark.sh (called to initialize your benchmark) has been created. Feel free to edit it.'
             )
             ->runProcess(['chmod', '+x', $this->getInitBenchmarkFilePath()])
-            ->outputSuccess('Make ' . $this->getInitBenchmarkFilePath(true) . ' executable.')
-            ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName());
-
-        return $this;
+            ->outputSuccess('Make ' . $initBenchmarkRelativePath . ' executable.');
     }
 }

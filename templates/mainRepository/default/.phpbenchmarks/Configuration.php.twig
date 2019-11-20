@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpBenchmarks\BenchmarkConfiguration;
+
+class Configuration
+{
+    public static function getComponentType(): int
+    {
+        return {{ componentType }};
+    }
+
+    public static function getComponentName(): string
+    {
+        return '{{ componentName }}';
+    }
+
+    public static function getComponentSlug(): string
+    {
+        return '{{ componentSlug }}';
+    }
+
+    public static function isPhpCompatible(int $major, int $minor): bool
+    {
+        return
+            {{ compatiblesPhpVersions|raw }};
+    }
+
+    public static function getBenchmarkUrl(): string
+    {
+        return '{{ benchmarkUrl }}';
+    }
+
+    public static function getCoreDependencyName(): string
+    {
+        return '{{ coreDependencyName }}';
+    }
+
+    public static function getCoreDependencyMajorVersion(): int
+    {
+        return {{ coreDependencyMajorVersion }};
+    }
+
+    public static function getCoreDependencyMinorVersion(): int
+    {
+        return {{ coreDependencyMinorVersion }};
+    }
+
+    public static function getCoreDependencyPatchVersion(): int
+    {
+        return {{ coreDependencyPatchVersion }};
+    }
+
+    public static function getBenchmarkType(): int
+    {
+        return {{ benchmarkType }};
+    }
+
+    public static function getSourceCodeUrls(): array
+    {
+        return [];
+    }
+}

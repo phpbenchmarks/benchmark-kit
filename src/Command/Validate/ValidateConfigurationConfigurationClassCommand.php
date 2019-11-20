@@ -33,11 +33,11 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
             ->assertCallMethod('getComponentName', '____PHPBENCHMARKS_COMPONENT_NAME____')
             ->assertCallMethod('getComponentSlug', '____PHPBENCHMARKS_COMPONENT_SLUG____')
             ->assertPhpVersionsCompatibles()
-            ->assertCallMethod('getBenchmarkUrl', '____PHPBENCHMARKS_BENCHMARK_URL____')
-            ->assertCallMethod('getCoreDependencyName', '____PHPBENCHMARKS_CORE_DEPENDENCY_NAME____')
-            ->assertCallMethod('getCoreDependencyMajorVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_MAJOR_VERSION____')
-            ->assertCallMethod('getCoreDependencyMinorVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_MINOR_VERSION____')
-            ->assertCallMethod('getCoreDependencyPatchVersion', '____PHPBENCHMARKS_CORE_DEPENDENCY_PATCH_VERSION____')
+            ->assertCallMethod('getBenchmarkUrl', '{{ benchmarkUrl }}')
+            ->assertCallMethod('getCoreDependencyName', '{{ coreDependencyName }}')
+            ->assertCallMethod('getCoreDependencyMajorVersion', '{{ coreDependencyMajorVersion }}')
+            ->assertCallMethod('getCoreDependencyMinorVersion', '{{ coreDependencyMinorVersion }}')
+            ->assertCallMethod('getCoreDependencyPatchVersion', '{{ coreDependencyPatchVersion }}')
             ->assertInArray(
                 'getBenchmarkType',
                 BenchmarkType::getByComponentType(ComponentConfiguration::getComponentType())

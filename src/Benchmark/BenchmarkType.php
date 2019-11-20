@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Benchmark;
 
-use App\Component\ComponentType;
+use App\{
+    Component\ComponentType,
+    ComponentConfiguration\ComponentConfiguration,
+    SourceCodeUrl\SourceCodeUrl
+};
 
 class BenchmarkType
 {
@@ -19,135 +23,141 @@ class BenchmarkType
     protected const CONFIGURATIONS = [
         self::HELLO_WORLD => [
             'name' => 'Hello world',
-            'upperCamelCaseName' => 'HelloWorld',
+            'camelCaseName' => 'helloWorld',
             'slug' => 'hello-world',
             'defaultBenchmarkUrl' => '/benchmark/helloworld',
             'responseBodyFiles' => ['responseBody.txt'],
             'responseBodyFileMinSize' => 13,
             'sourceCodeUrlIds' => [
-                ComponentType::PHP => ['entryPoint'],
-                ComponentType::FRAMEWORK => ['route', 'controller'],
-                ComponentType::TEMPLATE_ENGINE => ['entryPoint', 'template']
+                ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT],
+                ComponentType::FRAMEWORK => [
+                    SourceCodeUrl::URL_ROUTE,
+                    SourceCodeUrl::URL_CONTROLLER
+                ],
+                ComponentType::TEMPLATE_ENGINE => [
+                    SourceCodeUrl::URL_ENTRY_POINT,
+                    SourceCodeUrl::URL_TEMPLATE
+                ]
             ]
         ],
         self::REST_API => [
             'name' => 'REST API',
-            'upperCamelCaseName' => 'RestApi',
+            'camelCaseName' => 'restApi',
             'slug' => 'rest-api',
             'defaultBenchmarkUrl' => '/benchmark/rest',
             'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
             'responseBodyFileMinSize' => 7541,
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [
-                    'entryPoint',
-                    'randomizeLanguageDispatchEvent',
-                    'randomizeLanguageEventListener',
-                    'translations',
-                    'translate',
-                    'serialize'
+                    SourceCodeUrl::URL_ENTRY_POINT,
+                    SourceCodeUrl::URL_RANDOMIZE_LANGUAGE_DISPATCH_EVENT,
+                    SourceCodeUrl::URL_RANDOMIZE_LANGUAGE_EVENT_LISTENER,
+                    SourceCodeUrl::URL_TRANSLATIONS,
+                    SourceCodeUrl::URL_TRANSLATE,
+                    SourceCodeUrl::URL_SERIALIZE
                 ],
                 ComponentType::FRAMEWORK => [
-                    'route',
-                    'controller',
-                    'randomizeLanguageDispatchEvent',
-                    'randomizeLanguageEventListener',
-                    'translations',
-                    'translate',
-                    'serialize'
+                    SourceCodeUrl::URL_ROUTE,
+                    SourceCodeUrl::URL_CONTROLLER,
+                    SourceCodeUrl::URL_RANDOMIZE_LANGUAGE_DISPATCH_EVENT,
+                    SourceCodeUrl::URL_RANDOMIZE_LANGUAGE_EVENT_LISTENER,
+                    SourceCodeUrl::URL_TRANSLATIONS,
+                    SourceCodeUrl::URL_TRANSLATE,
+                    SourceCodeUrl::URL_SERIALIZE
                 ]
             ]
         ],
         self::TEMPLATING_SMALL_OVERLOAD => [
             'name' => 'Template engine small overload',
-            'upperCamelCaseName' => 'TemplateEngineSmallOverload',
+            'camelCaseName' => 'templateEngineSmallOverload',
             'slug' => 'templating-small-overload',
             'defaultBenchmarkUrl' => '/index.php',
             'responseBodyFiles' => ['responseBody.html'],
             'sourceCodeUrlIds' => [
-                ComponentType::PHP => ['entryPoint']
+                ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
             ]
         ],
         self::TEMPLATING_BIG_OVERLOAD => [
             'name' => 'Template engine big overload',
-            'upperCamelCaseName' => 'TemplateEngineBigOverload',
+            'camelCaseName' => 'templateEngineBigOverload',
             'slug' => 'templating-big-overload',
             'defaultBenchmarkUrl' => '/index.php',
             'responseBodyFiles' => ['responseBody.html'],
             'sourceCodeUrlIds' => [
-                ComponentType::PHP => ['entryPoint']
+                ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
             ]
         ],
         self::JSON_SERIALIZATION_HELLO_WORLD => [
             'name' => 'Serialization of Hello world',
-            'upperCamelCaseName' => 'JsonSerializationHelloWorld',
+            'camelCaseName' => 'jsonSerializationHelloWorld',
             'slug' => 'json-serialization-hello-world',
             'defaultBenchmarkUrl' => 'index.php',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 17,
             'sourceCodeUrlIds' => [
-                ComponentType::PHP => ['jsonSerialization'],
-                ComponentType::JSON_SERIALIZER => ['jsonSerialization']
+                ComponentType::PHP => [SourceCodeUrl::URL_JSON_SERIALIZATION],
+                ComponentType::JSON_SERIALIZER => [SourceCodeUrl::URL_JSON_SERIALIZATION]
             ]
         ],
         self::JSON_SERIALIZATION_SMALL_OVERLOAD => [
-            'name' => 'Small deserialization',
-            'upperCamelCaseName' => 'JsonSerializationSmallOverload',
+            'name' => 'Small serialization',
+            'camelCaseName' => 'jsonSerializationSmallOverload',
             'slug' => 'json-serialization-small-overload',
             'defaultBenchmarkUrl' => 'index.php',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 512000,
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [
-                    'jsonSerialization',
-                    'integerSerialization',
-                    'floatSerialization',
-                    'stringSerialization',
-                    'booleanSerialization',
-                    'nullSerialization',
-                    'arraySerialization',
-                    'objectSerialization'
+                    SourceCodeUrl::URL_JSON_SERIALIZATION,
+                    SourceCodeUrl::URL_INTEGER_SERIALIZATION,
+                    SourceCodeUrl::URL_FLOAT_SERIALIZATION,
+                    SourceCodeUrl::URL_STRING_SERIALIZATION,
+                    SourceCodeUrl::URL_BOOLEAN_SERIALIZATION,
+                    SourceCodeUrl::URL_NULL_SERIALIZATION,
+                    SourceCodeUrl::URL_ARRAY_SERIALIZATION,
+                    SourceCodeUrl::URL_OBJECT_SERIALIZATION
                 ],
                 ComponentType::JSON_SERIALIZER => [
-                    'jsonSerialization',
-                    'integerSerialization',
-                    'floatSerialization',
-                    'stringSerialization',
-                    'booleanSerialization',
-                    'nullSerialization',
-                    'arraySerialization',
-                    'objectSerialization',
-                    'customSerializers'
+                    SourceCodeUrl::URL_JSON_SERIALIZATION,
+                    SourceCodeUrl::URL_INTEGER_SERIALIZATION,
+                    SourceCodeUrl::URL_FLOAT_SERIALIZATION,
+                    SourceCodeUrl::URL_STRING_SERIALIZATION,
+                    SourceCodeUrl::URL_BOOLEAN_SERIALIZATION,
+                    SourceCodeUrl::URL_NULL_SERIALIZATION,
+                    SourceCodeUrl::URL_ARRAY_SERIALIZATION,
+                    SourceCodeUrl::URL_OBJECT_SERIALIZATION,
+                    SourceCodeUrl::URL_CUSTOM_SERIALIZATION
                 ]
             ]
         ],
         self::JSON_SERIALIZATION_BIG_OVERLOAD => [
-            'name' => 'Big deserialization',
-            'upperCamelCaseName' => 'JsonSerializationBigOverload',
+            'name' => 'Big serialization',
+            'camelCaseName' => 'jsonSerializationBigOverload',
             'slug' => 'json-serialization-big-overload',
             'defaultBenchmarkUrl' => 'index.php',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 5241001,
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [
-                    'jsonSerialization',
-                    'integerSerialization',
-                    'floatSerialization',
-                    'stringSerialization',
-                    'booleanSerialization',
-                    'nullSerialization',
-                    'arraySerialization',
-                    'objectSerialization'
+                    SourceCodeUrl::URL_JSON_SERIALIZATION,
+                    SourceCodeUrl::URL_INTEGER_SERIALIZATION,
+                    SourceCodeUrl::URL_FLOAT_SERIALIZATION,
+                    SourceCodeUrl::URL_STRING_SERIALIZATION,
+                    SourceCodeUrl::URL_BOOLEAN_SERIALIZATION,
+                    SourceCodeUrl::URL_NULL_SERIALIZATION,
+                    SourceCodeUrl::URL_ARRAY_SERIALIZATION,
+                    SourceCodeUrl::URL_OBJECT_SERIALIZATION
                 ],
                 ComponentType::JSON_SERIALIZER => [
-                    'jsonSerialization',
-                    'integerSerialization',
-                    'floatSerialization',
-                    'stringSerialization',
-                    'booleanSerialization',
-                    'nullSerialization',
-                    'arraySerialization',
-                    'objectSerialization',
-                    'customSerializers'
+                    SourceCodeUrl::URL_JSON_SERIALIZATION,
+                    SourceCodeUrl::URL_INTEGER_SERIALIZATION,
+                    SourceCodeUrl::URL_FLOAT_SERIALIZATION,
+                    SourceCodeUrl::URL_STRING_SERIALIZATION,
+                    SourceCodeUrl::URL_BOOLEAN_SERIALIZATION,
+                    SourceCodeUrl::URL_NULL_SERIALIZATION,
+                    SourceCodeUrl::URL_ARRAY_SERIALIZATION,
+                    SourceCodeUrl::URL_OBJECT_SERIALIZATION,
+                    SourceCodeUrl::URL_CUSTOM_SERIALIZATION
                 ]
             ]
         ]
@@ -209,44 +219,48 @@ class BenchmarkType
         return static::getAllByComponentType()[$componentType];
     }
 
-    public static function getName(int $type): string
+    public static function getName(int $type = null): string
     {
         return static::getConfiguration($type, 'name');
     }
 
-    public static function getSlug(int $type): string
+    public static function getSlug(int $type = null): string
     {
         return static::getConfiguration($type, 'slug');
     }
 
-    public static function getUpperCamelCaseName(int $type): string
+    public static function getCamelCaseName(int $type = null): string
     {
-        return static::getConfiguration($type, 'upperCamelCaseName');
+        return static::getConfiguration($type, 'camelCaseName');
     }
 
-    public static function getDefaultBenchmarkUrl(int $type): string
+    public static function getDefaultBenchmarkUrl(int $type = null): string
     {
         return static::getConfiguration($type, 'defaultBenchmarkUrl');
     }
 
-    public static function getResponseBodyFiles(int $type): array
+    public static function getResponseBodyFiles(int $type = null): array
     {
         return static::getConfiguration($type, 'responseBodyFiles');
     }
 
-    public static function getResponseBodyFileMinSize(int $type): int
+    public static function getResponseBodyFileMinSize(int $type = null): int
     {
         return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
-    public static function getSourceCodeUrlIds(int $type, int $componentType): array
+    public static function getSourceCodeUrlIds(int $type = null, int $componentType = null): array
     {
-        return static::getConfiguration($type, 'sourceCodeUrlIds')[$componentType];
+        $ids = static::getConfiguration($type, 'sourceCodeUrlIds');
+
+        return $ids[$componentType ?? ComponentConfiguration::getComponentType()];
     }
 
     /** @return mixed */
-    protected static function getConfiguration(int $type, string $name)
+    protected static function getConfiguration(?int $type, string $name)
     {
+        $type = $type ?? ComponentConfiguration::getBenchmarkType();
+
         if (array_key_exists($type, static::CONFIGURATIONS) === false) {
             throw new \Exception('Unknown benchmark type ' . $type . '.');
         } elseif (array_key_exists($name, static::CONFIGURATIONS[$type]) === false) {

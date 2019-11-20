@@ -7,11 +7,10 @@ namespace App\Command\Configure;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Command\Validate\ValidateConfigurationResponseBodyCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
-final class ConfigureResponseBodyCommand extends AbstractConfigureCommand
+final class ConfigureResponseBodyCommand extends AbstractCommand
 {
     /** @var string */
     protected static $defaultName = 'configure:response-body';
@@ -27,16 +26,10 @@ final class ConfigureResponseBodyCommand extends AbstractConfigureCommand
     {
         $this
             ->outputTitle('Creation of ' . $this->getResponseBodyPath(true) . ' files')
-            ->copyResponseBodyFiles()
-            ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName());
+            ->removeDirectory($this->getResponseBodyPath());
 
-        return $this;
-    }
-
-    private function copyResponseBodyFiles(): self
-    {
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
-            $this->copyDefaultConfigurationFile('responseBody/' . $file, true);
+            $this->writeFileFromTemplate($this->getResponseBodyPath(true) . '/' . $file);
         }
 
         return $this;
