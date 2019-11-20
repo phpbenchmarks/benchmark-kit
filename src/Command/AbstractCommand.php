@@ -8,7 +8,6 @@ use App\{
     Benchmark\BenchmarkType,
     Command\Configure\ConfigureAllCommand,
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration,
     Exception\HiddenValidationException,
     Exception\ValidationException
 };
@@ -21,7 +20,12 @@ use Symfony\Component\Console\{
     Question\ConfirmationQuestion,
     Question\Question
 };
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Twig\{
+    Environment,
+    Loader\FilesystemLoader
+};
 
 abstract class AbstractCommand extends Command
 {
@@ -141,6 +145,11 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    protected function getBenchmarkKitPath(): string
+    {
+        return realpath(__DIR__ . '/../..');
+    }
+
     protected function getInstallationPath(): string
     {
         return '/var/www/benchmark';
@@ -181,21 +190,88 @@ abstract class AbstractCommand extends Command
         return $this->getComposerPath($relative) . '/composer.lock.php' . $version;
     }
 
-    protected function getDefaultConfigurationPath(int $componentType = null): string
-    {
-        return
-            __DIR__
-            . '/../DefaultConfiguration/'
-            . ComponentType::getUpperCamelCaseName($componentType ?? ComponentConfiguration::getComponentType())
-            . '/MainRepository';
+    protected function renderTemplate(
+        string $templatePath,
+        array $templateParameters = [],
+        int $componentType = null,
+        int $benchmarkType = null
+    ): string {
+        static $twig;
+        if ($twig instanceof Environment === false) {
+            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates'));
+        }
+
+        $componentPath = 'mainRepository/' . ComponentType::getCamelCaseName($componentType);
+        $templates = [
+            $componentPath . '/' . $templatePath . '.' . BenchmarkType::getCamelCaseName($benchmarkType) . '.twig',
+            $componentPath . '/' . $templatePath . '.twig',
+            'mainRepository/default/' . $templatePath . '.twig'
+        ];
+
+        $templateTwigPath = null;
+        foreach ($templates as $template) {
+            if (is_readable($this->getBenchmarkKitPath() . '/templates/' . $template) === true) {
+                $templateTwigPath = $template;
+                break;
+            }
+        }
+
+        if ($templateTwigPath === null) {
+            throw new \Exception('Template ' . $templatePath . ' not found.');
+        }
+
+        return $twig->render($templateTwigPath, $templateParameters);
     }
 
-    protected function getTypedDefaultConfigurationPath(int $componentType = null, int $benchmarkType = null): string
+    protected function writeFileFromTemplate(
+        string $templatePath,
+        array $templateParameters = [],
+        int $componentType = null,
+        int $benchmarkType = null
+    ): self {
+        $file = $this->getInstallationPath() . '/' . $templatePath;
+
+        return $this
+            ->createDirectory(dirname($file))
+            ->filePutContent(
+                $file,
+                $this->renderTemplate($templatePath, $templateParameters, $componentType, $benchmarkType)
+            );
+    }
+
+    protected function filePutContent(string $filename, string $content): self
     {
-        return
-            $this->getDefaultConfigurationPath($componentType)
-            . '/'
-            . BenchmarkType::getUpperCamelCaseName($benchmarkType ?? ComponentConfiguration::getBenchmarkType());
+        $fileExists = file_exists($filename);
+        (new Filesystem())->dumpFile($filename, $content);
+        $this->outputSuccess(
+            'File '
+                . $this->removeInstallationPathPrefix($filename)
+                . ' '
+                . ($fileExists ? 'modified' : 'created')
+                . '.'
+        );
+
+        return $this;
+    }
+
+    protected function createDirectory(string $directory): self
+    {
+        if (is_dir($directory) === false) {
+            (new Filesystem())->mkdir($directory);
+            $this->outputSuccess('Directory ' . $this->removeInstallationPathPrefix($directory) . ' created.');
+        }
+
+        return $this;
+    }
+
+    protected function removeDirectory(string $directory): self
+    {
+        if (is_dir($directory)) {
+            (new Filesystem())->remove($directory);
+            $this->outputSuccess('Directory ' . $this->removeInstallationPathPrefix($directory) . ' removed.');
+        }
+
+        return $this;
     }
 
     /** @return $this */

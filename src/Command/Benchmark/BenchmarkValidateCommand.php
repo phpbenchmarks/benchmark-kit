@@ -22,7 +22,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate configurations and features for a benchmark');
+        $this->setDescription('Validate configurations and features for the benchmark');
     }
 
     protected function doExecute(): parent

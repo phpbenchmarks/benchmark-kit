@@ -8,7 +8,6 @@ use App\{
     Command\AbstractCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\ValidateComposerJsonCommand,
-    Command\Validate\ValidateConfigurationComposerLockCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,7 +29,10 @@ final class ComposerUpdateCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
+        $this
+            ->runCommand(ValidateComposerJsonCommand::getDefaultName())
+            ->outputTitle('Remove ' . $this->getComposerPath(true) . ' directory')
+            ->removeDirectory($this->getComposerPath());
 
         foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
             $this
@@ -38,15 +40,12 @@ final class ComposerUpdateCommand extends AbstractCommand
                 ->outputTitle('Update Composer dependencies')
                 ->runProcess(['composer', 'update', '--ansi'], OutputInterface::VERBOSITY_VERBOSE)
                 ->outputSuccess('Composer update done.')
+                ->createDirectory($this->getComposerPath())
                 ->runProcess(['mv', 'composer.lock', $this->getComposerLockFilePath($phpVersion, true)])
                 ->outputSuccess(
                     'Move composer.lock to '
                         . $this->getComposerLockFilePath($phpVersion, true)
                         . '.'
-                )
-                ->runCommand(
-                    ValidateConfigurationComposerLockCommand::getDefaultName(),
-                    ['phpVersion' => $phpVersion]
                 );
         }
 

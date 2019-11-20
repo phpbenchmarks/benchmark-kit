@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Component;
 
-use Symfony\Component\Console\Input\StringInput;
+use App\ComponentConfiguration\ComponentConfiguration;
 
 class ComponentType
 {
@@ -16,22 +16,22 @@ class ComponentType
     protected const TYPES = [
         self::PHP => [
             'name' => 'PHP',
-            'upperCamelCaseName' => 'Php',
+            'camelCaseName' => 'php',
             'showResultsQueryParameter' => 'phpBenchmarksShowResults=1'
         ],
         self::FRAMEWORK => [
             'name' => 'Framework',
-            'upperCamelCaseName' => 'Framework',
+            'camelCaseName' => 'framework',
             'showResultsQueryParameter' => null
         ],
         self::TEMPLATE_ENGINE => [
             'name' => 'Template engine',
-            'upperCamelCaseName' => 'TemplateEngine',
+            'camelCaseName' => 'templateEngine',
             'showResultsQueryParameter' => null
         ],
         self::JSON_SERIALIZER => [
             'name' => 'JSON serializer',
-            'upperCamelCaseName' => 'JsonSerializer',
+            'camelCaseName' => 'jsonSerializer',
             'showResultsQueryParameter' => 'phpBenchmarksShowResults=1'
         ],
     ];
@@ -46,23 +46,25 @@ class ComponentType
         ];
     }
 
-    public static function getName(int $type): string
+    public static function getName(int $type = null): string
     {
         return static::getConfiguration($type)['name'];
     }
 
-    public static function getUpperCamelCaseName(int $type): string
+    public static function getCamelCaseName(int $type = null): string
     {
-        return static::getConfiguration($type)['upperCamelCaseName'];
+        return static::getConfiguration($type)['camelCaseName'];
     }
 
-    public static function getShowResultsQueryParameter(int $type): ?string
+    public static function getShowResultsQueryParameter(int $type = null): ?string
     {
         return static::getConfiguration($type)['showResultsQueryParameter'];
     }
 
-    protected static function getConfiguration(int $type): array
+    protected static function getConfiguration(int $type = null): array
     {
+        $type = $type ?? ComponentConfiguration::getComponentType();
+
         if (array_key_exists($type, static::TYPES) === false) {
             throw new \Exception('Unknown component type "' . $type . '".');
         }
