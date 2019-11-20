@@ -8,14 +8,11 @@ use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
 
 final class ConfigureConfigurationClassCommand extends AbstractCommand
 {
-    use DefineVariableTrait;
-
     /** @var string */
     protected static $defaultName = 'configure:configuration-class';
 

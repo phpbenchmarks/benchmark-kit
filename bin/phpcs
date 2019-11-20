@@ -13,7 +13,7 @@ if [ $(which docker || false) ]; then
 else
     php -d memory_limit=512M /var/steevanb/php-code-sniffs/vendor/bin/phpcs \
         --warning-severity=0 \
-        --ignore=/var/phpcs/vendor/,/var/phpcs/src/Command/Configure/DefineVariableTrait.php,/var/phpcs/src/vendor/,/var/phpcs/src/ComponentConfiguration/ComponentConfigurationInterface.php \
+        --ignore=/var/phpcs/vendor/ \
         --standard=/var/steevanb/php-code-sniffs/vendor/steevanb/php-code-sniffs/Steevanb/ruleset.xml \
         --bootstrap=/var/phpcs/phpcs.bootstrap.php \
         --report=steevanb\\PhpCodeSniffs\\Reports\\Steevanb \
