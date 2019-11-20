@@ -12,7 +12,7 @@ interface ComponentConfigurationInterface
 
     public static function getComponentSlug(): string;
 
-    public static function isPhpCompatible(int $major, int $minor): bool;
+    public static function isCompatibleWithPhp(int $major, int $minor): bool;
 
     public static function getBenchmarkUrl(): string;
 

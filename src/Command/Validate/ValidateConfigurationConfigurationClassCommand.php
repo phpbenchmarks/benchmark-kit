@@ -93,7 +93,7 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
         foreach (PhpVersion::getAll() as $phpVersion) {
             $parts = explode('.', $phpVersion);
             $this->assertCallMethod(
-                'isPhpCompatible',
+                'isCompatibleWithPhp',
                 '____PHPBENCHMARKS_PHP' . $phpVersion . '_COMPATIBLE____',
                 [(int) $parts[0], (int) $parts[1]]
             );
