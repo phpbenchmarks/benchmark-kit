@@ -7,7 +7,6 @@ namespace App\Command\Configure;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Command\Validate\ValidateConfigurationConfigurationClassCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
@@ -31,8 +30,7 @@ class ConfigureConfigurationClassCommand extends AbstractConfigureCommand
     {
         $this
             ->outputTitle('Creation of ' . $this->getConfigurationFilePath(true))
-            ->createConfiguration()
-            ->runCommand(ValidateConfigurationConfigurationClassCommand::getDefaultName());
+            ->createConfiguration();
 
         return $this;
     }
@@ -108,26 +106,31 @@ class ConfigureConfigurationClassCommand extends AbstractConfigureCommand
                     return $return;
                 },
                 $configurationPath
-            );
+            )
+            ->defineCoreDependencyName($configurationPath);
 
-        foreach (PhpVersion::getAll() as $phpVersion) {
+        if ($this->hasVariable('____PHPBENCHMARKS_PHP_COMPATIBLE____', $configurationPath)) {
+            $compatibles = [];
+            foreach (PhpVersion::getAll() as $phpVersion) {
+                $parts = explode('.', $phpVersion);
+                if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')) {
+                    $compatibles[] = '($major === ' . $parts[0] . ' && $minor === ' . $parts[1] . ')';
+                }
+            }
+
             $this->defineVariable(
-                '____PHPBENCHMARKS_PHP' . str_replace('.', null, $phpVersion) . '_COMPATIBLE____',
-                function () use ($phpVersion) {
-                    return $this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')
-                        ? 'true'
-                        : 'false';
+                '____PHPBENCHMARKS_PHP_COMPATIBLE____',
+                function () use ($compatibles) {
+                    return implode("\n" . '            || ', $compatibles);
                 },
                 $configurationPath
             );
         }
 
-        $this->defineCodeDependencyName($configurationPath);
-
         return $this;
     }
 
-    protected function defineCodeDependencyName(string $configurationPath): self
+    protected function defineCoreDependencyName(string $configurationPath): self
     {
         $this->defineVariable(
             '____PHPBENCHMARKS_CORE_DEPENDENCY_NAME____',

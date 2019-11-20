@@ -22,20 +22,11 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
     public static function getEnabledPhpVersions(): array
     {
         $return = [];
-        if (static::isPhp56Compatible()) {
-            $return[] = PhpVersion::PHP_56;
-        }
-        if (static::isPhp70Compatible()) {
-            $return[] = PhpVersion::PHP_70;
-        }
-        if (static::isPhp71Compatible()) {
-            $return[] = PhpVersion::PHP_71;
-        }
-        if (static::isPhp72Compatible()) {
-            $return[] = PhpVersion::PHP_72;
-        }
-        if (static::isPhp73Compatible()) {
-            $return[] = PhpVersion::PHP_73;
+        foreach (PhpVersion::getAll() as $phpVersion) {
+            $parts = explode('.', $phpVersion);
+            if (static::isPhpCompatible((int) $parts[0], (int) $parts[1])) {
+                $return[] = $phpVersion;
+            }
         }
 
         return $return;
@@ -44,20 +35,11 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
     public static function getDisabledPhpVersions(): array
     {
         $return = [];
-        if (static::isPhp56Compatible() === false) {
-            $return[] = PhpVersion::PHP_56;
-        }
-        if (static::isPhp70Compatible() === false) {
-            $return[] = PhpVersion::PHP_70;
-        }
-        if (static::isPhp71Compatible() === false) {
-            $return[] = PhpVersion::PHP_71;
-        }
-        if (static::isPhp72Compatible() === false) {
-            $return[] = PhpVersion::PHP_72;
-        }
-        if (static::isPhp73Compatible() === false) {
-            $return[] = PhpVersion::PHP_73;
+        foreach (PhpVersion::getAll() as $phpVersion) {
+            $parts = explode('.', $phpVersion);
+            if (static::isPhpCompatible((int) $parts[0], (int) $parts[1]) === false) {
+                $return[] = $phpVersion;
+            }
         }
 
         return $return;

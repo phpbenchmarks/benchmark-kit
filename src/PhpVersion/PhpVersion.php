@@ -22,15 +22,4 @@ final class PhpVersion
             static::PHP_73
         ];
     }
-
-    public static function getAllWithoutDot(): array
-    {
-        return [
-            str_replace('.', null, static::PHP_56),
-            str_replace('.', null, static::PHP_70),
-            str_replace('.', null, static::PHP_71),
-            str_replace('.', null, static::PHP_72),
-            str_replace('.', null, static::PHP_73)
-        ];
-    }
 }

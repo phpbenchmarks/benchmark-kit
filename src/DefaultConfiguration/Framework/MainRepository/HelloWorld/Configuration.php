@@ -21,29 +21,10 @@ class Configuration
         return '____PHPBENCHMARKS_COMPONENT_SLUG____';
     }
 
-    public static function isPhp56Compatible(): bool
+    public static function isPhpCompatible(int $major, int $minor): bool
     {
-        return ____PHPBENCHMARKS_PHP56_COMPATIBLE____;
-    }
-
-    public static function isPhp70Compatible(): bool
-    {
-        return ____PHPBENCHMARKS_PHP70_COMPATIBLE____;
-    }
-
-    public static function isPhp71Compatible(): bool
-    {
-        return ____PHPBENCHMARKS_PHP71_COMPATIBLE____;
-    }
-
-    public static function isPhp72Compatible(): bool
-    {
-        return ____PHPBENCHMARKS_PHP72_COMPATIBLE____;
-    }
-
-    public static function isPhp73Compatible(): bool
-    {
-        return ____PHPBENCHMARKS_PHP73_COMPATIBLE____;
+        return
+            ____PHPBENCHMARKS_PHP_COMPATIBLE____;
     }
 
     public static function getBenchmarkUrl(): string
