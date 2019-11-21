@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Configure;
+namespace App\Command\Configure\PhpBenchmarks;
 
 use App\Command\AbstractCommand;
 
-final class ConfigureVhostCommand extends AbstractCommand
+final class ConfigurePhpBenchmarksVhostCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'configure:vhost';
+    protected static $defaultName = 'configure:phpbenchmarks:vhost';
 
     protected function configure(): void
     {

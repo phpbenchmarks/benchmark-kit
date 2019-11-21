@@ -11,23 +11,23 @@ use App\{
     Command\Composer\ComposerUpdateCommand,
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureCircleCiCommand,
-    Command\Configure\ConfigureConfigurationClassSourceCodeUrlsCommand,
-    Command\Configure\ConfigureConfigurationClassCommand,
-    Command\Configure\ConfigureInitBenchmarkCommand,
     Command\Configure\ConfigureReadmeCommand,
-    Command\Configure\ConfigureResponseBodyCommand,
-    Command\Configure\ConfigureVhostCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksVhostCommand,
     Command\DefaultCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksComposerLockCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateBranchNameCommand,
     Command\Validate\ValidateComposerJsonCommand,
-    Command\Validate\ValidateConfigurationComponentSourceCodeUrlsCommand,
-    Command\Validate\ValidateConfigurationComposerLockCommand,
-    Command\Validate\ValidateConfigurationConfigurationClassCommand,
-    Command\Validate\ValidateConfigurationInitBenchmarkCommand,
-    Command\Validate\ValidateConfigurationResponseBodyCommand,
-    Command\Validate\ValidateConfigurationVhostCommand,
     Command\Vhost\VhostCreateCommand
 };
 use Symfony\Component\Console\Application;
@@ -41,12 +41,12 @@ $application->add(new ComposerUpdateCommand());
 
 $application->add(new ConfigureAllCommand());
 $application->add(new ConfigureCircleCiCommand());
-$application->add(new ConfigureConfigurationClassCommand());
-$application->add(new ConfigureConfigurationClassSourceCodeUrlsCommand());
-$application->add(new ConfigureInitBenchmarkCommand());
 $application->add(new ConfigureReadmeCommand());
-$application->add(new ConfigureResponseBodyCommand());
-$application->add(new ConfigureVhostCommand());
+$application->add(new ConfigurePhpBenchmarksConfigurationClassCommand());
+$application->add(new ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
+$application->add(new ConfigurePhpBenchmarksInitBenchmarkCommand());
+$application->add(new ConfigurePhpBenchmarksResponseBodyCommand());
+$application->add(new ConfigurePhpBenchmarksVhostCommand());
 
 $application->add(new DefaultCommand());
 
@@ -55,12 +55,12 @@ $application->add(new PhpVersionCliDefineCommand());
 $application->add(new ValidateAllCommand());
 $application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateComposerJsonCommand());
-$application->add(new ValidateConfigurationComposerLockCommand());
-$application->add(new ValidateConfigurationConfigurationClassCommand());
-$application->add(new ValidateConfigurationComponentSourceCodeUrlsCommand());
-$application->add(new ValidateConfigurationInitBenchmarkCommand());
-$application->add(new ValidateConfigurationResponseBodyCommand());
-$application->add(new ValidateConfigurationVhostCommand());
+$application->add(new ValidatePhpBenchmarksComposerLockCommand());
+$application->add(new ValidatePhpBenchmarksConfigurationClassCommand());
+$application->add(new ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
+$application->add(new ValidatePhpBenchmarksInitBenchmarkCommand());
+$application->add(new ValidatePhpBenchmarksResponseBodyCommand());
+$application->add(new ValidatePhpBenchmarksVhostCommand());
 
 $application->add(new VhostCreateCommand());
 

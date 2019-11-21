@@ -6,7 +6,7 @@ namespace App\ComponentConfiguration;
 
 interface ComponentConfigurationInterface
 {
-    public static function getComponentType(): string;
+    public static function getComponentType(): int;
 
     public static function getComponentName(): string;
 

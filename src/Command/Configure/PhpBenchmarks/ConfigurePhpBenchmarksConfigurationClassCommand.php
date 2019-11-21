@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Configure;
+namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
@@ -11,10 +11,10 @@ use App\{
     PhpVersion\PhpVersion
 };
 
-final class ConfigureConfigurationClassCommand extends AbstractCommand
+final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'configure:configuration-class';
+    protected static $defaultName = 'configure:phpbenchmarks:configurationClass';
 
     protected function configure(): void
     {

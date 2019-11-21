@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Configure;
+namespace App\Command\Configure\PhpBenchmarks;
 
 use App\Command\AbstractCommand;
 
-final class ConfigureInitBenchmarkCommand extends AbstractCommand
+final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'configure:initBenchmark';
+    protected static $defaultName = 'configure:phpbenchmarks:initBenchmark';
 
     protected function configure(): void
     {

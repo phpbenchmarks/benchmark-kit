@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\Command\AbstractCommand;
 
-final class ValidateConfigurationVhostCommand extends AbstractCommand
+final class ValidatePhpBenchmarksVhostCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:configuration:vhost';
+    protected static $defaultName = 'validate:phpbenchmarks:vhost';
 
     /** @var ?string */
     protected $vhostContent;

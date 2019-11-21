@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
@@ -10,10 +10,10 @@ use App\{
     ComponentConfiguration\ComponentConfiguration
 };
 
-final class ValidateConfigurationResponseBodyCommand extends AbstractCommand
+final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:configuration:response-body';
+    protected static $defaultName = 'validate:phpbenchmarks:responseBody';
 
     protected function configure(): void
     {
