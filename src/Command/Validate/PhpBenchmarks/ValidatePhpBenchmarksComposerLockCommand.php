@@ -7,7 +7,6 @@ namespace App\Command\Validate\PhpBenchmarks;
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
-    Command\GitRepositoryTrait,
     Command\PhpVersionArgumentTrait,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 
 final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
 {
-    use GitRepositoryTrait;
     use PhpVersionArgumentTrait;
 
     /** @var string */
@@ -81,9 +79,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
                 $this->throwError('Error while parsing: ' . $e->getMessage());
             }
 
-            $this
-                ->validateComponentVersion($data)
-                ->validateCommonVersion($data);
+            $this->validateComponentVersion($data);
         }
 
         return $this;
@@ -124,51 +120,6 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
 
         if ($packageFound === false) {
             $this->throwError('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
-        }
-
-        return $this;
-    }
-
-    private function validateCommonVersion(array $data): self
-    {
-        if ($this->skipBranchName() === false) {
-            $packageFound = false;
-            $commonRepositoryName = $this->getCommonRepositoryName();
-
-            foreach ($data['packages'] as $package) {
-                if ($package['name'] === $commonRepositoryName) {
-                    $packageFound = true;
-
-                    $branchPrefix = $this->getCommonProdBranchPrefix();
-                    $shouldRequire = $branchPrefix . 'z';
-                    $isBranchValid = substr($package['version'], 0, strlen($branchPrefix)) === $branchPrefix;
-
-                    if ($isBranchValid === false && $this->isValidateProd() === false) {
-                        $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
-                        $isBranchValid = $package['version'] === $this->getCommonDevBranchName();
-                    }
-
-                    $isBranchValid
-                        ?
-                            $this->outputSuccess(
-                                'Package ' . $commonRepositoryName . ' version is ' . $package['version'] . '.'
-                            )
-                        :
-                            $this->throwError(
-                                'Package '
-                                    . $commonRepositoryName
-                                    . ' version should be '
-                                    . $shouldRequire
-                                    . ' but is '
-                                    . $package['version']
-                                    . '. See README.md for more informations.'
-                            );
-                }
-            }
-
-            if ($packageFound === false) {
-                $this->throwError('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
-            }
         }
 
         return $this;
