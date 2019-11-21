@@ -6,12 +6,15 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Command\GitRepositoryTrait,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
 };
 
-final class ValidateComposerJsonCommand extends AbstractComposerFilesCommand
+final class ValidateComposerJsonCommand extends AbstractCommand
 {
+    use GitRepositoryTrait;
+
     /** @var string */
     protected static $defaultName = 'validate:composer:json';
 
