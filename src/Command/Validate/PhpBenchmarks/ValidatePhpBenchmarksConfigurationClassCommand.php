@@ -30,14 +30,14 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
         $this
             ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true))
             ->assertInArray('getComponentType', ComponentType::getAll())
-            ->assertCallMethod('getComponentName', '____PHPBENCHMARKS_COMPONENT_NAME____')
-            ->assertCallMethod('getComponentSlug', '____PHPBENCHMARKS_COMPONENT_SLUG____')
+            ->assertCallMethod('getComponentName')
+            ->assertCallMethod('getComponentSlug')
             ->assertPhpVersionsCompatibles()
-            ->assertCallMethod('getBenchmarkUrl', '{{ benchmarkUrl }}')
-            ->assertCallMethod('getCoreDependencyName', '{{ coreDependencyName }}')
-            ->assertCallMethod('getCoreDependencyMajorVersion', '{{ coreDependencyMajorVersion }}')
-            ->assertCallMethod('getCoreDependencyMinorVersion', '{{ coreDependencyMinorVersion }}')
-            ->assertCallMethod('getCoreDependencyPatchVersion', '{{ coreDependencyPatchVersion }}')
+            ->assertCallMethod('getBenchmarkUrl')
+            ->assertCallMethod('getCoreDependencyName')
+            ->assertCallMethod('getCoreDependencyMajorVersion')
+            ->assertCallMethod('getCoreDependencyMinorVersion')
+            ->assertCallMethod('getCoreDependencyPatchVersion')
             ->assertInArray(
                 'getBenchmarkType',
                 BenchmarkType::getByComponentType(ComponentConfiguration::getComponentType())
@@ -65,7 +65,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
             foreach ($allowedValues as $allowedValue => $allowedValueDescription) {
                 $allowedValuesError[] = $allowedValue . ' (' . $allowedValueDescription . ')';
             }
-            $this->throwError($method . '() should return a data among ' . implode(', ', $allowedValuesError) . '.');
+            $this->throwError($method . '() should return a value in ' . implode(', ', $allowedValuesError) . '.');
         }
         $this->outputSuccess($method . '() return ' . $value . ' (' . $allowedValues[$value] . ').');
 
@@ -73,30 +73,19 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
     }
 
     /** @param mixed $shouldNotReturn */
-    private function assertCallMethod(string $method, $shouldNotReturn, $parameters = []): self
+    private function assertCallMethod(string $method, $parameters = []): self
     {
         $value = ComponentConfiguration::{$method}(...$parameters);
-        if ($value === $shouldNotReturn) {
-            throw new \Exception(
-                'Configuration::' . $method . '() should not return ' . (string) $shouldNotReturn . '.'
-            );
-        }
-
         $valueStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
-        $this->outputSuccess($method . '(' . implode(', ', $parameters) . ') return ' . $valueStr . '.');
 
-        return $this;
+        return $this->outputSuccess($method . '(' . implode(', ', $parameters) . ') return ' . $valueStr . '.');
     }
 
     private function assertPhpVersionsCompatibles(): self
     {
         foreach (PhpVersion::getAll() as $phpVersion) {
             $parts = explode('.', $phpVersion);
-            $this->assertCallMethod(
-                'isCompatibleWithPhp',
-                '____PHPBENCHMARKS_PHP' . $phpVersion . '_COMPATIBLE____',
-                [(int) $parts[0], (int) $parts[1]]
-            );
+            $this->assertCallMethod('isCompatibleWithPhp', [(int) $parts[0], (int) $parts[1]]);
         }
 
         return $this;
