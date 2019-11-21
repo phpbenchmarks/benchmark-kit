@@ -8,7 +8,6 @@ use App\{
     Benchmark\BenchmarkType,
     Command\Configure\ConfigureAllCommand,
     Component\ComponentType,
-    Exception\HiddenValidationException,
     Exception\ValidationException
 };
 use Symfony\Component\Console\{
@@ -80,8 +79,6 @@ abstract class AbstractCommand extends Command
         $return = 0;
         try {
             $this->doExecute();
-        } catch (HiddenValidationException $e) {
-            $return = 1;
         } catch (\Throwable $e) {
             $this->outputError($e->getMessage());
             $this->onError();
@@ -310,7 +307,7 @@ abstract class AbstractCommand extends Command
             ->find($name)
             ->run(new ArrayInput($arguments), $this->output);
         if ($returnCode > 0) {
-            throw new HiddenValidationException();
+            throw new \Exception($name . ' return non-zero code.');
         }
 
         return $this;
