@@ -7,15 +7,16 @@ namespace App\Command\Validate\PhpBenchmarks;
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
+    Command\GitRepositoryTrait,
     Command\PhpVersionArgumentTrait,
-    Command\Validate\AbstractComposerFilesCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Console\Input\InputArgument;
 
-final class ValidatePhpBenchmarksComposerLockCommand extends AbstractComposerFilesCommand
+final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
 {
+    use GitRepositoryTrait;
     use PhpVersionArgumentTrait;
 
     /** @var string */

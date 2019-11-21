@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkType,
-    Command\AbstractCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
-abstract class AbstractComposerFilesCommand extends AbstractCommand
+trait GitRepositoryTrait
 {
     protected function getCommonRepositoryName(): string
     {
