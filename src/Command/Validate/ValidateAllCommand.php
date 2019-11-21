@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace App\Command\Validate;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksComposerLockCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand
+};
 
 final class ValidateAllCommand extends AbstractCommand
 {
@@ -23,14 +31,14 @@ final class ValidateAllCommand extends AbstractCommand
         $this
             ->runCommand(ValidateBranchNameCommand::getDefaultName())
             ->runCommand(ValidateComposerJsonCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationComposerLockCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationConfigurationClassCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName())
-            ->runCommand(ValidateConfigurationVhostCommand::getDefaultName());
+            ->runCommand(ValidatePhpBenchmarksComposerLockCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksConfigurationClassCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksInitBenchmarkCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksResponseBodyCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksVhostCommand::getDefaultName());
 
         if ($this->skipSourceCodeUrls() === false) {
-            $this->runCommand(ValidateConfigurationComponentSourceCodeUrlsCommand::getDefaultName());
+            $this->runCommand(ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand::getDefaultName());
         }
 
         return $this;

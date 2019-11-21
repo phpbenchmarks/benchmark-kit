@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Command\Configure\ConfigureConfigurationClassSourceCodeUrlsCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Validator\{
@@ -18,10 +18,10 @@ use Symfony\Component\Validator\{
     Validation
 };
 
-final class ValidateConfigurationComponentSourceCodeUrlsCommand extends AbstractCommand
+final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:configuration:configuration-class:source-code-urls';
+    protected static $defaultName = 'validate:phpBenchmarks:configurationClass:getSourceCodeUrls';
 
     public static function validateSourCodeUrl($url): ConstraintViolationListInterface
     {
@@ -56,7 +56,7 @@ final class ValidateConfigurationComponentSourceCodeUrlsCommand extends Abstract
         $this
             ->outputWarning(
                 'You can call "phpbenchkit '
-                    . ConfigureConfigurationClassSourceCodeUrlsCommand::getDefaultName()
+                    . ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand::getDefaultName()
                     . '" to configure it.'
             )
             ->outputWarning('You can add --skip-source-code-urls parameter to skip this validation.');

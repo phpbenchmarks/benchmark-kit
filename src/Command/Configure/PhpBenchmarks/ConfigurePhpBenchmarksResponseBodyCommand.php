@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Configure;
+namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
@@ -10,10 +10,10 @@ use App\{
     ComponentConfiguration\ComponentConfiguration
 };
 
-final class ConfigureResponseBodyCommand extends AbstractCommand
+final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'configure:response-body';
+    protected static $defaultName = 'configure:phpbenchmarks:responseBody';
 
     protected function configure(): void
     {

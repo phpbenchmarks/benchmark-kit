@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
     Command\PhpVersionArgumentTrait,
+    Command\Validate\AbstractComposerFilesCommand,
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration,
+    ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Console\Input\InputArgument;
 
-final class ValidateConfigurationComposerLockCommand extends AbstractComposerFilesCommand
+final class ValidatePhpBenchmarksComposerLockCommand extends AbstractComposerFilesCommand
 {
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'validate:configuration:composer:lock';
+    protected static $defaultName = 'validate:phpbenchmarks:composer:lock';
 
     protected function configure(): void
     {

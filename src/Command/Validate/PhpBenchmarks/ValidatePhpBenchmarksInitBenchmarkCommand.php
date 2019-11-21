@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\Command\AbstractCommand;
 
-final class ValidateConfigurationInitBenchmarkCommand extends AbstractCommand
+final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:configuration:init-benchmark';
+    protected static $defaultName = 'validate:phpbenchmarks:initBenchmark';
 
     protected function configure(): void
     {

@@ -6,7 +6,11 @@ namespace App\Command\Configure;
 
 use App\{
     Command\AbstractCommand,
-    Command\Composer\ComposerUpdateCommand
+    Command\Composer\ComposerUpdateCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksVhostCommand
 };
 
 final class ConfigureAllCommand extends AbstractCommand
@@ -24,10 +28,10 @@ final class ConfigureAllCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         return $this
-            ->runCommand(ConfigureConfigurationClassCommand::getDefaultName())
-            ->runCommand(ConfigureInitBenchmarkCommand::getDefaultName())
-            ->runCommand(ConfigureVhostCommand::getDefaultName())
-            ->runCommand(ConfigureResponseBodyCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksConfigurationClassCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksVhostCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName())
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
     }

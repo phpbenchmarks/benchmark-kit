@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Command\Configure\ConfigureConfigurationClassCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion
 };
 
-final class ValidateConfigurationConfigurationClassCommand extends AbstractCommand
+final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:configuration:configuration-class';
+    protected static $defaultName = 'validate:phpbenchmarks:configurationClass';
 
     protected function configure(): void
     {
@@ -50,7 +50,7 @@ final class ValidateConfigurationConfigurationClassCommand extends AbstractComma
     {
         $this->outputWarning(
             'You can call "phpbenchkit '
-                . ConfigureConfigurationClassCommand::getDefaultName()
+                . ConfigurePhpBenchmarksConfigurationClassCommand::getDefaultName()
                 . '" to create Configuration class.'
         );
 

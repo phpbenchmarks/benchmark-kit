@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Configure;
+namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Benchmark\BenchmarkType,
@@ -11,10 +11,10 @@ use App\{
 };
 use PhpBenchmarks\BenchmarkConfiguration\Configuration;
 
-final class ConfigureConfigurationClassSourceCodeUrlsCommand extends AbstractCommand
+final class ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'configure:configuration-class:source-code-urls';
+    protected static $defaultName = 'configure:phpbenchmarks:configurationClass:getSourceCodeUrls';
 
     protected function configure(): void
     {
