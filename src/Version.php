@@ -13,7 +13,7 @@ final class Version
     public const MINOR = 0;
 
     /** @var int  */
-    public const BUGFIX = 0;
+    public const PATCH = 0;
 
     /** @var bool */
     public const DEV = true;
@@ -25,7 +25,7 @@ final class Version
             . '.'
             . (string) static::MINOR
             . '.'
-            . (string) static::BUGFIX
+            . (string) static::PATCH
             . (static::DEV ? '-dev' : null);
     }
 }
