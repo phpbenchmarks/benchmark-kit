@@ -16,7 +16,7 @@ Features for benchmarks are not in this repository, they are in `common` reposit
 <br>
 This repository should have `common` repository in dependencies.
 
-Main dependencies (framework components for example) should have full version (major.minor.bugfix), no `^` or `~` are allowed.
+Main dependencies (framework components for example) should have full version (major.minor.patch), no `^` or `~` are allowed.
 <br>
 Other dependencies could use `^` or `~`.
 
