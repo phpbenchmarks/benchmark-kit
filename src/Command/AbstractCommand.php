@@ -8,6 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Command\Configure\ConfigureAllCommand,
     Component\ComponentType,
+    Exception\HiddenException,
     Exception\ValidationException
 };
 use Symfony\Component\Console\{
@@ -79,6 +80,8 @@ abstract class AbstractCommand extends Command
         $return = 0;
         try {
             $this->doExecute();
+        } catch (HiddenException $exception) {
+            $return = 1;
         } catch (\Throwable $e) {
             $this->outputError($e->getMessage());
             $this->onError();
@@ -307,7 +310,7 @@ abstract class AbstractCommand extends Command
             ->find($name)
             ->run(new ArrayInput($arguments), $this->output);
         if ($returnCode > 0) {
-            throw new \Exception($name . ' return non-zero code.');
+            throw new HiddenException();
         }
 
         return $this;
