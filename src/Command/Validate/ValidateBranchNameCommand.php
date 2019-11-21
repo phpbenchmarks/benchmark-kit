@@ -19,7 +19,7 @@ final class ValidateBranchNameCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate branch name: component_X.Y_benchmark-type_prepare');
+        $this->setDescription('Validate git branch name');
     }
 
     protected function doExecute(): parent
@@ -37,33 +37,33 @@ final class ValidateBranchNameCommand extends AbstractCommand
     {
         $branchName = $this->getBranchName();
 
-        $expectedGitBranch =
-            ComponentConfiguration::getComponentSlug()
-            . '_'
-            . ComponentConfiguration::getCoreDependencyMajorVersion()
+        $prodBranchName =
+            ComponentConfiguration::getCoreDependencyMajorVersion()
             . '.'
             . ComponentConfiguration::getCoreDependencyMinorVersion()
+            . '.'
+            . ComponentConfiguration::getCoreDependencyPatchVersion()
             . '_'
             . BenchmarkType::getSlug(ComponentConfiguration::getBenchmarkType());
-        if ($this->isValidateProd() === false) {
-            $expectedGitBranch .= '_prepare';
-        }
 
-        if ($branchName !== $expectedGitBranch) {
+        if ($this->isValidateProd() === true && $branchName !== $prodBranchName) {
             $this
-                ->outputWarning('You can add --skip-branch-name parameter to skip this validation.')
-                ->outputWarning('You can add --validate-prod parameter to remove "_prepare" suffix in branch name.')
-                ->throwError('Branch name should be ' . $expectedGitBranch . ' but is ' . $branchName . '.');
+                ->outputSkipBranchNameWarning()
+                ->throwError('Branch name should be ' . $prodBranchName . ' but is ' . $branchName . '.');
+        } elseif ($this->isValidateProd() === false && $branchName === $prodBranchName) {
+            $this
+                ->outputSkipBranchNameWarning()
+                ->throwError('Branch name should not be ' . $prodBranchName . ', it\'s reversed for prod.');
         }
-        $this->outputSuccess('Branch name is ' . $branchName . '.');
 
-        return $this;
+        return $this->outputSuccess('Branch name ' . $branchName . ' is valid.');
     }
 
     private function getBranchName(): string
     {
         $command =
-            'cd ' . $this->getInstallationPath()
+            'cd '
+            . $this->getInstallationPath()
             . ' && git branch --no-color 2> /dev/null'
             . ' | sed -e \'/^[^*]/d\' -e \'s/* \(.*\)/(\1)/\' -e \'s/(//g\' -e \'s/)//g\'';
 
@@ -74,5 +74,10 @@ final class ValidateBranchNameCommand extends AbstractCommand
         }
 
         return $return[0];
+    }
+
+    private function outputSkipBranchNameWarning(): self
+    {
+        return $this->outputWarning('You can add --skip-branch-name parameter to skip this validation.');
     }
 }

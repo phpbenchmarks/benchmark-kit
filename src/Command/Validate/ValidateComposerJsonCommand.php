@@ -6,15 +6,12 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
-    Command\GitRepositoryTrait,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
 };
 
 final class ValidateComposerJsonCommand extends AbstractCommand
 {
-    use GitRepositoryTrait;
-
     /** @var string */
     protected static $defaultName = 'validate:composer:json';
 
@@ -40,13 +37,10 @@ final class ValidateComposerJsonCommand extends AbstractCommand
             $this->throwError('Error while parsing: ' . $e->getMessage());
         }
 
-        $this
+        return $this
             ->validateName($data)
             ->validateLicense($data)
-            ->validateRequireComponent($data)
-            ->validateRequireCommon($data);
-
-        return $this;
+            ->validateRequireComponent($data);
     }
 
     private function validateName(array $data): self
@@ -105,40 +99,6 @@ final class ValidateComposerJsonCommand extends AbstractCommand
                     . ComponentConfiguration::getCoreDependencyVersion()
                     . '. See README.md for more informations.'
             );
-        }
-
-        return $this;
-    }
-
-    private function validateRequireCommon(array $data): self
-    {
-        if ($this->skipBranchName() === false) {
-            $commonRepository = $this->getCommonRepositoryName();
-            $commonVersion = $data['require'][$commonRepository] ?? null;
-
-            $branchPrefix = $this->getCommonProdBranchPrefix();
-            $shouldRequire = $branchPrefix . 'z';
-            $isBranchValid = substr((string) $commonVersion, 0, strlen($branchPrefix)) === $branchPrefix;
-
-            if ($isBranchValid === false && $this->isValidateProd() === false) {
-                $shouldRequire .= ' or ' . $this->getCommonDevBranchName();
-                $isBranchValid = ($data['require'][$commonRepository] ?? null) === $this->getCommonDevBranchName();
-            }
-
-            $isBranchValid
-                ? $this->outputSuccess('Require ' . $commonRepository . ': ' . $commonVersion . '.')
-                :
-                    $this
-                        ->outputWarning('You can add --skip-branch-name parameter to skip this validation.')
-                        ->throwError(
-                            'It should require '
-                            . $commonRepository
-                            . ': '
-                            . $shouldRequire
-                            . ' but is '
-                            . $commonVersion
-                            . '. See README.md for more informations.'
-                        );
         }
 
         return $this;
