@@ -40,6 +40,7 @@ docker tag $IMAGE_PATCH_TAG $IMAGE_MAJOR_TAG
 
 if [ $push == true ]; then
     echo "# docker login --username=phpbenchmarks"
+    docker logout
     docker login --username=phpbenchmarks
 
     echo "# docker push $IMAGE_PATCH_TAG"
