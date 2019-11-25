@@ -78,7 +78,9 @@ final class BenchmarkValidateCommand extends AbstractCommand
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
             $responseFile = $this->getResponseBodyPath() . '/' . $file;
             if ($body === file_get_contents($responseFile)) {
-                $this->outputSuccess('Body is equal to ' . $responseFile . ' content.');
+                $this->outputSuccess(
+                    'Body is equal to ' . $this->removeInstallationPathPrefix($responseFile) . ' content.'
+                );
                 $validated = true;
                 break;
             }

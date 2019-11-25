@@ -41,8 +41,6 @@ final class ValidateBranchNameCommand extends AbstractCommand
             ComponentConfiguration::getCoreDependencyMajorVersion()
             . '.'
             . ComponentConfiguration::getCoreDependencyMinorVersion()
-            . '.'
-            . ComponentConfiguration::getCoreDependencyPatchVersion()
             . '_'
             . BenchmarkType::getSlug(ComponentConfiguration::getBenchmarkType());
 
