@@ -27,6 +27,11 @@ class Configuration
             {{ compatiblesPhpVersions|raw }};
     }
 
+    public static function getEntryPointFileName(): string
+    {
+        return '{{ entryPointFileName }}';
+    }
+
     public static function getBenchmarkUrl(): string
     {
         return '{{ benchmarkUrl }}';
