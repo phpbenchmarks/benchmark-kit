@@ -7,6 +7,7 @@ namespace App\Command\Configure;
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
+    Command\Configure\Composer\ConfigureComposerJsonCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
@@ -34,6 +35,7 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName())
             ->runCommand(ConfigureReadmeCommand::getDefaultName())
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
+            ->runCommand(ConfigureComposerJsonCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
     }
 }
