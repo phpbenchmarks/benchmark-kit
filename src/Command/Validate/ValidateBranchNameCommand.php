@@ -51,7 +51,7 @@ final class ValidateBranchNameCommand extends AbstractCommand
         } elseif ($this->isValidateProd() === false && $branchName === $prodBranchName) {
             $this
                 ->outputSkipBranchNameWarning()
-                ->throwError('Branch name should not be ' . $prodBranchName . ', it\'s reversed for prod.');
+                ->throwError('Branch name should not be ' . $prodBranchName . ', it\'s reserved for prod.');
         }
 
         return $this->outputSuccess('Branch name ' . $branchName . ' is valid.');
