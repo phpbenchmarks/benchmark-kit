@@ -33,6 +33,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
             ->assertCallMethod('getComponentName')
             ->assertCallMethod('getComponentSlug')
             ->assertPhpVersionsCompatibles()
+            ->assertEntryPoint()
             ->assertCallMethod('getBenchmarkUrl')
             ->assertCallMethod('getCoreDependencyName')
             ->assertCallMethod('getCoreDependencyMajorVersion')
@@ -89,5 +90,16 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
         }
 
         return $this;
+    }
+
+    private function assertEntryPoint(): self
+    {
+        $entryPointFileName = ComponentConfiguration::getEntryPointFileName();
+
+        if (is_readable($this->getInstallationPath() . '/' . $entryPointFileName) === false) {
+            $this->throwError("getEntryPoint() return $entryPointFileName who is not readable.");
+        }
+
+        return $this->outputSuccess("getEntryPoint() return $entryPointFileName who is readable.");
     }
 }

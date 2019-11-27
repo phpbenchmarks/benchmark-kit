@@ -31,6 +31,7 @@ final class ValidateAllCommand extends AbstractCommand
         $this
             ->runCommand(ValidateBranchNameCommand::getDefaultName())
             ->runCommand(ValidateComposerJsonCommand::getDefaultName())
+            ->runCommand(ValidateEntryPointCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksComposerLockCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksConfigurationClassCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksInitBenchmarkCommand::getDefaultName())

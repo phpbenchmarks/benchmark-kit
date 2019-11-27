@@ -14,6 +14,8 @@ interface ComponentConfigurationInterface
 
     public static function isCompatibleWithPhp(int $major, int $minor): bool;
 
+    public static function getEntryPointFileName(): string;
+
     public static function getBenchmarkUrl(): string;
 
     public static function getCoreDependencyName(): string;

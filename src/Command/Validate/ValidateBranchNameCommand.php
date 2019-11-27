@@ -22,6 +22,11 @@ final class ValidateBranchNameCommand extends AbstractCommand
         $this->setDescription('Validate git branch name');
     }
 
+    protected function onError(): parent
+    {
+        return $this->outputWarning('You can add --skip-branch-name parameter to skip this validation.');
+    }
+
     protected function doExecute(): parent
     {
         if ($this->skipBranchName() === false) {
@@ -45,13 +50,9 @@ final class ValidateBranchNameCommand extends AbstractCommand
             . BenchmarkType::getSlug(ComponentConfiguration::getBenchmarkType());
 
         if ($this->isValidateProd() === true && $branchName !== $prodBranchName) {
-            $this
-                ->outputSkipBranchNameWarning()
-                ->throwError('Branch name should be ' . $prodBranchName . ' but is ' . $branchName . '.');
+            $this->throwError('Branch name should be ' . $prodBranchName . ' but is ' . $branchName . '.');
         } elseif ($this->isValidateProd() === false && $branchName === $prodBranchName) {
-            $this
-                ->outputSkipBranchNameWarning()
-                ->throwError('Branch name should not be ' . $prodBranchName . ', it\'s reserved for prod.');
+            $this->throwError('Branch name should not be ' . $prodBranchName . ', it\'s reserved for prod.');
         }
 
         return $this->outputSuccess('Branch name ' . $branchName . ' is valid.');
@@ -68,14 +69,9 @@ final class ValidateBranchNameCommand extends AbstractCommand
         // As command is tricky, I prefer using exec() instead of Process
         exec($command, $return, $returnCode);
         if ($returnCode > 0 || is_array($return) === false || count($return) !== 1) {
-            $this->throwError('Can\'t get git branch name.');
+            $this->throwError('Can\'t get git branch name. Verify directory is a git repository.');
         }
 
         return $return[0];
-    }
-
-    private function outputSkipBranchNameWarning(): self
-    {
-        return $this->outputWarning('You can add --skip-branch-name parameter to skip this validation.');
     }
 }

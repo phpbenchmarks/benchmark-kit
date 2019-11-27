@@ -12,6 +12,7 @@ use App\{
     Command\Configure\Composer\ConfigureComposerJsonCommand,
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureCircleCiCommand,
+    Command\Configure\ConfigureEntryPointCommand,
     Command\Configure\ConfigureReadmeCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
@@ -29,6 +30,7 @@ use App\{
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateBranchNameCommand,
     Command\Validate\ValidateComposerJsonCommand,
+    Command\Validate\ValidateEntryPointCommand,
     Command\Vhost\VhostCreateCommand
 };
 use Symfony\Component\Console\Application;
@@ -43,6 +45,7 @@ $application->add(new ComposerUpdateCommand());
 $application->add(new ConfigureAllCommand());
 $application->add(new ConfigureComposerJsonCommand());
 $application->add(new ConfigureCircleCiCommand());
+$application->add(new ConfigureEntryPointCommand());
 $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
@@ -57,6 +60,7 @@ $application->add(new PhpVersionCliDefineCommand());
 $application->add(new ValidateAllCommand());
 $application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateComposerJsonCommand());
+$application->add(new ValidateEntryPointCommand());
 $application->add(new ValidatePhpBenchmarksComposerLockCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
