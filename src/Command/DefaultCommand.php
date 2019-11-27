@@ -30,7 +30,8 @@ final class DefaultCommand extends ListCommand
             [
                 '',
                 'Welcome to http://www.phpbenchmarks.com benchmark kit ' . Version::getVersion() . '.',
-                ''
+                '',
+                'Host source code path: ' . getenv('HOST_SOURCE_CODE_PATH') . '.'
             ],
             $output,
             $isConfigurationValid
