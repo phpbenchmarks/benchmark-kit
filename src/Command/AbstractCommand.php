@@ -111,6 +111,12 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    /** @return $this */
+    protected function outputCallPhpbenchkitWarning(string $command): self
+    {
+        return $this->outputWarning("You can use phpbenchkit $command to configure it.");
+    }
+
     protected function throwError(string $error = null): void
     {
         throw new ValidationException($error);
