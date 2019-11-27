@@ -6,6 +6,8 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Command\Validate\Composer\ValidateComposerJsonCommand,
+    Command\Validate\Composer\ValidateComposerLockCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksComposerLockCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
@@ -31,6 +33,7 @@ final class ValidateAllCommand extends AbstractCommand
         $this
             ->runCommand(ValidateBranchNameCommand::getDefaultName())
             ->runCommand(ValidateComposerJsonCommand::getDefaultName())
+            ->runCommand(ValidateComposerLockCommand::getDefaultName())
             ->runCommand(ValidateEntryPointCommand::getDefaultName())
             ->runCommand(ValidateReadmeCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksComposerLockCommand::getDefaultName())

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Validate;
+namespace App\Command\Validate\Composer;
 
 use App\{
     Command\AbstractCommand,

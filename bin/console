@@ -21,6 +21,8 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksVhostCommand,
     Command\DefaultCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
+    Command\Validate\Composer\ValidateComposerJsonCommand,
+    Command\Validate\Composer\ValidateComposerLockCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksComposerLockCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
@@ -29,7 +31,6 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateBranchNameCommand,
-    Command\Validate\ValidateComposerJsonCommand,
     Command\Validate\ValidateEntryPointCommand,
     Command\Validate\ValidateReadmeCommand,
     Command\Vhost\VhostCreateCommand
@@ -61,6 +62,7 @@ $application->add(new PhpVersionCliDefineCommand());
 $application->add(new ValidateAllCommand());
 $application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateComposerJsonCommand());
+$application->add(new ValidateComposerLockCommand());
 $application->add(new ValidateEntryPointCommand());
 $application->add(new ValidateReadmeCommand());
 $application->add(new ValidatePhpBenchmarksComposerLockCommand());
