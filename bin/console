@@ -9,6 +9,7 @@ use App\{
     Command\Benchmark\BenchmarkInitCommand,
     Command\Benchmark\BenchmarkValidateCommand,
     Command\Composer\ComposerUpdateCommand,
+    Command\Configure\Composer\ConfigureComposerJsonCommand,
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureCircleCiCommand,
     Command\Configure\ConfigureReadmeCommand,
@@ -40,6 +41,7 @@ $application->add(new BenchmarkValidateCommand());
 $application->add(new ComposerUpdateCommand());
 
 $application->add(new ConfigureAllCommand());
+$application->add(new ConfigureComposerJsonCommand());
 $application->add(new ConfigureCircleCiCommand());
 $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassCommand());

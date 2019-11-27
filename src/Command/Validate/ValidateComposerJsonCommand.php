@@ -6,6 +6,7 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
+    Command\Configure\Composer\ConfigureComposerJsonCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration
 };
@@ -45,11 +46,11 @@ final class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateName(array $data): self
     {
-        ($data['name'] ?? null) === 'phpbenchmarks/' . ComponentConfiguration::getComponentSlug()
+        ($data['name'] ?? null) === ConfigureComposerJsonCommand::getComposerName()
             ? $this->outputSuccess('Name ' . $data['name'] . ' is valid.')
             :
                 $this->throwError(
-                    'Repository name must be "phpbenchmarks/' . ComponentConfiguration::getComponentSlug() . '".'
+                    'Repository name must be "' . ConfigureComposerJsonCommand::getComposerName() . '".'
                 );
 
         return $this;
@@ -57,9 +58,9 @@ final class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateLicense(array $data): self
     {
-        ($data['license'] ?? null) === 'proprietary'
+        ($data['license'] ?? null) === ConfigureComposerJsonCommand::LICENSE
             ? $this->outputSuccess('License ' . $data['license'] . ' is valid.')
-            : $this->throwError('License must be "proprietary".');
+            : $this->throwError('License must be "' . ConfigureComposerJsonCommand::LICENSE . '".');
 
         return $this;
     }
