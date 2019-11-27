@@ -25,34 +25,40 @@ readonly DOCKER_IMAGE_NAME="phpbenchmarks/benchmark-kit:4"
 function addHost() {
     local HOST="benchmark-kit.loc"
     if [ "$(cat /etc/hosts | grep -c $HOST)" -eq 0 ]; then
-        echo -e "\e[32mAdd host $HOST\e[0m..."
+        echo -e "Add host \e[32m$HOST\e[0m."
         sudo /bin/sh -c "echo \"127.0.0.1 $HOST\" >> /etc/hosts"
     fi
 }
 
 function startContainer() {
-    echo -e "\e[32mStart $CONTAINER_NAME container...\e[0m"
-
     defaultSourceCodePath=$(pwd)
     defaultNginxPort="8080"
     if [ -f "$DEFAULT_CONFIG_PATH" ]; then
         source $DEFAULT_CONFIG_PATH
     fi
 
-    echo -en "\e[44m Benchmark source code path [$defaultSourceCodePath]? \e[0m "
-    read sourceCodePath
     if [ "$sourceCodePath" == "" ]; then
-        sourceCodePath=$defaultSourceCodePath
+        echo -en "\e[44m Benchmark source code path [$defaultSourceCodePath]? \e[0m "
+        read sourceCodePath
+        if [ "$sourceCodePath" == "" ]; then
+            sourceCodePath=$defaultSourceCodePath
+        fi
+    else
+        echo -e "Source code: \e[32m$sourceCodePath\e[0m."
     fi
     if [ ! -d "$sourceCodePath" ]; then
-        echo "Source code path $sourceCodePath is not a redirectory."
+        echo -e "\e[41m Benchmark source code path $sourceCodePath is not a redirectory. \e[0m"
         exit 1
     fi
 
-    echo -en "\e[44m Nginx port [$defaultNginxPort]? \e[0m "
-    read nginxPort
     if [ "$nginxPort" == "" ]; then
-        nginxPort=$defaultNginxPort
+        echo -en "\e[44m Nginx port [$defaultNginxPort]? \e[0m "
+        read nginxPort
+        if [ "$nginxPort" == "" ]; then
+            nginxPort=$defaultNginxPort
+        fi
+    else
+        echo -e "Nginx port: \e[32m$nginxPort\e[0m."
     fi
 
     echo "#!/usr/bin/env bash" > $DEFAULT_CONFIG_PATH
@@ -65,6 +71,7 @@ function startContainer() {
         kitAsVolumeDockerRunParameter=""
     fi
 
+    echo -e "Start \e[32m$CONTAINER_NAME\e[0m container."
     docker run \
         -it \
         -d \
@@ -74,7 +81,9 @@ function startContainer() {
         -v $sourceCodePath:/var/www/benchmark \
         $kitAsVolumeDockerRunParameter \
         -e NGINX_PORT=$nginxPort \
-        $DOCKER_IMAGE_NAME
+        -e HOST_SOURCE_CODE_PATH=$sourceCodePath \
+        $DOCKER_IMAGE_NAME \
+        > /dev/null
 
     containerStarted=true
 }
@@ -93,8 +102,8 @@ function updatePhpBenchKitScript()
 
 function stopContainer() {
     if [ $containerStarted == true ]; then
-        echo -e "\e[32mStop $CONTAINER_NAME container...\e[0m"
-        docker stop $CONTAINER_NAME
+        echo -e "Stop \e[32m$CONTAINER_NAME\e[0m container."
+        docker kill $CONTAINER_NAME > /dev/null
     fi
 }
 
@@ -103,6 +112,8 @@ restartContainer=false
 kitAsVolume=false
 consoleParams=""
 selfUpdate=false
+sourceCodePath=""
+nginxPort=""
 for param in "$@"; do
     if [ "$param" == "--stop" ]; then
         stopContainer=true
@@ -112,6 +123,12 @@ for param in "$@"; do
         kitAsVolume=true
     elif [ "$param" == "--selfupdate" ]; then
         selfUpdate=true
+    elif [ "${param:0:9}" == "--source=" ]; then
+        sourceCodePath=${param:9}
+        restartContainer=true
+    elif [ "${param:0:13}" == "--nginx-port=" ]; then
+        nginxPort=${param:13}
+        restartContainer=true
     else
         consoleParams="$consoleParams $param"
     fi
