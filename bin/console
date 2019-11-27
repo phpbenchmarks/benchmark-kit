@@ -30,7 +30,6 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand,
     Command\Validate\ValidateAllCommand,
-    Command\Validate\ValidateBranchNameCommand,
     Command\Validate\ValidateEntryPointCommand,
     Command\Validate\ValidateReadmeCommand,
     Command\Vhost\VhostCreateCommand
@@ -60,7 +59,6 @@ $application->add(new DefaultCommand());
 $application->add(new PhpVersionCliDefineCommand());
 
 $application->add(new ValidateAllCommand());
-$application->add(new ValidateBranchNameCommand());
 $application->add(new ValidateComposerJsonCommand());
 $application->add(new ValidateComposerLockCommand());
 $application->add(new ValidateEntryPointCommand());

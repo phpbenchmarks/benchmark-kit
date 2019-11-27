@@ -38,23 +38,7 @@ abstract class AbstractCommand extends Command
     private $output;
 
     /** @var bool */
-    private $validateProd = true;
-
-    /** @var bool */
-    private $skipBranchName = true;
-
-    /** @var bool */
     private $skipSourceCodeUrls = false;
-
-    public function isValidateProd(): bool
-    {
-        return $this->validateProd;
-    }
-
-    public function skipBranchName(): bool
-    {
-        return $this->skipBranchName;
-    }
 
     public function skipSourceCodeUrls(): bool
     {
@@ -63,18 +47,13 @@ abstract class AbstractCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addOption('validate-prod', 'p', null, 'Validate data for prod instead of dev')
-            ->addOption('skip-branch-name', null, null, 'Do not validate branch name')
-            ->addOption('skip-source-code-urls', null, null, 'Do not validate source code urls');
+        $this->addOption('skip-source-code-urls', null, null, 'Do not validate source code urls');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
-        $this->validateProd = $input->getOption('validate-prod');
-        $this->skipBranchName = $input->getOption('skip-branch-name');
         $this->skipSourceCodeUrls = $input->getOption('skip-source-code-urls');
 
         $return = 0;
@@ -295,12 +274,6 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function runCommand(string $name, array $arguments = []): self
     {
-        if ($this->isValidateProd()) {
-            $arguments['--validate-prod'] = true;
-        }
-        if ($this->skipBranchName()) {
-            $arguments['--skip-branch-name'] = true;
-        }
         if ($this->skipSourceCodeUrls()) {
             $arguments['--skip-source-code-urls'] = true;
         }

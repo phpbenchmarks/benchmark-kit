@@ -47,10 +47,8 @@ List available commands:
 phpbenchkit
 ```
 
-Almost all commands accept this options:
-* `--skip-branch-name`: don't validate git branch name, usefull while you are in development and repositories are not created yet.
+Almost all commands accept this option:
 * `--skip-source-code-urls`: don't validate source code urls, usefull while you are in development.
-* `--validate-prod`: you should not need it, it's used when we test your code before benchmarking it.
 
 ## #1 Ask us to create repositories
 
@@ -97,7 +95,6 @@ phpbench composer:update 7.1
 You can validate each part of your configuration with `phpbench` commands:
 ```
 validate:all                                     Call all validate commands
-validate:branch:name                             Validate branch name: component_X.Y_benchmark-type_prepare
 validate:composer:json                           Validate dependencies in composer.json
 validate:composer:lock                           Validate dependencies in .phpbenchmarks/composer/composer.lock.phpX.Y
 validate:configuration:class                     Validate .phpbenchmarks/Configuration.php
