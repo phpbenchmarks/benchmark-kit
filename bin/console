@@ -13,6 +13,7 @@ use App\{
     Command\Configure\ConfigureAllCommand,
     Command\Configure\ConfigureCircleCiCommand,
     Command\Configure\ConfigureEntryPointCommand,
+    Command\Configure\ConfigureGitignoreCommand,
     Command\Configure\ConfigureReadmeCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
@@ -31,6 +32,7 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateEntryPointCommand,
+    Command\Validate\ValidateGitignoreCommand,
     Command\Validate\ValidateReadmeCommand,
     Command\Vhost\VhostCreateCommand
 };
@@ -47,6 +49,7 @@ $application->add(new ConfigureAllCommand());
 $application->add(new ConfigureComposerJsonCommand());
 $application->add(new ConfigureCircleCiCommand());
 $application->add(new ConfigureEntryPointCommand());
+$application->add(new ConfigureGitignoreCommand());
 $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
@@ -62,6 +65,7 @@ $application->add(new ValidateAllCommand());
 $application->add(new ValidateComposerJsonCommand());
 $application->add(new ValidateComposerLockCommand());
 $application->add(new ValidateEntryPointCommand());
+$application->add(new ValidateGitignoreCommand());
 $application->add(new ValidateReadmeCommand());
 $application->add(new ValidatePhpBenchmarksComposerLockCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassCommand());

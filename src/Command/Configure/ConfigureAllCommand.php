@@ -33,6 +33,7 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksVhostCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName())
+            ->runCommand(ConfigureGitignoreCommand::getDefaultName())
             ->runCommand(ConfigureReadmeCommand::getDefaultName())
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ConfigureEntryPointCommand::getDefaultName())

@@ -24,9 +24,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
 
     protected function onError(): parent
     {
-        return $this->outputWarning(
-            'You can use phpbenchkit ' . ConfigureEntryPointCommand::getDefaultName() . ' to configure it.'
-        );
+        return $this->outputCallPhpbenchkitWarning(ConfigureEntryPointCommand::getDefaultName());
     }
 
     protected function doExecute(): parent

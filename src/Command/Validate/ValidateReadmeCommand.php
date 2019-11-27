@@ -22,9 +22,7 @@ final class ValidateReadmeCommand extends AbstractCommand
 
     protected function onError(): parent
     {
-        return $this->outputWarning(
-            'You can use phpbenchkit ' . ConfigureReadmeCommand::getDefaultName() . ' to configure it.'
-        );
+        return $this->outputCallPhpbenchkitWarning(ConfigureReadmeCommand::getDefaultName());
     }
 
     protected function doExecute(): parent
