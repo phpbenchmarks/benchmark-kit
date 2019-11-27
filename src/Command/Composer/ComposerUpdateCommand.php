@@ -7,7 +7,7 @@ namespace App\Command\Composer;
 use App\{
     Command\AbstractCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
-    Command\Validate\ValidateComposerJsonCommand,
+    Command\Validate\Composer\ValidateComposerJsonCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 use Symfony\Component\Console\Output\OutputInterface;

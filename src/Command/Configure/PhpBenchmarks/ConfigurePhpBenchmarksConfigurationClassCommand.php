@@ -38,6 +38,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         $componentSlug = $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
 
         $benchmarkType = $this->getBenchmarkType($componentType);
+        $entryPointFileName = $this->askQuestion('Entry point file name?', 'public/index.php');
         $benchmarkUrl = $this->askQuestion(
             'Benchmark url, after host?',
             BenchmarkType::getDefaultBenchmarkUrl($benchmarkType)
@@ -57,6 +58,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
                     'componentType' => $componentType,
                     'componentName' => $componentName,
                     'componentSlug' => $componentSlug,
+                    'entryPointFileName' => $entryPointFileName,
                     'benchmarkUrl' => $benchmarkUrl,
                     'coreDependencyName' => $coreDependencyName,
                     'coreDependencyMajorVersion' => $coreDependencyMajorVersion,
@@ -107,14 +109,12 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
                 $this->throwError('Error while parsing: ' . $e->getMessage());
             }
 
-            $choices = array_keys($data['require'] ?? []);
-            foreach ($choices as $key => $choice) {
-                if (
-                    $choice === 'php'
-                    || substr($choice, 0, 4) === 'ext-'
-                    || substr($choice, 0, 14) === 'phpbenchmarks/'
-                ) {
-                    unset($choices[$key]);
+            $choices = [];
+            $choiceIndex = 1;
+            foreach (array_keys($data['require'] ?? []) as $dependency) {
+                if ($dependency !== 'php' && substr($dependency, 0, 4) !== 'ext-') {
+                    $choices[$choiceIndex] = $dependency;
+                    $choiceIndex++;
                 }
             }
             $return = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);

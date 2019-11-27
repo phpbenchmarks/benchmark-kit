@@ -201,11 +201,11 @@ abstract class AbstractCommand extends Command
             $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates'));
         }
 
-        $componentPath = 'mainRepository/' . ComponentType::getCamelCaseName($componentType);
+        $componentPath = 'benchmark/' . ComponentType::getCamelCaseName($componentType);
         $templates = [
             $componentPath . '/' . $templatePath . '.' . BenchmarkType::getCamelCaseName($benchmarkType) . '.twig',
             $componentPath . '/' . $templatePath . '.twig',
-            'mainRepository/default/' . $templatePath . '.twig'
+            'benchmark/default/' . $templatePath . '.twig'
         ];
 
         $templateTwigPath = null;
