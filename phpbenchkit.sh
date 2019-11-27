@@ -73,7 +73,7 @@ function startContainer() {
 
     echo -e "Start \e[32m$CONTAINER_NAME\e[0m container."
     docker run \
-        -it \
+        $ttyParameter \
         -d \
         --name=$CONTAINER_NAME \
         --rm \
@@ -114,6 +114,7 @@ consoleParams=""
 selfUpdate=false
 sourceCodePath=""
 nginxPort=""
+tty=true
 for param in "$@"; do
     if [ "$param" == "--stop" ]; then
         stopContainer=true
@@ -129,10 +130,18 @@ for param in "$@"; do
     elif [ "${param:0:13}" == "--nginx-port=" ]; then
         nginxPort=${param:13}
         restartContainer=true
+    elif [ "$param" == "--no-tty" ]; then
+        tty=false
     else
         consoleParams="$consoleParams $param"
     fi
 done
+
+if [ $tty == true ]; then
+    ttyParameter="-it"
+else
+    ttyParameter="-t"
+fi
 
 if [ $selfUpdate == true ]; then
     stopContainer
@@ -159,4 +168,4 @@ fi
 
 addHost
 
-docker exec -it --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.3 bin/console $consoleParams
+docker exec $ttyParameter --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.3 bin/console $consoleParams
