@@ -259,13 +259,24 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    protected function removeFile(string $file): self
+    {
+        if (is_file($file)) {
+            (new Filesystem())->remove($file);
+            $this->outputSuccess('File ' . $this->removeInstallationPathPrefix($file) . ' removed.');
+        }
+
+        return $this;
+    }
+
     /** @return $this */
     protected function runProcess(
         array $commands,
         int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
-        string $cwd = null
+        string $cwd = null,
+        ?int $timeout = 60
     ): self {
-        (new Process($commands, $cwd ?? $this->getInstallationPath()))
+        (new Process($commands, $cwd ?? $this->getInstallationPath(), null, null, $timeout))
             ->mustRun(
                 function (string $type, string $line) use ($outputVerbosity) {
                     if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {

@@ -6,6 +6,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\{
+    Command\Benchmark\BenchmarkErrorCommand,
     Command\Benchmark\BenchmarkInitCommand,
     Command\Benchmark\BenchmarkValidateCommand,
     Command\Composer\ComposerUpdateCommand,
@@ -40,6 +41,7 @@ use Symfony\Component\Console\Application;
 
 $application = new Application();
 
+$application->add(new BenchmarkErrorCommand());
 $application->add(new BenchmarkInitCommand());
 $application->add(new BenchmarkValidateCommand());
 

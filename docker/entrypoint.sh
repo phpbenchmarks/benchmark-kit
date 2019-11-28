@@ -9,6 +9,7 @@ service php7.0-fpm start
 service php7.1-fpm start
 service php7.2-fpm start
 service php7.3-fpm start
+service php7.4-fpm start
 
 if [ "$1" == "--nginx-as-service" ]; then
     service nginx start
