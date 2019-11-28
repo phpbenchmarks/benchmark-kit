@@ -14,6 +14,26 @@ readonly IMAGE_PATCH_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSIO
 readonly IMAGE_MINOR_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION
 readonly IMAGE_MAJOR_TAG=$IMAGE_NAME:$MAJOR_VERSION
 
+readonly LOG_FILE="/tmp/benchmark-kit_build.log"
+
+function rmLogFile() {
+    if [ -f "$LOG_FILE" ]; then
+        rm $LOG_FILE;
+    fi
+}
+
+function onError() {
+    if [ -f "$LOG_FILE" ]; then
+        cat $LOG_FILE
+        rmLogFile
+    fi
+
+    echo -e "\e[41m Error, build canceled. \e[0m"
+}
+
+trap onError ERR
+rmLogFile
+
 echo -n "Image to build: $IMAGE_PATCH_TAG? [Y/n] "
 read validate
 if [ "$validate" != "" ] && [ "$validate" != "y" ] && [ "$validate" != "y" ]; then
@@ -21,20 +41,24 @@ if [ "$validate" != "" ] && [ "$validate" != "y" ] && [ "$validate" != "y" ]; th
 fi
 
 dockerQuiet="-q"
+dockerNoCache=""
 push=false
 for param in "$@"; do
     if [ "$param" == "-v" ]; then
         dockerQuiet=""
+    elif [ "$param" == "--no-cache" ]; then
+        dockerNoCache="--no-cache"
     elif [ "$param" == "--push" ]; then
         push=true
     fi
 done
 
 echo "# composer install --no-dev"
-composer install --no-dev > /dev/null 2>&1
+composer install --no-dev > $LOG_FILE 2>&1
+rmLogFile
 
 echo "Build image..."
-docker build $DOCKER_DIRECTORY/.. --file=docker/Dockerfile --tag=$IMAGE_PATCH_TAG $dockerQuiet > /dev/null
+docker build $DOCKER_DIRECTORY/.. --file=docker/Dockerfile --tag=$IMAGE_PATCH_TAG $dockerQuiet $dockerNoCache
 docker tag $IMAGE_PATCH_TAG $IMAGE_MINOR_TAG
 docker tag $IMAGE_PATCH_TAG $IMAGE_MAJOR_TAG
 
@@ -44,14 +68,18 @@ if [ $push == true ]; then
     docker login --username=phpbenchmarks
 
     echo "# docker push $IMAGE_PATCH_TAG"
-    docker push $IMAGE_PATCH_TAG > /dev/null
+    docker push $IMAGE_PATCH_TAG > $LOG_FILE
+    rmLogFile
 
     echo "# docker push $IMAGE_MINOR_TAG"
-    docker push $IMAGE_MINOR_TAG > /dev/null
+    docker push $IMAGE_MINOR_TAG > $LOG_FILE
+    rmLogFile
 
     echo "# docker push $IMAGE_MAJOR_TAG"
-    docker push $IMAGE_MAJOR_TAG > /dev/null
+    docker push $IMAGE_MAJOR_TAG > $LOG_FILE
+    rmLogFile
 fi
 
 echo "# composer install"
-composer install > /dev/null 2>&1
+composer install > $LOG_FILE 2>&1
+rmLogFile

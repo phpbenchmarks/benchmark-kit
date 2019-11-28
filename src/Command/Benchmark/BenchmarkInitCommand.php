@@ -42,6 +42,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputSuccess($this->getComposerLockFilePath($phpVersion, true) . ' copied to composer.lock.')
             ->outputTitle('Call ' . $initBenchmarkShortPath)
             ->runProcess([$this->getInitBenchmarkFilePath()], OutputInterface::VERBOSITY_VERBOSE)
-            ->outputSuccess($initBenchmarkShortPath . ' called.');
+            ->outputSuccess($initBenchmarkShortPath . ' called.')
+            ->removeFile($this->getInstallationPath() . '/composer.lock');
     }
 }

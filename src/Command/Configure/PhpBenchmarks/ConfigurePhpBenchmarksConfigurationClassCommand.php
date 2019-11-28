@@ -34,8 +34,13 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         }
 
         $componentType = $this->getComponentType();
-        $componentName = $this->askQuestion('Component name (exemple: Symfony, Zend Framework)?');
-        $componentSlug = $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
+        if ($componentType === ComponentType::PHP) {
+            $componentName = 'PHP';
+            $componentSlug = 'php';
+        } else {
+            $componentName = $this->askQuestion('Component name (exemple: Symfony, Zend Framework)?');
+            $componentSlug = $this->askQuestion('Component slug (exemple: symfony, zend-framework)?');
+        }
 
         $benchmarkType = $this->getBenchmarkType($componentType);
         $entryPointFileName = $this->askQuestion('Entry point file name?', 'public/index.php');
@@ -44,7 +49,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
             BenchmarkType::getDefaultBenchmarkUrl($benchmarkType)
         );
 
-        $coreDependencyName = $this->getCoreDependencyName();
+        $coreDependencyName = $this->getCoreDependencyName($componentType);
         $coreDependencyMajorVersion = $this->askQuestionInt('Core dependency major version?');
         $coreDependencyMinorVersion = $this->askQuestionInt('Core dependency minor version?');
         $coreDependencyPatchVersion = $this->askQuestionInt('Core dependency patch version?');
@@ -94,8 +99,12 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         return implode("\n" . '            || ', $compatibles);
     }
 
-    private function getCoreDependencyName(): string
+    private function getCoreDependencyName(int $componentType): string
     {
+        if ($componentType === ComponentType::PHP) {
+            return 'php';
+        }
+
         $composerPath = $this->getInstallationPath() . '/composer.json';
         if (is_file($composerPath)) {
             try {

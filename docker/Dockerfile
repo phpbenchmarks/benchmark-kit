@@ -23,7 +23,8 @@ RUN \
         php7.0-fpm php7.0-xml php7.0-intl php7.0-mysql php7.0-mbstring php7.0-curl php7.0-zip php7.0-apcu \
         php7.1-fpm php7.1-xml php7.1-intl php7.1-mysql php7.1-mbstring php7.1-curl php7.1-zip php7.1-apcu \
         php7.2-fpm php7.2-xml php7.2-intl php7.2-mysql php7.2-mbstring php7.2-curl php7.2-zip php7.2-apcu \
-        php7.3-fpm php7.3-xml php7.3-intl php7.3-mysql php7.3-mbstring php7.3-curl php7.3-zip php7.3-apcu
+        php7.3-fpm php7.3-xml php7.3-intl php7.3-mysql php7.3-mbstring php7.3-curl php7.3-zip php7.3-apcu \
+        php7.4-fpm php7.4-xml php7.4-intl php7.4-mysql php7.4-mbstring php7.4-curl php7.4-zip php7.4-apcu
 
 # Fix update-alternatives warning
 RUN \
@@ -46,12 +47,14 @@ RUN \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.1" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.2" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.3" >> /etc/sudoers.d/phpbenchmarks \
+    && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.4" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload" >> /etc/sudoers.d/phpbenchmarks
 
 # We have some commands to do in this directory with phpbenchmarks user.
 # So instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
 # change this directory mod to 777
 RUN chmod 777 /etc/nginx/sites-enabled
+RUN chmod -R 777 /var/log/nginx
 
 # Create phpbenchmarks user, we assume final host user id will be 1000 (should be 99% of the time)
 RUN \
