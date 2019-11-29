@@ -84,6 +84,7 @@ class BenchmarkType
             'slug' => 'templating-big-overload',
             'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.html'],
+            'responseBodyFileMinSize' => 5200000,
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
             ]
