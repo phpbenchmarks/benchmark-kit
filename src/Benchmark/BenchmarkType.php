@@ -71,8 +71,9 @@ class BenchmarkType
             'name' => 'Template engine small overload',
             'camelCaseName' => 'templateEngineSmallOverload',
             'slug' => 'templating-small-overload',
-            'defaultBenchmarkUrl' => '/index.php',
+            'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.html'],
+            'responseBodyFileMinSize' => 520000,
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
             ]
@@ -81,7 +82,7 @@ class BenchmarkType
             'name' => 'Template engine big overload',
             'camelCaseName' => 'templateEngineBigOverload',
             'slug' => 'templating-big-overload',
-            'defaultBenchmarkUrl' => '/index.php',
+            'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.html'],
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
@@ -91,7 +92,7 @@ class BenchmarkType
             'name' => 'Serialization of Hello world',
             'camelCaseName' => 'jsonSerializationHelloWorld',
             'slug' => 'json-serialization-hello-world',
-            'defaultBenchmarkUrl' => 'index.php',
+            'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 17,
             'sourceCodeUrlIds' => [
@@ -100,10 +101,10 @@ class BenchmarkType
             ]
         ],
         self::JSON_SERIALIZATION_SMALL_OVERLOAD => [
-            'name' => 'Small serialization',
+            'name' => 'Small JSON serialization',
             'camelCaseName' => 'jsonSerializationSmallOverload',
             'slug' => 'json-serialization-small-overload',
-            'defaultBenchmarkUrl' => 'index.php',
+            'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 512000,
             'sourceCodeUrlIds' => [
@@ -131,10 +132,10 @@ class BenchmarkType
             ]
         ],
         self::JSON_SERIALIZATION_BIG_OVERLOAD => [
-            'name' => 'Big serialization',
+            'name' => 'Big JSON serialization',
             'camelCaseName' => 'jsonSerializationBigOverload',
             'slug' => 'json-serialization-big-overload',
-            'defaultBenchmarkUrl' => 'index.php',
+            'defaultBenchmarkUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 5241001,
             'sourceCodeUrlIds' => [
