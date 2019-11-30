@@ -30,7 +30,7 @@ final class ComposerUpdateCommand extends AbstractCommand
         $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
-            $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
+            $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
             $this
                 ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
