@@ -15,7 +15,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 {
     use PhpVersionArgumentTrait;
 
-    protected const HOST = 'benchmark-kit.loc';
+    public const HOST = 'benchmark-kit.loc';
 
     /** @var string */
     protected static $defaultName = 'nginx:vhost:benchmarkKit:create';

@@ -35,7 +35,7 @@ final class ConfigureEntryPointCommand extends AbstractCommand
 
         if (is_readable($entryPointFileName) === false) {
             throw new \Exception(
-                'Entrypoint ' . $this->removeInstallationPathPrefix($entryPointFileName) . ' is not readable.'
+                'Entrypoint ' . Path::removeBenchmarkPathPrefix($entryPointFileName) . ' is not readable.'
             );
         }
 

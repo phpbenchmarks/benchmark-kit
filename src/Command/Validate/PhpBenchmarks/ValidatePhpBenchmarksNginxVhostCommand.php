@@ -29,7 +29,7 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
         $vhostFilePath = Path::getBenchmarkConfigurationPath() . '/' . Path::getVhostFilePath();
 
         return $this
-            ->outputTitle('Validation of ' . $this->removeInstallationPathPrefix($vhostFilePath))
+            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix($vhostFilePath))
             ->assertFileExist($vhostFilePath, ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->assertContainsVariable('____HOST____')
             ->assertContainsVariable('____INSTALLATION_PATH____')

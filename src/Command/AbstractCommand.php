@@ -209,7 +209,7 @@ abstract class AbstractCommand extends Command
         (new Filesystem())->dumpFile($filename, $content);
         $this->outputSuccess(
             'File '
-                . $this->removeInstallationPathPrefix($filename)
+                . Path::removeBenchmarkPathPrefix($filename)
                 . ' '
                 . ($fileExists ? 'modified' : 'created')
                 . '.'
@@ -341,19 +341,14 @@ abstract class AbstractCommand extends Command
         if (is_readable($filePath) === false) {
             $this->throwError(
                 'File '
-                    . $this->removeInstallationPathPrefix($filePath)
+                    . Path::removeBenchmarkPathPrefix($filePath)
                     . ' does not exist. Use "phpbenchkit '
                     . $configureCommandName
                     . '" to create it.'
             );
         }
-        $this->outputSuccess('File ' . $this->removeInstallationPathPrefix($filePath) . ' exist.');
+        $this->outputSuccess('File ' . Path::removeBenchmarkPathPrefix($filePath) . ' exist.');
 
         return $this;
-    }
-
-    protected function removeInstallationPathPrefix(string $path): string
-    {
-        return substr($path, strlen(Path::getBenchmarkConfigurationPath()) + 1);
     }
 }
