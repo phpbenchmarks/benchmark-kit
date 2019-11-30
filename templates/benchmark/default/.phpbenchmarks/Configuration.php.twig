@@ -21,12 +21,6 @@ class Configuration
         return '{{ componentSlug }}';
     }
 
-    public static function isCompatibleWithPhp(int $major, int $minor): bool
-    {
-        return
-            {{ compatiblesPhpVersions|raw }};
-    }
-
     public static function getEntryPointFileName(): string
     {
         return '{{ entryPointFileName }}';

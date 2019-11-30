@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\ComponentConfiguration;
 
-use App\PhpVersion\PhpVersion;
+use App\{
+    PhpVersion\PhpVersion,
+    PhpVersion\PhpVersionArray,
+    Utils\Directory
+};
 use PhpBenchmarks\BenchmarkConfiguration\Configuration;
 
 class ComponentConfiguration extends Configuration implements ComponentConfigurationInterface
@@ -19,26 +23,29 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
                 . static::getCoreDependencyPatchVersion();
     }
 
-    public static function getEnabledPhpVersions(): array
+    public static function isCompatibleWithPhp(PhpVersion $phpVersion): bool
     {
-        $return = [];
+        return is_dir(Directory::getPhpConfigurationPath($phpVersion));
+    }
+
+    public static function getCompatiblesPhpVersions(): PhpVersionArray
+    {
+        $return = new PhpVersionArray();
         foreach (PhpVersion::getAll() as $phpVersion) {
-            $parts = explode('.', $phpVersion);
-            if (static::isCompatibleWithPhp((int) $parts[0], (int) $parts[1])) {
-                $return[] = $phpVersion;
+            if (static::isCompatibleWithPhp($phpVersion)) {
+                $return[] = new PhpVersion($phpVersion->getMajor(), $phpVersion->getMinor());
             }
         }
 
         return $return;
     }
 
-    public static function getDisabledPhpVersions(): array
+    public static function getIncompatiblesPhpVersions(): PhpVersionArray
     {
-        $return = [];
+        $return = new PhpVersionArray();
         foreach (PhpVersion::getAll() as $phpVersion) {
-            $parts = explode('.', $phpVersion);
-            if (static::isCompatibleWithPhp((int) $parts[0], (int) $parts[1]) === false) {
-                $return[] = $phpVersion;
+            if (static::isCompatibleWithPhp($phpVersion) === false) {
+                $return[] = new PhpVersion($phpVersion->getMajor(), $phpVersion->getMinor());
             }
         }
 

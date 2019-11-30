@@ -19,9 +19,11 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksPhpVersionCompatibleCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
-    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksVhostCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand,
     Command\DefaultCommand,
+    Command\Nginx\NginxVhostCreateCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
     Command\Validate\Composer\ValidateComposerLockCommand,
@@ -30,12 +32,11 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
-    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksNginxVhostCommand,
     Command\Validate\ValidateAllCommand,
     Command\Validate\ValidateEntryPointCommand,
     Command\Validate\ValidateGitignoreCommand,
-    Command\Validate\ValidateReadmeCommand,
-    Command\Vhost\VhostCreateCommand
+    Command\Validate\ValidateReadmeCommand
 };
 use Symfony\Component\Console\Application;
 
@@ -56,8 +57,9 @@ $application->add(new ConfigureReadmeCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassCommand());
 $application->add(new ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
 $application->add(new ConfigurePhpBenchmarksInitBenchmarkCommand());
+$application->add(new ConfigurePhpBenchmarksNginxVhostCommand());
+$application->add(new ConfigurePhpBenchmarksPhpVersionCompatibleCommand());
 $application->add(new ConfigurePhpBenchmarksResponseBodyCommand());
-$application->add(new ConfigurePhpBenchmarksVhostCommand());
 
 $application->add(new DefaultCommand());
 
@@ -74,8 +76,8 @@ $application->add(new ValidatePhpBenchmarksConfigurationClassCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
 $application->add(new ValidatePhpBenchmarksInitBenchmarkCommand());
 $application->add(new ValidatePhpBenchmarksResponseBodyCommand());
-$application->add(new ValidatePhpBenchmarksVhostCommand());
+$application->add(new ValidatePhpBenchmarksNginxVhostCommand());
 
-$application->add(new VhostCreateCommand());
+$application->add(new NginxVhostCreateCommand());
 
 $application->run();

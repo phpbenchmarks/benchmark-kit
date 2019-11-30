@@ -44,8 +44,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
 
         if (strpos($content, ConfigureEntryPointCommand::STATS_COMMENT) === false) {
             $this->throwError(
-                'Entrypoint '
-                    . $entryPointFileName
+                $this->removeInstallationPathPrefix($entryPointFileName)
                     . ' should contains "'
                     . ConfigureEntryPointCommand::STATS_COMMENT
                     . '" at the end of the file.'
@@ -53,8 +52,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
         }
 
         return $this->outputSuccess(
-            'Entrypoint '
-                . $entryPointFileName
+            $this->removeInstallationPathPrefix($entryPointFileName)
                 . ' contains "'
                 . ConfigureEntryPointCommand::STATS_COMMENT
                 . '".'

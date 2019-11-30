@@ -6,10 +6,10 @@ namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkType,
-    Command\Configure\ConfigureAllCommand,
     Component\ComponentType,
     Exception\HiddenException,
-    Exception\ValidationException
+    Exception\ValidationException,
+    Utils\Directory
 };
 use Symfony\Component\Console\{
     Command\Command,
@@ -30,6 +30,8 @@ use Twig\{
 abstract class AbstractCommand extends Command
 {
     abstract protected function doExecute(): self;
+
+    protected const PHPBENCHMARKS_DIRECTORY = '.phpbenchmarks';
 
     /** @var InputInterface */
     private $input;
@@ -142,17 +144,12 @@ abstract class AbstractCommand extends Command
 
     protected function getConfigurationPath(bool $relative = false): string
     {
-        return ($relative ? null : $this->getInstallationPath() . '/') . '.phpbenchmarks';
+        return ($relative ? null : $this->getInstallationPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
     }
 
     protected function getResponseBodyPath(bool $relative = false): string
     {
         return $this->getConfigurationPath($relative) . '/responseBody';
-    }
-
-    protected function getComposerPath(bool $relative = false): string
-    {
-        return $this->getConfigurationPath($relative) . '/composer';
     }
 
     protected function getConfigurationFilePath(bool $relative = false): string
@@ -163,16 +160,6 @@ abstract class AbstractCommand extends Command
     protected function getInitBenchmarkFilePath(bool $relative = false): string
     {
         return $this->getConfigurationPath($relative) . '/initBenchmark.sh';
-    }
-
-    protected function getVhostFilePath(bool $relative = false): string
-    {
-        return $this->getConfigurationPath($relative) . '/vhost.conf';
-    }
-
-    protected function getComposerLockFilePath(string $version, bool $relative = false): string
-    {
-        return $this->getComposerPath($relative) . '/composer.lock.php' . $version;
     }
 
     protected function renderTemplate(
@@ -243,7 +230,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory) === false) {
             (new Filesystem())->mkdir($directory);
-            $this->outputSuccess('Directory ' . $this->removeInstallationPathPrefix($directory) . ' created.');
+            $this->outputSuccess('Directory ' . Directory::removeBenchmarkPathPrefix($directory) . ' created.');
         }
 
         return $this;
@@ -253,7 +240,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory)) {
             (new Filesystem())->remove($directory);
-            $this->outputSuccess('Directory ' . $this->removeInstallationPathPrefix($directory) . ' removed.');
+            $this->outputSuccess('Directory ' . Directory::removeBenchmarkPathPrefix($directory) . ' removed.');
         }
 
         return $this;
@@ -263,7 +250,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_file($file)) {
             (new Filesystem())->remove($file);
-            $this->outputSuccess('File ' . $this->removeInstallationPathPrefix($file) . ' removed.');
+            $this->outputSuccess('File ' . Directory::removeBenchmarkPathPrefix($file) . ' removed.');
         }
 
         return $this;
@@ -357,18 +344,18 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function assertFileExist(string $filePath, string $shortFilePath): self
+    protected function assertFileExist(string $filePath, string $configureCommandName): self
     {
         if (is_readable($filePath) === false) {
             $this->throwError(
                 'File '
-                    . $shortFilePath
+                    . $this->removeInstallationPathPrefix($filePath)
                     . ' does not exist. Use "phpbenchkit '
-                    . ConfigureAllCommand::getDefaultName()
+                    . $configureCommandName
                     . '" to create it.'
             );
         }
-        $this->outputSuccess('File ' . $shortFilePath . ' exist.');
+        $this->outputSuccess('File ' . $this->removeInstallationPathPrefix($filePath) . ' exist.');
 
         return $this;
     }

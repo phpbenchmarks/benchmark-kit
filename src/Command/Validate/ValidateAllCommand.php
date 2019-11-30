@@ -13,7 +13,7 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
-    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksVhostCommand
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksNginxVhostCommand
 };
 
 final class ValidateAllCommand extends AbstractCommand
@@ -40,7 +40,7 @@ final class ValidateAllCommand extends AbstractCommand
             ->runCommand(ValidatePhpBenchmarksConfigurationClassCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksInitBenchmarkCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksResponseBodyCommand::getDefaultName())
-            ->runCommand(ValidatePhpBenchmarksVhostCommand::getDefaultName());
+            ->runCommand(ValidatePhpBenchmarksNginxVhostCommand::getDefaultName());
 
         if ($this->skipSourceCodeUrls() === false) {
             $this->runCommand(ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand::getDefaultName());

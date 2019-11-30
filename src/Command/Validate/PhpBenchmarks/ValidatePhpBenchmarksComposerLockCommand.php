@@ -7,16 +7,13 @@ namespace App\Command\Validate\PhpBenchmarks;
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
-    Command\PhpVersionArgumentTrait,
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Directory
 };
-use Symfony\Component\Console\Input\InputArgument;
 
 final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
 {
-    use PhpVersionArgumentTrait;
-
     /** @var string */
     protected static $defaultName = 'validate:phpbenchmarks:composer:lock';
 
@@ -24,57 +21,37 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this
-            ->setDescription('Validate dependencies in ' . $this->getComposerLockFilePath('X.Y', true))
-            ->addPhpVersionArgument($this, InputArgument::OPTIONAL);
+        $this->setDescription('Validate dependencies in composer.lock');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
-            return $this;
-        }
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+            $composerLockFilePath = Directory::getComposerLockFilePath($phpVersion);
+            $this->outputTitle('Validation of ' . Directory::removeBenchmarkPathPrefix($composerLockFilePath));
 
-        $this
-            ->assertPhpVersionArgument($this, true)
-            ->validateDisabledPhpVersions()
-            ->validateEnabledPhpVersions();
-
-        return $this;
-    }
-
-    private function validateDisabledPhpVersions(): self
-    {
-        foreach ($this->getPhpVersions(ComponentConfiguration::getDisabledPhpVersions()) as $phpVersion) {
-            $this->outputTitle('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
-            is_file($this->getComposerLockFilePath($phpVersion))
-                ?
-                    $this->throwError(
-                        'File should not exist, as this PHP version is disabled by configuration.'
-                            . ' See README.md for more informations.'
-                    )
-                : $this->outputSuccess('File does not exist.');
-        }
-
-        return $this;
-    }
-
-    private function validateEnabledPhpVersions(): self
-    {
-        foreach ($this->getPhpVersions(ComponentConfiguration::getEnabledPhpVersions()) as $phpVersion) {
-            $this->outputTitle('Validation of ' . $this->getComposerLockFilePath($phpVersion, true));
-
-            $lockPath = $this->getComposerLockFilePath($phpVersion);
-            if (is_readable($lockPath) === false) {
+            if (is_readable($composerLockFilePath) === false) {
                 $this->throwError(
-                    'File does not exist. Call "phpbenchkit '
-                        . ComposerUpdateCommand::getDefaultName()
-                        . '" to create it.'
+                    Directory::removeBenchmarkPathPrefix($composerLockFilePath)
+                    . ' does not exist. Call "phpbenchkit '
+                    . ComposerUpdateCommand::getDefaultName()
+                    . '" to create it.'
                 );
             }
 
+            $this->outputSuccess(Directory::removeBenchmarkPathPrefix($composerLockFilePath) . ' exist.');
+
+            if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
+                continue;
+            }
+
             try {
-                $data = json_decode(file_get_contents($lockPath), true, 512, JSON_THROW_ON_ERROR);
+                $data = json_decode(
+                    file_get_contents($composerLockFilePath),
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                );
             } catch (\Throwable $e) {
                 $this->throwError('Error while parsing: ' . $e->getMessage());
             }
@@ -123,17 +100,5 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
         }
 
         return $this;
-    }
-
-    private function getPhpVersions(array $phpVersions): array
-    {
-        $phpVersion = $this->getPhpVersionFromArgument($this);
-        if (is_string($phpVersion)) {
-            $return = in_array($phpVersion, $phpVersions) ? [$phpVersion] : [];
-        } else {
-            $return = $phpVersions;
-        }
-
-        return $return;
     }
 }
