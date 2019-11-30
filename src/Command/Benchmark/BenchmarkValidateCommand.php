@@ -7,11 +7,12 @@ namespace App\Command\Benchmark;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Validate\ValidateAllCommand,
-    Command\Nginx\NginxVhostBenchmarkCreateCommand,
     ComponentConfiguration\ComponentConfiguration,
     Component\ComponentType,
-    PhpVersion\PhpVersion
+    PhpVersion\PhpVersion,
+    Utils\Path
 };
 
 final class BenchmarkValidateCommand extends AbstractCommand
@@ -48,8 +49,12 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $benchmarkUrl .= $showResultsQueryParameter;
         }
 
-        $url = 'http://' . NginxVhostBenchmarkCreateCommand::HOST . $benchmarkUrl;
-        $urlWithPort = 'http://' . NginxVhostBenchmarkCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
+        $url = 'http://' . NginxVhostBenchmarkKitCreateCommand::HOST . $benchmarkUrl;
+        $urlWithPort = 'http://'
+            . NginxVhostBenchmarkKitCreateCommand::HOST
+            . ':'
+            . getenv('NGINX_PORT')
+            . $benchmarkUrl;
 
         $this
             ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
@@ -80,7 +85,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $responseFile = $this->getResponseBodyPath() . '/' . $file;
             if ($body === file_get_contents($responseFile)) {
                 $this->outputSuccess(
-                    'Body is equal to ' . $this->removeInstallationPathPrefix($responseFile) . ' content.'
+                    'Body is equal to ' . Path::removeBenchmarkPathPrefix($responseFile) . ' content.'
                 );
                 $validated = true;
                 break;

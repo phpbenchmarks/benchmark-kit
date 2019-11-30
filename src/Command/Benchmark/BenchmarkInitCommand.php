@@ -33,7 +33,7 @@ final class BenchmarkInitCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
-        $initBenchmarkShortPath = $this->removeInstallationPathPrefix($this->getInitBenchmarkFilePath());
+        $initBenchmarkShortPath = Path::removeBenchmarkPathPrefix($this->getInitBenchmarkFilePath());
         $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
 
         return $this

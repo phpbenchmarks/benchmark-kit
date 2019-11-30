@@ -30,7 +30,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         $configurationPath = Path::getBenchmarkConfigurationPath() . '/' . $this->getConfigurationFilePath(true);
         if (file_exists($configurationPath)) {
             unlink($configurationPath);
-            $this->outputSuccess('Remove file ' . $this->removeInstallationPathPrefix($configurationPath));
+            $this->outputSuccess('Remove file ' . Path::removeBenchmarkPathPrefix($configurationPath));
         }
 
         $componentType = $this->getComponentType();
