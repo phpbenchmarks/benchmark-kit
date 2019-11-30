@@ -26,11 +26,9 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $vhostFilePath = Path::getBenchmarkConfigurationPath() . '/' . Path::getVhostFilePath();
-
         return $this
-            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix($vhostFilePath))
-            ->assertFileExist($vhostFilePath, ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
+            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix(Path::getVhostFilePath()))
+            ->assertFileExist(Path::getVhostFilePath(), ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->assertContainsVariable('____HOST____')
             ->assertContainsVariable('____INSTALLATION_PATH____')
             ->assertContainsVariable('____PHP_FPM_SOCK____');
@@ -39,9 +37,7 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     private function assertContainsVariable(string $name): self
     {
         if ($this->vhostContent === null) {
-            $this->vhostContent = file_get_contents(
-                Path::getBenchmarkConfigurationPath() . '/' . Path::getVhostFilePath()
-            );
+            $this->vhostContent = file_get_contents(Path::getVhostFilePath());
         }
 
         if (strpos($this->vhostContent, $name) === false) {

@@ -31,7 +31,7 @@ final class ValidateGitignoreCommand extends AbstractCommand
     {
         $this->outputTitle('Validate .gitignore');
 
-        $gitIgnoreFileName = Path::getBenchmarkConfigurationPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getBenchmarkPath() . '/.gitignore';
 
         if (is_readable($gitIgnoreFileName) === false) {
             $this->throwError('.gitignore file not found.');

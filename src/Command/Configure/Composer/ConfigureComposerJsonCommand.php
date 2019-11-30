@@ -39,7 +39,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
 
     protected function doExecute(): AbstractCommand
     {
-        $composerJsonFile = Path::getBenchmarkConfigurationPath() . '/composer.json';
+        $composerJsonFile = Path::getBenchmarkPath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
             $this->throwError('File does not exist.');
         }

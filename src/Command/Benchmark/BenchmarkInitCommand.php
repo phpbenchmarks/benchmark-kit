@@ -53,6 +53,6 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputTitle('Call ' . Path::removeBenchmarkPathPrefix($initBenchmarkPath))
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess(Path::removeBenchmarkPathPrefix($initBenchmarkPath) . ' called.')
-            ->removeFile(Path::getBenchmarkConfigurationPath() . '/composer.lock');
+            ->removeFile(Path::getBenchmarkPath() . '/composer.lock');
     }
 }

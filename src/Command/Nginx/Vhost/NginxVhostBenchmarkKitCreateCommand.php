@@ -62,7 +62,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         }
 
         $content = str_replace('____HOST____', static::HOST, $content);
-        $content = str_replace('____INSTALLATION_PATH____', Path::getBenchmarkConfigurationPath(), $content);
+        $content = str_replace('____INSTALLATION_PATH____', Path::getBenchmarkPath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
@@ -70,7 +70,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 
         return $this
             ->outputSuccess('____HOST____ replaced by ' . static::HOST . '.')
-            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkConfigurationPath() . '.')
+            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkPath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
     }
 

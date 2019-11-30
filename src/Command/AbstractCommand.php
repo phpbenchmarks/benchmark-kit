@@ -136,7 +136,7 @@ abstract class AbstractCommand extends Command
 
     protected function getConfigurationPath(bool $relative = false): string
     {
-        return ($relative ? null : Path::getBenchmarkConfigurationPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
+        return ($relative ? null : Path::getBenchmarkPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
     }
 
     protected function getResponseBodyPath(bool $relative = false): string
@@ -188,7 +188,7 @@ abstract class AbstractCommand extends Command
         int $componentType = null,
         int $benchmarkType = null
     ): self {
-        $file = Path::getBenchmarkConfigurationPath() . '/' . $templatePath;
+        $file = Path::getBenchmarkPath() . '/' . $templatePath;
 
         return $this
             ->createDirectory(dirname($file))

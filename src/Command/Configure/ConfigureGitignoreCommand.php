@@ -27,7 +27,7 @@ final class ConfigureGitignoreCommand extends AbstractCommand
     {
         $this->outputTitle('Configure .gitignore');
 
-        $gitIgnoreFileName = Path::getBenchmarkConfigurationPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getBenchmarkPath() . '/.gitignore';
         $ignores = (is_readable($gitIgnoreFileName)) ? file_get_contents($gitIgnoreFileName) : '';
 
         if (strpos($ignores, static::IGNORE_COMPOSER_LOCK) === false) {
