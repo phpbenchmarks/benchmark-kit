@@ -168,4 +168,4 @@ fi
 
 addHost
 
-docker exec $ttyParameter --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.3 bin/console $consoleParams
+docker exec $ttyParameter --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.4 bin/console $consoleParams

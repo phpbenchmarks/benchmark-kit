@@ -32,7 +32,8 @@ RUN \
     && touch /usr/share/man/man1/php7.0.1.gz \
     && touch /usr/share/man/man1/php7.1.1.gz \
     && touch /usr/share/man/man1/php7.2.1.gz \
-    && touch /usr/share/man/man1/php7.3.1.gz
+    && touch /usr/share/man/man1/php7.3.1.gz \
+    && touch /usr/share/man/man1/php7.4.1.gz
 
 # Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
@@ -73,10 +74,12 @@ RUN \
     && sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.2/fpm/pool.d/www.conf \
     && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.2/fpm/pool.d/www.conf \
     && sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf \
-    && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf
+    && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf \
+    && sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.4/fpm/pool.d/www.conf
 
-# Define PHP 7.3 as default
-RUN /usr/bin/update-alternatives --set php /usr/bin/php7.3
+# Define PHP 7.4 as default
+RUN /usr/bin/update-alternatives --set php /usr/bin/php7.4
 
 # Copy benchmark kit source code
 COPY bin/console /var/benchmark-kit/bin/console

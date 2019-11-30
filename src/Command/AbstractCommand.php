@@ -33,14 +33,11 @@ abstract class AbstractCommand extends Command
 
     protected const PHPBENCHMARKS_DIRECTORY = '.phpbenchmarks';
 
-    /** @var InputInterface */
-    private $input;
+    private ?InputInterface $input;
 
-    /** @var OutputInterface */
-    private $output;
+    private ?OutputInterface $output;
 
-    /** @var bool */
-    private $skipSourceCodeUrls = false;
+    private bool $skipSourceCodeUrls = false;
 
     public function skipSourceCodeUrls(): bool
     {

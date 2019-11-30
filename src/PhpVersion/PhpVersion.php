@@ -25,11 +25,9 @@ final class PhpVersion
         return new static((int) $parts[0], (int) $parts[1]);
     }
 
-    /** @var int  */
-    private $major;
+    private int $major;
 
-    /** @var int */
-    private $minor;
+    private int $minor;
 
     public function __construct(int $major, int $minor)
     {
