@@ -15,8 +15,7 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     /** @var string */
     protected static $defaultName = 'validate:phpbenchmarks:nginx:vhost';
 
-    /** @var ?string */
-    protected $vhostContent;
+    private ?string $vhostContent;
 
     protected function configure(): void
     {

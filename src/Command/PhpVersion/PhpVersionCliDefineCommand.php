@@ -15,7 +15,7 @@ final class PhpVersionCliDefineCommand extends AbstractCommand
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'php-version:cli:define';
+    protected static $defaultName = 'phpVersion:cli:define';
 
     protected function configure(): void
     {
