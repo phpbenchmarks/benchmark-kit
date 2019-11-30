@@ -6,7 +6,8 @@ namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
+    Utils\Path
 };
 
 final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
@@ -18,15 +19,15 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . $this->getInitBenchmarkFilePath(true));
+        $this->setDescription('Validate ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()));
     }
 
     protected function doExecute(): parent
     {
         return $this
-            ->outputTitle('Validation of ' . $this->getInitBenchmarkFilePath(true))
+            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()))
             ->assertFileExist(
-                $this->getInitBenchmarkFilePath(),
+                Path::getInitBenchmarkPath(),
                 ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName()
             );
     }

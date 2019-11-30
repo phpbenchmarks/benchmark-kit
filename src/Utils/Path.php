@@ -37,4 +37,9 @@ class Path
     {
         return static::getBenchmarkConfigurationPath() . '/nginx/vhost.conf';
     }
+
+    public static function getInitBenchmarkPath(): string
+    {
+        return static::getBenchmarkConfigurationPath() . '/initBenchmark.sh';
+    }
 }

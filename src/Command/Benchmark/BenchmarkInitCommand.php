@@ -26,14 +26,14 @@ final class BenchmarkInitCommand extends AbstractCommand
         parent::configure();
 
         $this
-            ->setDescription('Define PHP version and call ' . $this->getInitBenchmarkFilePath(true))
+            ->setDescription('Define PHP version and call initBenchmark.sh')
             ->addPhpVersionArgument($this);
     }
 
     protected function doExecute(): parent
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
-        $initBenchmarkShortPath = Path::removeBenchmarkPathPrefix($this->getInitBenchmarkFilePath());
+        $initBenchmarkPath = Path::getInitBenchmarkPath();
         $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
 
         return $this
@@ -50,9 +50,9 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputTitle('Prepare composer.lock')
             ->runProcess(['cp', $composerLockFilePath, 'composer.lock'])
             ->outputSuccess(Path::removeBenchmarkPathPrefix($composerLockFilePath) . ' copied to composer.lock.')
-            ->outputTitle('Call ' . $initBenchmarkShortPath)
-            ->runProcess([$this->getInitBenchmarkFilePath()], OutputInterface::VERBOSITY_VERBOSE)
-            ->outputSuccess($initBenchmarkShortPath . ' called.')
+            ->outputTitle('Call ' . Path::removeBenchmarkPathPrefix($initBenchmarkPath))
+            ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
+            ->outputSuccess(Path::removeBenchmarkPathPrefix($initBenchmarkPath) . ' called.')
             ->removeFile(Path::getBenchmarkConfigurationPath() . '/composer.lock');
     }
 }
