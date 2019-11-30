@@ -27,7 +27,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
     {
         $this->outputTitle('Creation of ' . $this->getConfigurationFilePath(true));
 
-        $configurationPath = Path::getBenchmarkConfigurationPath() . '/' . $this->getConfigurationFilePath(true);
+        $configurationPath = Path::getBenchmarkPath() . '/' . $this->getConfigurationFilePath(true);
         if (file_exists($configurationPath)) {
             unlink($configurationPath);
             $this->outputSuccess('Remove file ' . Path::removeBenchmarkPathPrefix($configurationPath));
@@ -89,7 +89,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
             return 'php';
         }
 
-        $composerPath = Path::getBenchmarkConfigurationPath() . '/composer.json';
+        $composerPath = Path::getBenchmarkPath() . '/composer.json';
         if (is_file($composerPath)) {
             try {
                 $data = json_decode(

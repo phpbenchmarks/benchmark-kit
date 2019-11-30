@@ -95,7 +95,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
     {
         $entryPointFileName = ComponentConfiguration::getEntryPointFileName();
 
-        if (is_readable(Path::getBenchmarkConfigurationPath() . '/' . $entryPointFileName) === false) {
+        if (is_readable(Path::getBenchmarkPath() . '/' . $entryPointFileName) === false) {
             $this->throwError("getEntryPoint() return $entryPointFileName who is not readable.");
         }
 

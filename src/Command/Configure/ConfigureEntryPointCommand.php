@@ -28,10 +28,7 @@ final class ConfigureEntryPointCommand extends AbstractCommand
     {
         $this->outputTitle('Configure entrypoint');
 
-        $entryPointFileName =
-            Path::getBenchmarkConfigurationPath()
-            . '/'
-            . ComponentConfiguration::getEntryPointFileName();
+        $entryPointFileName = Path::getBenchmarkPath() . '/' . ComponentConfiguration::getEntryPointFileName();
 
         if (is_readable($entryPointFileName) === false) {
             throw new \Exception(

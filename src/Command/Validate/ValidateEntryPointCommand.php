@@ -32,20 +32,20 @@ final class ValidateEntryPointCommand extends AbstractCommand
     {
         $this->outputTitle('Validate entrypoint');
 
-        $entryPointRelativeFileName = ComponentConfiguration::getEntryPointFileName();
-        $entryPointFileName = Path::getBenchmarkConfigurationPath() . '/' . $entryPointRelativeFileName;
+        $entryPointRelativeFilePath = ComponentConfiguration::getEntryPointFileName();
+        $entryPointFilePath = Path::getBenchmarkPath() . '/' . $entryPointRelativeFilePath;
 
-        if (is_readable($entryPointFileName) === false) {
+        if (is_readable($entryPointFilePath) === false) {
             throw new \Exception(
-                'Entrypoint ' . $entryPointRelativeFileName . ' is not readable.'
+                'Entrypoint ' . $entryPointRelativeFilePath . ' is not readable.'
             );
         }
 
-        $content = file_get_contents($entryPointFileName);
+        $content = file_get_contents($entryPointFilePath);
 
         if (strpos($content, ConfigureEntryPointCommand::STATS_COMMENT) === false) {
             $this->throwError(
-                Path::removeBenchmarkPathPrefix($entryPointFileName)
+                Path::removeBenchmarkPathPrefix($entryPointFilePath)
                     . ' should contains "'
                     . ConfigureEntryPointCommand::STATS_COMMENT
                     . '" at the end of the file.'
@@ -53,7 +53,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
         }
 
         return $this->outputSuccess(
-            Path::removeBenchmarkPathPrefix($entryPointFileName)
+            Path::removeBenchmarkPathPrefix($entryPointFilePath)
                 . ' contains "'
                 . ConfigureEntryPointCommand::STATS_COMMENT
                 . '".'

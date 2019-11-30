@@ -32,7 +32,7 @@ final class ValidateReadmeCommand extends AbstractCommand
     {
         $this->outputTitle('Validation of README.md');
 
-        $readmeFileName = Path::getBenchmarkConfigurationPath() . '/README.md';
+        $readmeFileName = Path::getBenchmarkPath() . '/README.md';
         if (is_readable($readmeFileName) === false) {
             $this->throwError('README.md does not exists or is not readable.');
         }
