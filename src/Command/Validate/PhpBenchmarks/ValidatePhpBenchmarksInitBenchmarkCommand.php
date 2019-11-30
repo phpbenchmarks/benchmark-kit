@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Validate\PhpBenchmarks;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand
+};
 
 final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 {
@@ -20,10 +23,11 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        $this
+        return $this
             ->outputTitle('Validation of ' . $this->getInitBenchmarkFilePath(true))
-            ->assertFileExist($this->getInitBenchmarkFilePath(), $this->getInitBenchmarkFilePath(true));
-
-        return $this;
+            ->assertFileExist(
+                $this->getInitBenchmarkFilePath(),
+                ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName()
+            );
     }
 }

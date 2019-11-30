@@ -7,6 +7,7 @@ namespace App\Command\Validate\PhpBenchmarks;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
     ComponentConfiguration\ComponentConfiguration
 };
 
@@ -29,7 +30,7 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
             $filePath = $this->getResponseBodyPath() . '/' . $file;
             $fileRelativePath = $this->getResponseBodyPath(true) . '/' . $file;
-            $this->assertFileExist($filePath, $fileRelativePath);
+            $this->assertFileExist($filePath, ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName());
 
             $minSize = BenchmarkType::getResponseBodyFileMinSize(ComponentConfiguration::getBenchmarkType());
             $minSizeFormated = number_format($minSize, 0, '.', ',');
