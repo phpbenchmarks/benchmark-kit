@@ -49,7 +49,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         $destination = $this->getContainerVhostFilePath();
 
         return $this
-            ->runProcess(['cp', Path::getVhostFilePath(), $destination])
+            ->runProcess(['cp', Path::getVhostPath(), $destination])
             ->outputSuccess('Create ' . $destination . '.');
     }
 

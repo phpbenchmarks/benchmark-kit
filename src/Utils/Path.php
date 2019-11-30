@@ -28,12 +28,12 @@ class Path
         return static::getBenchmarkConfigurationPath() . '/php/' . $phpVersion->toString();
     }
 
-    public static function getComposerLockFilePath(PhpVersion $phpVersion): string
+    public static function getComposerLockPath(PhpVersion $phpVersion): string
     {
         return static::getPhpConfigurationPath($phpVersion) . '/composer.lock';
     }
 
-    public static function getVhostFilePath(): string
+    public static function getVhostPath(): string
     {
         return static::getBenchmarkConfigurationPath() . '/nginx/vhost.conf';
     }

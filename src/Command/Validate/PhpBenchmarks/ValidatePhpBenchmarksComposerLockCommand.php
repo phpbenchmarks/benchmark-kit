@@ -27,7 +27,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
     protected function doExecute(): AbstractCommand
     {
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
-            $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
+            $composerLockFilePath = Path::getComposerLockPath($phpVersion);
             $this->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix($composerLockFilePath));
 
             if (is_readable($composerLockFilePath) === false) {
