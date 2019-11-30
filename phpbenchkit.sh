@@ -23,7 +23,7 @@ readonly DEFAULT_CONFIG_PATH="/tmp/phpbenchmarkkit.default.sh"
 readonly DOCKER_IMAGE_NAME="phpbenchmarks/benchmark-kit:4"
 
 function addHost() {
-    local HOST="benchmark-kit.loc"
+    local HOST="$1"
     if [ "$(cat /etc/hosts | grep -c $HOST)" -eq 0 ]; then
         echo -e "Add host \e[32m$HOST\e[0m."
         sudo /bin/sh -c "echo \"127.0.0.1 $HOST\" >> /etc/hosts"
@@ -166,6 +166,7 @@ if [ "$containerStarted" == false ]; then
     startContainer
 fi
 
-addHost
+addHost "benchmark-kit.loc"
+addHost "phpinfo.benchmark-kit.loc"
 
 docker exec $ttyParameter --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.4 bin/console $consoleParams

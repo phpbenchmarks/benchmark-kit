@@ -8,7 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Command\Validate\ValidateAllCommand,
-    Command\Nginx\NginxVhostCreateCommand,
+    Command\Nginx\NginxVhostBenchmarkCreateCommand,
     ComponentConfiguration\ComponentConfiguration,
     Component\ComponentType,
     PhpVersion\PhpVersion
@@ -48,8 +48,8 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $benchmarkUrl .= $showResultsQueryParameter;
         }
 
-        $url = 'http://' . NginxVhostCreateCommand::HOST . $benchmarkUrl;
-        $urlWithPort = 'http://' . NginxVhostCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
+        $url = 'http://' . NginxVhostBenchmarkCreateCommand::HOST . $benchmarkUrl;
+        $urlWithPort = 'http://' . NginxVhostBenchmarkCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
 
         $this
             ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])

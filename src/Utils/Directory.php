@@ -32,4 +32,9 @@ class Directory
     {
         return static::getPhpConfigurationPath($phpVersion) . '/composer.lock';
     }
+
+    public static function getVhostFilePath(): string
+    {
+        return static::getBenchmarkConfigurationPath() . '/nginx/vhost.conf';
+    }
 }

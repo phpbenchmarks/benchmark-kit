@@ -7,7 +7,7 @@ namespace App\Command\Validate\PhpBenchmarks;
 use App\{
     Command\AbstractCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand,
-    Nginx\NginxService
+    Utils\Directory
 };
 
 final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
@@ -21,12 +21,12 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . NginxService::getVhostFilePath());
+        $this->setDescription('Validate ' . Directory::getVhostFilePath());
     }
 
     protected function doExecute(): parent
     {
-        $vhostFilePath = $this->getInstallationPath() . '/' . NginxService::getVhostFilePath();
+        $vhostFilePath = $this->getInstallationPath() . '/' . Directory::getVhostFilePath();
 
         return $this
             ->outputTitle('Validation of ' . $this->removeInstallationPathPrefix($vhostFilePath))
@@ -40,7 +40,7 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     {
         if ($this->vhostContent === null) {
             $this->vhostContent = file_get_contents(
-                $this->getInstallationPath() . '/' . NginxService::getVhostFilePath()
+                $this->getInstallationPath() . '/' . Directory::getVhostFilePath()
             );
         }
 

@@ -23,7 +23,8 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand,
     Command\DefaultCommand,
-    Command\Nginx\NginxVhostCreateCommand,
+    Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
+    Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
     Command\Validate\Composer\ValidateComposerLockCommand,
@@ -78,6 +79,7 @@ $application->add(new ValidatePhpBenchmarksInitBenchmarkCommand());
 $application->add(new ValidatePhpBenchmarksResponseBodyCommand());
 $application->add(new ValidatePhpBenchmarksNginxVhostCommand());
 
-$application->add(new NginxVhostCreateCommand());
+$application->add(new NginxVhostBenchmarkKitCreateCommand());
+$application->add(new NginxVhostPhpInfoCreateCommand());
 
 $application->run();
