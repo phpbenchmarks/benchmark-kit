@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Utils\Path
+};
 
 final class ConfigureCircleCiCommand extends AbstractCommand
 {
@@ -22,7 +25,7 @@ final class ConfigureCircleCiCommand extends AbstractCommand
     {
         return $this
             ->outputTitle('Configure CircleCI')
-            ->removeDirectory($this->getInstallationPath() . '/.circleci')
+            ->removeDirectory(Path::getBenchmarkConfigurationPath() . '/.circleci')
             ->writeFileFromTemplate('.circleci/config.yml');
     }
 }

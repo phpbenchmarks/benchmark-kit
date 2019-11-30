@@ -7,7 +7,8 @@ namespace App\Command\Validate;
 use App\{
     Command\AbstractCommand,
     Command\Configure\ConfigureEntryPointCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 
 final class ValidateEntryPointCommand extends AbstractCommand
@@ -32,7 +33,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
         $this->outputTitle('Validate entrypoint');
 
         $entryPointRelativeFileName = ComponentConfiguration::getEntryPointFileName();
-        $entryPointFileName = $this->getInstallationPath() . '/' . $entryPointRelativeFileName;
+        $entryPointFileName = Path::getBenchmarkConfigurationPath() . '/' . $entryPointRelativeFileName;
 
         if (is_readable($entryPointFileName) === false) {
             throw new \Exception(

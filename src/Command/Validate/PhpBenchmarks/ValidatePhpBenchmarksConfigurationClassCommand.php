@@ -10,7 +10,8 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
-    PhpVersion\PhpVersion
+    PhpVersion\PhpVersion,
+    Utils\Path
 };
 
 final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractCommand
@@ -94,7 +95,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
     {
         $entryPointFileName = ComponentConfiguration::getEntryPointFileName();
 
-        if (is_readable($this->getInstallationPath() . '/' . $entryPointFileName) === false) {
+        if (is_readable(Path::getBenchmarkConfigurationPath() . '/' . $entryPointFileName) === false) {
             $this->throwError("getEntryPoint() return $entryPointFileName who is not readable.");
         }
 

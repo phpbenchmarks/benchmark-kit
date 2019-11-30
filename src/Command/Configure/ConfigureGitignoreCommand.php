@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Configure;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Utils\Path
+};
 
 final class ConfigureGitignoreCommand extends AbstractCommand
 {
@@ -24,7 +27,7 @@ final class ConfigureGitignoreCommand extends AbstractCommand
     {
         $this->outputTitle('Configure .gitignore');
 
-        $gitIgnoreFileName = $this->getInstallationPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getBenchmarkConfigurationPath() . '/.gitignore';
         $ignores = (is_readable($gitIgnoreFileName)) ? file_get_contents($gitIgnoreFileName) : '';
 
         if (strpos($ignores, static::IGNORE_COMPOSER_LOCK) === false) {

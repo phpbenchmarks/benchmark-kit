@@ -9,7 +9,7 @@ use App\{
     Command\Composer\ComposerUpdateCommand,
     Component\ComponentType,
     ComponentConfiguration\ComponentConfiguration,
-    Utils\Directory
+    Utils\Path
 };
 
 final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
@@ -27,19 +27,19 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
     protected function doExecute(): AbstractCommand
     {
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
-            $composerLockFilePath = Directory::getComposerLockFilePath($phpVersion);
-            $this->outputTitle('Validation of ' . Directory::removeBenchmarkPathPrefix($composerLockFilePath));
+            $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
+            $this->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix($composerLockFilePath));
 
             if (is_readable($composerLockFilePath) === false) {
                 $this->throwError(
-                    Directory::removeBenchmarkPathPrefix($composerLockFilePath)
+                    Path::removeBenchmarkPathPrefix($composerLockFilePath)
                     . ' does not exist. Call "phpbenchkit '
                     . ComposerUpdateCommand::getDefaultName()
                     . '" to create it.'
                 );
             }
 
-            $this->outputSuccess(Directory::removeBenchmarkPathPrefix($composerLockFilePath) . ' exist.');
+            $this->outputSuccess(Path::removeBenchmarkPathPrefix($composerLockFilePath) . ' exist.');
 
             if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
                 continue;

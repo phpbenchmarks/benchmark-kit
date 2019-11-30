@@ -6,7 +6,8 @@ namespace App\Command\Validate;
 
 use App\{
     Command\AbstractCommand,
-    Command\Configure\ConfigureGitignoreCommand
+    Command\Configure\ConfigureGitignoreCommand,
+    Utils\Path
 };
 
 final class ValidateGitignoreCommand extends AbstractCommand
@@ -30,7 +31,7 @@ final class ValidateGitignoreCommand extends AbstractCommand
     {
         $this->outputTitle('Validate .gitignore');
 
-        $gitIgnoreFileName = $this->getInstallationPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getBenchmarkConfigurationPath() . '/.gitignore';
 
         if (is_readable($gitIgnoreFileName) === false) {
             $this->throwError('.gitignore file not found.');

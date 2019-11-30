@@ -6,7 +6,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    Utils\Directory
+    Utils\Path
 };
 
 final class ConfigurePhpBenchmarksNginxVhostCommand extends AbstractCommand
@@ -18,14 +18,14 @@ final class ConfigurePhpBenchmarksNginxVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . Directory::getVhostFilePath());
+        $this->setDescription('Create ' . Path::getVhostFilePath());
     }
 
     protected function doExecute(): AbstractCommand
     {
         return $this
-            ->outputTitle('Creation of ' . Directory::getVhostFilePath())
-            ->writeFileFromTemplate(Directory::getVhostFilePath())
+            ->outputTitle('Creation of ' . Path::getVhostFilePath())
+            ->writeFileFromTemplate(Path::getVhostFilePath())
             ->outputWarning('Default virtual host has been created. Feel free to edit it.');
     }
 }

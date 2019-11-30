@@ -7,7 +7,8 @@ namespace App\Command\Configure\PhpBenchmarks;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Component\ComponentType
+    Component\ComponentType,
+    Utils\Path
 };
 
 final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractCommand
@@ -26,7 +27,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
     {
         $this->outputTitle('Creation of ' . $this->getConfigurationFilePath(true));
 
-        $configurationPath = $this->getInstallationPath() . '/' . $this->getConfigurationFilePath(true);
+        $configurationPath = Path::getBenchmarkConfigurationPath() . '/' . $this->getConfigurationFilePath(true);
         if (file_exists($configurationPath)) {
             unlink($configurationPath);
             $this->outputSuccess('Remove file ' . $this->removeInstallationPathPrefix($configurationPath));
@@ -88,7 +89,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
             return 'php';
         }
 
-        $composerPath = $this->getInstallationPath() . '/composer.json';
+        $composerPath = Path::getBenchmarkConfigurationPath() . '/composer.json';
         if (is_file($composerPath)) {
             try {
                 $data = json_decode(

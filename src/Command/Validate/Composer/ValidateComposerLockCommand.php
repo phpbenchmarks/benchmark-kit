@@ -7,6 +7,7 @@ namespace App\Command\Validate\Composer;
 use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
+    Utils\Path
 };
 
 final class ValidateComposerLockCommand extends AbstractCommand
@@ -34,7 +35,7 @@ final class ValidateComposerLockCommand extends AbstractCommand
     {
         $this->outputTitle('Validation of composer.lock');
 
-        if (file_exists($this->getInstallationPath() . '/composer.lock')) {
+        if (file_exists(Path::getBenchmarkConfigurationPath() . '/composer.lock')) {
             $this->throwError('composer.lock shoud not exists.');
         }
 

@@ -7,7 +7,7 @@ namespace App\Command\Nginx\Vhost;
 use App\{
     Command\AbstractCommand,
     Command\PhpVersionArgumentTrait,
-    Utils\Directory
+    Utils\Path
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -49,7 +49,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         $destination = $this->getContainerVhostFilePath();
 
         return $this
-            ->runProcess(['cp', Directory::getVhostFilePath(), $destination])
+            ->runProcess(['cp', Path::getVhostFilePath(), $destination])
             ->outputSuccess('Create ' . $destination . '.');
     }
 
@@ -62,7 +62,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         }
 
         $content = str_replace('____HOST____', static::HOST, $content);
-        $content = str_replace('____INSTALLATION_PATH____', $this->getInstallationPath(), $content);
+        $content = str_replace('____INSTALLATION_PATH____', Path::getBenchmarkConfigurationPath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
@@ -70,7 +70,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 
         return $this
             ->outputSuccess('____HOST____ replaced by ' . static::HOST . '.')
-            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . $this->getInstallationPath() . '.')
+            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkConfigurationPath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
     }
 

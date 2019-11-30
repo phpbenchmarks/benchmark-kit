@@ -9,7 +9,7 @@ use App\{
     Component\ComponentType,
     Exception\HiddenException,
     Exception\ValidationException,
-    Utils\Directory
+    Utils\Path
 };
 use Symfony\Component\Console\{
     Command\Command,
@@ -134,14 +134,9 @@ abstract class AbstractCommand extends Command
         return realpath(__DIR__ . '/../..');
     }
 
-    protected function getInstallationPath(): string
-    {
-        return '/var/www/benchmark';
-    }
-
     protected function getConfigurationPath(bool $relative = false): string
     {
-        return ($relative ? null : $this->getInstallationPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
+        return ($relative ? null : Path::getBenchmarkConfigurationPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
     }
 
     protected function getResponseBodyPath(bool $relative = false): string
@@ -198,7 +193,7 @@ abstract class AbstractCommand extends Command
         int $componentType = null,
         int $benchmarkType = null
     ): self {
-        $file = $this->getInstallationPath() . '/' . $templatePath;
+        $file = Path::getBenchmarkConfigurationPath() . '/' . $templatePath;
 
         return $this
             ->createDirectory(dirname($file))
@@ -227,7 +222,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory) === false) {
             (new Filesystem())->mkdir($directory);
-            $this->outputSuccess('Directory ' . Directory::removeBenchmarkPathPrefix($directory) . ' created.');
+            $this->outputSuccess('Directory ' . Path::removeBenchmarkPathPrefix($directory) . ' created.');
         }
 
         return $this;
@@ -237,7 +232,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory)) {
             (new Filesystem())->remove($directory);
-            $this->outputSuccess('Directory ' . Directory::removeBenchmarkPathPrefix($directory) . ' removed.');
+            $this->outputSuccess('Directory ' . Path::removeBenchmarkPathPrefix($directory) . ' removed.');
         }
 
         return $this;
@@ -247,7 +242,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_file($file)) {
             (new Filesystem())->remove($file);
-            $this->outputSuccess('File ' . Directory::removeBenchmarkPathPrefix($file) . ' removed.');
+            $this->outputSuccess('File ' . Path::removeBenchmarkPathPrefix($file) . ' removed.');
         }
 
         return $this;
@@ -260,7 +255,7 @@ abstract class AbstractCommand extends Command
         string $cwd = null,
         ?int $timeout = 60
     ): self {
-        (new Process($commands, $cwd ?? $this->getInstallationPath(), null, null, $timeout))
+        (new Process($commands, $cwd ?? Path::getBenchmarkConfigurationPath(), null, null, $timeout))
             ->mustRun(
                 function (string $type, string $line) use ($outputVerbosity) {
                     if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {
@@ -359,6 +354,6 @@ abstract class AbstractCommand extends Command
 
     protected function removeInstallationPathPrefix(string $path): string
     {
-        return substr($path, strlen($this->getInstallationPath()) + 1);
+        return substr($path, strlen(Path::getBenchmarkConfigurationPath()) + 1);
     }
 }

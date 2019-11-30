@@ -7,7 +7,7 @@ namespace App\ComponentConfiguration;
 use App\{
     PhpVersion\PhpVersion,
     PhpVersion\PhpVersionArray,
-    Utils\Directory
+    Utils\Path
 };
 use PhpBenchmarks\BenchmarkConfiguration\Configuration;
 
@@ -25,7 +25,7 @@ class ComponentConfiguration extends Configuration implements ComponentConfigura
 
     public static function isCompatibleWithPhp(PhpVersion $phpVersion): bool
     {
-        return is_dir(Directory::getPhpConfigurationPath($phpVersion));
+        return is_dir(Path::getPhpConfigurationPath($phpVersion));
     }
 
     public static function getCompatiblesPhpVersions(): PhpVersionArray
