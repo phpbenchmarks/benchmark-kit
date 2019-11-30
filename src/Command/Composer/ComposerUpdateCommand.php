@@ -9,7 +9,7 @@ use App\{
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
     ComponentConfiguration\ComponentConfiguration,
-    Utils\Directory
+    Utils\Path
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,7 +30,7 @@ final class ComposerUpdateCommand extends AbstractCommand
         $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
-            $composerLockFilePath = Directory::getComposerLockFilePath($phpVersion);
+            $composerLockFilePath = Path::getComposerLockFilePath($phpVersion);
 
             $this
                 ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
@@ -39,7 +39,7 @@ final class ComposerUpdateCommand extends AbstractCommand
                 ->outputSuccess('Composer update done.')
                 ->runProcess(['mv', 'composer.lock', $composerLockFilePath])
                 ->outputSuccess(
-                    'Move composer.lock to ' . Directory::removeBenchmarkPathPrefix($composerLockFilePath) . '.'
+                    'Move composer.lock to ' . Path::removeBenchmarkPathPrefix($composerLockFilePath) . '.'
                 );
         }
 

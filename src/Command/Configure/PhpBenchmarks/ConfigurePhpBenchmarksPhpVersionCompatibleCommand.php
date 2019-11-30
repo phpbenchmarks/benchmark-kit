@@ -7,7 +7,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 use App\{
     Command\AbstractCommand,
     PhpVersion\PhpVersion,
-    Utils\Directory
+    Utils\Path
 };
 
 final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCommand
@@ -27,7 +27,7 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
         $this->outputTitle('Configuration of PHP compatibles versions');
 
         foreach (PhpVersion::getAll() as $phpVersion) {
-            $phpConfigurationPath = Directory::getPhpConfigurationPath($phpVersion);
+            $phpConfigurationPath = Path::getPhpConfigurationPath($phpVersion);
 
             if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion->toString() . ' compatible?')) {
                 $this

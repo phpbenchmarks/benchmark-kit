@@ -6,7 +6,7 @@ namespace App\Utils;
 
 use App\PhpVersion\PhpVersion;
 
-class Directory
+class Path
 {
     public static function getBenchmarkPath(): string
     {

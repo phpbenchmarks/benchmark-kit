@@ -7,8 +7,8 @@ namespace App\Command\Validate\Composer;
 use App\{
     Command\AbstractCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
-    Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 
 final class ValidateComposerJsonCommand extends AbstractCommand
@@ -27,7 +27,7 @@ final class ValidateComposerJsonCommand extends AbstractCommand
     {
         $this->outputTitle('Validation of composer.json');
 
-        $composerJsonFile = $this->getInstallationPath() . '/composer.json';
+        $composerJsonFile = Path::getBenchmarkConfigurationPath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
             $this->throwError('File does not exist.');
         }

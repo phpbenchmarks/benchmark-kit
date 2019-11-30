@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command\Validate;
 
-use App\{Command\AbstractCommand,
+use App\{
+    Command\AbstractCommand,
     Command\Configure\ConfigureReadmeCommand,
-    ComponentConfiguration\ComponentConfiguration};
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
+};
 
 final class ValidateReadmeCommand extends AbstractCommand
 {
@@ -29,7 +32,7 @@ final class ValidateReadmeCommand extends AbstractCommand
     {
         $this->outputTitle('Validation of README.md');
 
-        $readmeFileName = $this->getInstallationPath() . '/README.md';
+        $readmeFileName = Path::getBenchmarkConfigurationPath() . '/README.md';
         if (is_readable($readmeFileName) === false) {
             $this->throwError('README.md does not exists or is not readable.');
         }

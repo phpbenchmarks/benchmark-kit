@@ -6,7 +6,8 @@ namespace App\Command\Configure\Composer;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 use Symfony\Component\Console\Input\InputOption;
 
@@ -38,7 +39,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
 
     protected function doExecute(): AbstractCommand
     {
-        $composerJsonFile = $this->getInstallationPath() . '/composer.json';
+        $composerJsonFile = Path::getBenchmarkConfigurationPath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
             $this->throwError('File does not exist.');
         }

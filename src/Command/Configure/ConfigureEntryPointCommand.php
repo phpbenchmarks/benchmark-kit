@@ -6,7 +6,8 @@ namespace App\Command\Configure;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 
 final class ConfigureEntryPointCommand extends AbstractCommand
@@ -27,7 +28,10 @@ final class ConfigureEntryPointCommand extends AbstractCommand
     {
         $this->outputTitle('Configure entrypoint');
 
-        $entryPointFileName = $this->getInstallationPath() . '/' . ComponentConfiguration::getEntryPointFileName();
+        $entryPointFileName =
+            Path::getBenchmarkConfigurationPath()
+            . '/'
+            . ComponentConfiguration::getEntryPointFileName();
 
         if (is_readable($entryPointFileName) === false) {
             throw new \Exception(
