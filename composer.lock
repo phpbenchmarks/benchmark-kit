@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "259486a69b3ff155911838dee7d857cc",
+    "content-hash": "98f9e7afa5009a0fd8057f8724f4acb5",
     "packages": [
         {
             "name": "psr/container",
@@ -54,6 +54,45 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "steevanb/php-typed-array",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/steevanb/php-typed-array.git",
+                "reference": "07c0f8c1d660bb876ce55c4efee6d6a78b9461a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/steevanb/php-typed-array/zipball/07c0f8c1d660bb876ce55c4efee6d6a78b9461a0",
+                "reference": "07c0f8c1d660bb876ce55c4efee6d6a78b9461a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "2.0.*",
+                "phpstan/phpstan": "0.11.*",
+                "phpunit/phpunit": "8.4.*",
+                "symfony/string": "dev-master"
+            },
+            "suggest": {
+                "symfony/string": "Needed to use UnicodeStringArray, ByteStringArray or CodePointStringArray."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "steevanb\\PhpTypedArray\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Add IntArray, StringArray, ObjectArray etc.",
+            "time": "2019-10-11T14:53:56+00:00"
         },
         {
             "name": "symfony/console",

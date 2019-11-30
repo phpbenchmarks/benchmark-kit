@@ -67,10 +67,6 @@ final class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateRequireComponent(array $data): self
     {
-        if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
-            return $this;
-        }
-
         if (is_null($data['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
             $this->throwError(
                 'It should require '

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Command\Validate\PhpBenchmarks;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand,
+    Nginx\NginxService
+};
 
-final class ValidatePhpBenchmarksVhostCommand extends AbstractCommand
+final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
 {
     /** @var string */
-    protected static $defaultName = 'validate:phpbenchmarks:vhost';
+    protected static $defaultName = 'validate:phpbenchmarks:nginx:vhost';
 
     /** @var ?string */
     protected $vhostContent;
@@ -18,25 +22,27 @@ final class ValidatePhpBenchmarksVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . $this->getVhostFilePath(true));
+        $this->setDescription('Validate ' . NginxService::getVhostFilePath());
     }
 
     protected function doExecute(): parent
     {
-        $this
-            ->outputTitle('Validation of ' . $this->getVhostFilePath(true))
-            ->assertFileExist($this->getVhostFilePath(), $this->getVhostFilePath(true))
+        $vhostFilePath = $this->getInstallationPath() . '/' . NginxService::getVhostFilePath();
+
+        return $this
+            ->outputTitle('Validation of ' . $this->removeInstallationPathPrefix($vhostFilePath))
+            ->assertFileExist($vhostFilePath, ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->assertContainsVariable('____HOST____')
             ->assertContainsVariable('____INSTALLATION_PATH____')
             ->assertContainsVariable('____PHP_FPM_SOCK____');
-
-        return $this;
     }
 
     private function assertContainsVariable(string $name): self
     {
         if ($this->vhostContent === null) {
-            $this->vhostContent = file_get_contents($this->getVhostFilePath());
+            $this->vhostContent = file_get_contents(
+                $this->getInstallationPath() . '/' . NginxService::getVhostFilePath()
+            );
         }
 
         if (strpos($this->vhostContent, $name) === false) {

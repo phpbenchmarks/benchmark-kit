@@ -22,9 +22,11 @@ trait PhpVersionArgumentTrait
         return $this;
     }
 
-    private function getPhpVersionFromArgument(AbstractCommand $command): ?string
+    private function getPhpVersionFromArgument(AbstractCommand $command): ?PhpVersion
     {
-        return $command->getInput()->getArgument('phpVersion');
+        $phpVersionString = $command->getInput()->getArgument('phpVersion');
+
+        return is_string($phpVersionString) ? PhpVersion::createFromString($phpVersionString) : null;
     }
 
     private function assertPhpVersionArgument(AbstractCommand $command, bool $allowNull = false): self
@@ -35,20 +37,20 @@ trait PhpVersionArgumentTrait
             return $this;
         }
 
-        if (in_array($phpVersion, ComponentConfiguration::getEnabledPhpVersions()) === false) {
+        if (ComponentConfiguration::getCompatiblesPhpVersions()->exists($phpVersion) === false) {
             throw new \Exception(
-                in_array($phpVersion, PhpVersion::getAll())
+                PhpVersion::getAll()->exists($phpVersion)
                     ?
                         'PHP '
-                            . $phpVersion
+                            . $phpVersion->toString()
                             . ' is not compatible with this benchmark. Enable it into '
                             . $command->getConfigurationFilePath(true)
                             . '.'
                     :
                         'Invalid PHP version '
-                            . $phpVersion
+                            . $phpVersion->toString()
                             . '. Available versions: '
-                            . implode(', ', ComponentConfiguration::getEnabledPhpVersions())
+                            . ComponentConfiguration::getCompatiblesPhpVersions()->toString()
                             . '.'
             );
         }

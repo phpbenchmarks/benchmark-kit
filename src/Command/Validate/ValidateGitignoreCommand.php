@@ -40,6 +40,6 @@ final class ValidateGitignoreCommand extends AbstractCommand
             $this->throwError('.gitignore should contains ' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '.');
         }
 
-        return $this->outputSuccess('.gitignore contains ' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '.');
+        return $this->outputSuccess('.gitignore contains "' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '".');
     }
 }

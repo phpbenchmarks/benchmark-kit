@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Vhost;
+namespace App\Command\Nginx;
 
 use App\{
     Command\AbstractCommand,
-    Command\PhpVersionArgumentTrait
+    Command\PhpVersionArgumentTrait,
+    Nginx\NginxService
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class VhostCreateCommand extends AbstractCommand
+final class NginxVhostCreateCommand extends AbstractCommand
 {
     use PhpVersionArgumentTrait;
 
     public const HOST = 'benchmark-kit.loc';
 
     /** @var string */
-    protected static $defaultName = 'vhost:create';
+    protected static $defaultName = 'nginx:vhost:create';
 
     protected function configure(): void
     {
@@ -48,7 +49,7 @@ final class VhostCreateCommand extends AbstractCommand
         $destination = $this->getContainerVhostFilePath();
 
         return $this
-            ->runProcess(['cp', $this->getVhostFilePath(), $destination])
+            ->runProcess(['cp', NginxService::getVhostFilePath(), $destination])
             ->outputSuccess('Create ' . $destination . '.');
     }
 
@@ -62,7 +63,7 @@ final class VhostCreateCommand extends AbstractCommand
 
         $content = str_replace('____HOST____', static::HOST, $content);
         $content = str_replace('____INSTALLATION_PATH____', $this->getInstallationPath(), $content);
-        $phpFpm = 'php' . $this->getPhpVersionFromArgument($this) . '-fpm.sock';
+        $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
         $writed = file_put_contents($vhostFile, $content);

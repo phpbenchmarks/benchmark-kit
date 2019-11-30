@@ -7,8 +7,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    Component\ComponentType,
-    PhpVersion\PhpVersion
+    Component\ComponentType
 };
 
 final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractCommand
@@ -54,8 +53,6 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         $coreDependencyMinorVersion = $this->askQuestionInt('Core dependency minor version?');
         $coreDependencyPatchVersion = $this->askQuestionInt('Core dependency patch version?');
 
-        $compatiblesPhpVersions = $this->getCompatiblesPhpVersions();
-
         return $this
             ->writeFileFromTemplate(
                 $this->getConfigurationFilePath(true),
@@ -69,8 +66,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
                     'coreDependencyMajorVersion' => $coreDependencyMajorVersion,
                     'coreDependencyMinorVersion' => $coreDependencyMinorVersion,
                     'coreDependencyPatchVersion' => $coreDependencyPatchVersion,
-                    'benchmarkType' => $benchmarkType,
-                    'compatiblesPhpVersions' => $compatiblesPhpVersions
+                    'benchmarkType' => $benchmarkType
                 ],
                 $componentType,
                 $benchmarkType
@@ -84,19 +80,6 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
         } while (is_numeric($return) === false);
 
         return (int) $return;
-    }
-
-    private function getCompatiblesPhpVersions(): string
-    {
-        $compatibles = [];
-        foreach (PhpVersion::getAll() as $phpVersion) {
-            $parts = explode('.', $phpVersion);
-            if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion . ' compatible?')) {
-                $compatibles[] = '($major === ' . $parts[0] . ' && $minor === ' . $parts[1] . ')';
-            }
-        }
-
-        return implode("\n" . '            || ', $compatibles);
     }
 
     private function getCoreDependencyName(int $componentType): string

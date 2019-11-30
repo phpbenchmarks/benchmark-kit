@@ -27,7 +27,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
 
     protected function doExecute(): parent
     {
-        $this
+        return $this
             ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true))
             ->assertInArray('getComponentType', ComponentType::getAll())
             ->assertCallMethod('getComponentName')
@@ -43,8 +43,6 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
                 'getBenchmarkType',
                 BenchmarkType::getByComponentType(ComponentConfiguration::getComponentType())
             );
-
-        return $this;
     }
 
     protected function onError(): parent
@@ -74,19 +72,19 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
     }
 
     /** @param mixed $shouldNotReturn */
-    private function assertCallMethod(string $method, $parameters = []): self
+    private function assertCallMethod(string $method, $parameters = [], string $outputParameters = null): self
     {
         $value = ComponentConfiguration::{$method}(...$parameters);
         $valueStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
+        $outputParameters = $outputParameters === null ? implode(', ', $parameters) : $outputParameters;
 
-        return $this->outputSuccess($method . '(' . implode(', ', $parameters) . ') return ' . $valueStr . '.');
+        return $this->outputSuccess("$method($outputParameters) return $valueStr.");
     }
 
     private function assertPhpVersionsCompatibles(): self
     {
         foreach (PhpVersion::getAll() as $phpVersion) {
-            $parts = explode('.', $phpVersion);
-            $this->assertCallMethod('isCompatibleWithPhp', [(int) $parts[0], (int) $parts[1]]);
+            $this->assertCallMethod('isCompatibleWithPhp', [$phpVersion], $phpVersion->toString());
         }
 
         return $this;

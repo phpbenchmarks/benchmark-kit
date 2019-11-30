@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ComponentConfiguration;
 
+use App\PhpVersion\PhpVersion;
+
 interface ComponentConfigurationInterface
 {
     public static function getComponentType(): int;
@@ -12,7 +14,7 @@ interface ComponentConfigurationInterface
 
     public static function getComponentSlug(): string;
 
-    public static function isCompatibleWithPhp(int $major, int $minor): bool;
+    public static function isCompatibleWithPhp(PhpVersion $phpVersion): bool;
 
     public static function getEntryPointFileName(): string;
 

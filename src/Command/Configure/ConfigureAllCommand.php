@@ -10,8 +10,9 @@ use App\{
     Command\Configure\Composer\ConfigureComposerJsonCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksPhpVersionCompatibleCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
-    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksVhostCommand
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand
 };
 
 final class ConfigureAllCommand extends AbstractCommand
@@ -23,15 +24,16 @@ final class ConfigureAllCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Call all configure commands and composer:update');
+        $this->setDescription('Call all configure commands and ' . ComposerUpdateCommand::getDefaultName());
     }
 
     protected function doExecute(): parent
     {
         return $this
             ->runCommand(ConfigurePhpBenchmarksConfigurationClassCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksPhpVersionCompatibleCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
-            ->runCommand(ConfigurePhpBenchmarksVhostCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName())
             ->runCommand(ConfigureGitignoreCommand::getDefaultName())
             ->runCommand(ConfigureReadmeCommand::getDefaultName())

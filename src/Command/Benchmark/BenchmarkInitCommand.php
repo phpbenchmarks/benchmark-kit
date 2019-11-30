@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command\Benchmark;
 
-use App\{
-    Command\AbstractCommand,
+use App\{Command\AbstractCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\PhpVersionArgumentTrait,
-    Command\Vhost\VhostCreateCommand
-};
+    Command\Nginx\NginxVhostCreateCommand,
+    Composer\ComposerService,
+    Utils\Directory};
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class BenchmarkInitCommand extends AbstractCommand
@@ -32,14 +32,15 @@ final class BenchmarkInitCommand extends AbstractCommand
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
         $initBenchmarkShortPath = $this->removeInstallationPathPrefix($this->getInitBenchmarkFilePath());
+        $composerLockFilePath = Directory::getComposerLockFilePath($phpVersion);
 
         return $this
             ->assertPhpVersionArgument($this)
-            ->runCommand(VhostCreateCommand::getDefaultName(), ['phpVersion' => $phpVersion])
-            ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion])
+            ->runCommand(NginxVhostCreateCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
+            ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
-            ->runProcess(['cp', $this->getComposerLockFilePath($phpVersion), 'composer.lock'])
-            ->outputSuccess($this->getComposerLockFilePath($phpVersion, true) . ' copied to composer.lock.')
+            ->runProcess(['cp', $composerLockFilePath, 'composer.lock'])
+            ->outputSuccess($composerLockFilePath . ' copied to composer.lock.')
             ->outputTitle('Call ' . $initBenchmarkShortPath)
             ->runProcess([$this->getInitBenchmarkFilePath()], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess($initBenchmarkShortPath . ' called.')

@@ -8,7 +8,8 @@ use App\{
     Command\AbstractCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Directory
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,31 +22,24 @@ final class ComposerUpdateCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription(
-            'Execute composer update for all enabled PHP versions and create '
-                . $this->getComposerLockFilePath('X.Y', true)
-        );
+        $this->setDescription('Execute composer update for all enabled PHP versions');
     }
 
     protected function doExecute(): parent
     {
-        $this
-            ->runCommand(ValidateComposerJsonCommand::getDefaultName())
-            ->outputTitle('Remove ' . $this->getComposerPath(true) . ' directory')
-            ->removeDirectory($this->getComposerPath());
+        $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
-        foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+            $composerLockFilePath = Directory::getComposerLockFilePath($phpVersion);
+
             $this
-                ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion])
+                ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
                 ->outputTitle('Update Composer dependencies')
                 ->runProcess(['composer', 'update', '--ansi'], OutputInterface::VERBOSITY_VERBOSE)
                 ->outputSuccess('Composer update done.')
-                ->createDirectory($this->getComposerPath())
-                ->runProcess(['mv', 'composer.lock', $this->getComposerLockFilePath($phpVersion, true)])
+                ->runProcess(['mv', 'composer.lock', $composerLockFilePath])
                 ->outputSuccess(
-                    'Move composer.lock to '
-                        . $this->getComposerLockFilePath($phpVersion, true)
-                        . '.'
+                    'Move composer.lock to ' . Directory::removeBenchmarkPathPrefix($composerLockFilePath) . '.'
                 );
         }
 

@@ -8,9 +8,10 @@ use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Command\Validate\ValidateAllCommand,
-    Command\Vhost\VhostCreateCommand,
+    Command\Nginx\NginxVhostCreateCommand,
     ComponentConfiguration\ComponentConfiguration,
-    Component\ComponentType
+    Component\ComponentType,
+    PhpVersion\PhpVersion
 };
 
 final class BenchmarkValidateCommand extends AbstractCommand
@@ -29,14 +30,14 @@ final class BenchmarkValidateCommand extends AbstractCommand
     {
         $this->runCommand(ValidateAllCommand::getDefaultName());
 
-        foreach (ComponentConfiguration::getEnabledPhpVersions() as $phpVersion) {
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
         }
 
         return $this;
     }
 
-    private function validateForPhpVersion(string $phpVersion): self
+    private function validateForPhpVersion(PhpVersion $phpVersion): self
     {
         $benchmarkUrl = ComponentConfiguration::getBenchmarkUrl();
         $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
@@ -47,11 +48,11 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $benchmarkUrl .= $showResultsQueryParameter;
         }
 
-        $url = 'http://' . VhostCreateCommand::HOST . $benchmarkUrl;
-        $urlWithPort = 'http://' . VhostCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
+        $url = 'http://' . NginxVhostCreateCommand::HOST . $benchmarkUrl;
+        $urlWithPort = 'http://' . NginxVhostCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
 
         $this
-            ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion])
+            ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Validation of ' . $urlWithPort);
 
         $curl = curl_init();
