@@ -94,6 +94,7 @@ COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
 # Configure nginx default page
 COPY docker/html /var/www/html
 COPY docker/nginx/default /etc/nginx/sites-available
+COPY docker/nginx/phpinfo.benchmark-kit.loc.conf /etc/nginx/sites-available
 RUN rm /var/www/html/index.nginx-debian.html
 
 # Run

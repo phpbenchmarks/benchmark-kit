@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Nginx;
+namespace App\Command\Nginx\Vhost;
 
 use App\{
     Command\AbstractCommand,
-    Command\PhpVersionArgumentTrait,
-    Nginx\NginxService
+    Command\PhpVersionArgumentTrait
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class NginxVhostCreateCommand extends AbstractCommand
+final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
 {
     use PhpVersionArgumentTrait;
 
-    public const HOST = 'benchmark-kit.loc';
+    protected const HOST = 'phpinfo.benchmark-kit.loc';
 
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:create';
+    protected static $defaultName = 'nginx:vhost:phpInfo:create';
 
     protected function configure(): void
     {
@@ -41,7 +40,12 @@ final class NginxVhostCreateCommand extends AbstractCommand
 
     private function getContainerVhostFilePath(): string
     {
-        return '/etc/nginx/sites-enabled/benchmark-kit.loc.conf';
+        return '/etc/nginx/sites-enabled/phpinfo.benchmark-kit.loc.conf';
+    }
+
+    private function getContainerVhostTemplateFilePath(): string
+    {
+        return '/etc/nginx/sites-available/phpinfo.benchmark-kit.loc.conf';
     }
 
     private function createVhostFile(): self
@@ -49,7 +53,7 @@ final class NginxVhostCreateCommand extends AbstractCommand
         $destination = $this->getContainerVhostFilePath();
 
         return $this
-            ->runProcess(['cp', NginxService::getVhostFilePath(), $destination])
+            ->runProcess(['cp', $this->getContainerVhostTemplateFilePath(), $destination])
             ->outputSuccess('Create ' . $destination . '.');
     }
 
@@ -61,19 +65,15 @@ final class NginxVhostCreateCommand extends AbstractCommand
             $this->throwError('Error while reading ' . $vhostFile . '.');
         }
 
-        $content = str_replace('____HOST____', static::HOST, $content);
-        $content = str_replace('____INSTALLATION_PATH____', $this->getInstallationPath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
-        $writed = file_put_contents($vhostFile, $content);
+        $writed = $this->filePutContent($vhostFile, $content);
         if ($writed === false) {
             $this->throwError('Error while writing ' . $vhostFile . '.');
         }
 
         return $this
-            ->outputSuccess('____HOST____ replaced by ' . static::HOST . '.')
-            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . $this->getInstallationPath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
     }
 
