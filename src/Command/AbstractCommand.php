@@ -149,11 +149,6 @@ abstract class AbstractCommand extends Command
         return $this->getConfigurationPath($relative) . '/Configuration.php';
     }
 
-    protected function getInitBenchmarkFilePath(bool $relative = false): string
-    {
-        return $this->getConfigurationPath($relative) . '/initBenchmark.sh';
-    }
-
     protected function renderTemplate(
         string $templatePath,
         array $templateParameters = [],
@@ -255,7 +250,7 @@ abstract class AbstractCommand extends Command
         string $cwd = null,
         ?int $timeout = 60
     ): self {
-        (new Process($commands, $cwd ?? Path::getBenchmarkConfigurationPath(), null, null, $timeout))
+        (new Process($commands, $cwd ?? Path::getBenchmarkPath(), null, null, $timeout))
             ->mustRun(
                 function (string $type, string $line) use ($outputVerbosity) {
                     if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {

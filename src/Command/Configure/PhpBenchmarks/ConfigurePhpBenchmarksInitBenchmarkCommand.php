@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Configure\PhpBenchmarks;
 
-use App\Command\AbstractCommand;
+use App\{
+    Command\AbstractCommand,
+    Utils\Path
+};
 
 final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 {
@@ -15,12 +18,13 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . $this->getInitBenchmarkFilePath(true));
+        $this->setDescription('Create ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()));
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $initBenchmarkRelativePath = $this->getInitBenchmarkFilePath(true);
+        $initBenchmarkPath = Path::getInitBenchmarkPath();
+        $initBenchmarkRelativePath = Path::removeBenchmarkPathPrefix($initBenchmarkPath);
 
         return $this
             ->outputTitle('Creation of ' . $initBenchmarkRelativePath)
@@ -28,7 +32,7 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
             ->outputWarning(
                 'Default initBenchmark.sh (called to initialize your benchmark) has been created. Feel free to edit it.'
             )
-            ->runProcess(['chmod', '+x', $this->getInitBenchmarkFilePath()])
+            ->runProcess(['chmod', '+x', $initBenchmarkPath])
             ->outputSuccess('Make ' . $initBenchmarkRelativePath . ' executable.');
     }
 }
