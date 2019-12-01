@@ -36,7 +36,7 @@ final class ValidateComposerLockCommand extends AbstractCommand
         $this->outputTitle('Validation of composer.lock');
 
         if (file_exists(Path::getBenchmarkPath() . '/composer.lock')) {
-            $this->throwError('composer.lock shoud not exists.');
+            throw new \Exception('composer.lock shoud not exists.');
         }
 
         return $this->outputSuccess('composer.lock does not exists.');

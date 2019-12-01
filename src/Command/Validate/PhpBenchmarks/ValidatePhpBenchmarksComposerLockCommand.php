@@ -31,11 +31,11 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
             $this->outputTitle('Validation of ' . Path::rmPrefix($composerLockFilePath));
 
             if (is_readable($composerLockFilePath) === false) {
-                $this->throwError(
+                throw new \Exception(
                     Path::rmPrefix($composerLockFilePath)
-                    . ' does not exist. Call "phpbenchkit '
-                    . ComposerUpdateCommand::getDefaultName()
-                    . '" to create it.'
+                        . ' does not exist. Call "phpbenchkit '
+                        . ComposerUpdateCommand::getDefaultName()
+                        . '" to create it.'
                 );
             }
 
@@ -53,7 +53,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
                     JSON_THROW_ON_ERROR
                 );
             } catch (\Throwable $e) {
-                $this->throwError('Error while parsing: ' . $e->getMessage());
+                throw new \Exception('Error while parsing: ' . $e->getMessage());
             }
 
             $this->validateComponentVersion($data);
@@ -73,7 +73,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
                     $package['version'] !== ComponentConfiguration::getCoreDependencyVersion()
                     && $package['version'] !== 'v' . ComponentConfiguration::getCoreDependencyVersion()
                 ) {
-                    $this->throwError(
+                    throw new \Exception(
                         'Package '
                             . ComponentConfiguration::getCoreDependencyName()
                             . ' version should be '
@@ -96,7 +96,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
         }
 
         if ($packageFound === false) {
-            $this->throwError('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
+            throw new \Exception('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
         }
 
         return $this;

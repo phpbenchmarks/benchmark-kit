@@ -41,8 +41,9 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
 
         foreach ($variables as $variable) {
             if (strpos($vhostContent, $variable) === false) {
-                $this->throwError('File should contains ' . $variable . ' variable.');
+                throw new \Exception('File should contains ' . $variable . ' variable.');
             }
+
             $this->outputSuccess('File contains ' . $variable . ' variable.');
         }
 

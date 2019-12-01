@@ -45,9 +45,8 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
         $minSize = BenchmarkType::getResponseBodyFileMinSize(ComponentConfiguration::getBenchmarkType());
         $minSizeFormated = number_format($minSize, 0, '.', ',');
         $fileSize = filesize($filePath);
-        ($fileSize < $minSize)
-            ?
-            $this->throwError(
+        if ($fileSize < $minSize) {
+            throw new \Exception(
                 'File '
                 . Path::rmPrefix($filePath)
                 . ' size must be at least '
@@ -55,16 +54,15 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
                 . ' bytes but is '
                 . number_format($fileSize, 0, '.', ',')
                 . '.'
-            )
-            :
-            $this->outputSuccess(
-                'File '
+            );
+        }
+
+        return $this->outputSuccess(
+            'File '
                 . Path::rmPrefix($filePath)
                 . ' size is >= '
                 . $minSizeFormated
                 . ' bytes.'
-            );
-
-        return $this;
+        );
     }
 }

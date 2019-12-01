@@ -34,11 +34,11 @@ final class ValidateGitignoreCommand extends AbstractCommand
         $gitIgnoreFileName = Path::getBenchmarkPath() . '/.gitignore';
 
         if (is_readable($gitIgnoreFileName) === false) {
-            $this->throwError('.gitignore file not found.');
+            throw new \Exception('.gitignore file not found.');
         }
 
         if (strpos(file_get_contents($gitIgnoreFileName), ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK) === false) {
-            $this->throwError('.gitignore should contains ' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '.');
+            throw new \Exception('.gitignore should contains ' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '.');
         }
 
         return $this->outputSuccess('.gitignore contains "' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '".');

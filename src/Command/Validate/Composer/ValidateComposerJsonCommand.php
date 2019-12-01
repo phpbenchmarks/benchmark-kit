@@ -39,32 +39,31 @@ final class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateName(array $composerConfiguration): self
     {
-        ($composerConfiguration['name'] ?? null) === ConfigureComposerJsonCommand::getComposerName()
-            ? $this->outputSuccess('Name ' . $composerConfiguration['name'] . ' is valid.')
-            :
-                $this->throwError(
-                    'Repository name must be "' . ConfigureComposerJsonCommand::getComposerName() . '".'
-                );
+        if (($composerConfiguration['name'] ?? null) !== ConfigureComposerJsonCommand::getComposerName()) {
+            throw new \Exception(
+                'Repository name must be "' . ConfigureComposerJsonCommand::getComposerName() . '".'
+            );
+        }
 
-        return $this;
+        return $this->outputSuccess('Name ' . $composerConfiguration['name'] . ' is valid.');
     }
 
     private function validateLicense(array $composerConfiguration): self
     {
-        ($composerConfiguration['license'] ?? null) === ConfigureComposerJsonCommand::LICENSE
-            ? $this->outputSuccess('License ' . $composerConfiguration['license'] . ' is valid.')
-            : $this->throwError('License must be "' . ConfigureComposerJsonCommand::LICENSE . '".');
+        if (($composerConfiguration['license'] ?? null) !== ConfigureComposerJsonCommand::LICENSE) {
+            throw new \Exception('License must be "' . ConfigureComposerJsonCommand::LICENSE . '".');
+        }
 
-        return $this;
+        return $this->outputSuccess('License ' . $composerConfiguration['license'] . ' is valid.');
     }
 
     private function validateRequireComponent(array $composerConfiguration): self
     {
         if (is_null($composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
-            $this->throwError(
+            throw new \Exception(
                 'It should require '
-                . ComponentConfiguration::getCoreDependencyName()
-                . '. See README.md for more informations.'
+                    . ComponentConfiguration::getCoreDependencyName()
+                    . '. See README.md for more informations.'
             );
         }
 
@@ -82,7 +81,7 @@ final class ValidateComposerJsonCommand extends AbstractCommand
                     . '.'
             );
         } else {
-            $this->throwError(
+            throw new \Exception(
                 'It should require '
                     . ComponentConfiguration::getCoreDependencyName()
                     . ': '

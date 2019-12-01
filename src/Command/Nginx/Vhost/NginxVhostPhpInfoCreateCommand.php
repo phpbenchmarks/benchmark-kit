@@ -75,7 +75,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
         $vhostFile = $this->getContainerVhostFilePath();
         $content = file_get_contents($vhostFile);
         if ($content === false) {
-            $this->throwError('Error while reading ' . $vhostFile . '.');
+            throw new \Exception('Error while reading ' . $vhostFile . '.');
         }
 
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
@@ -83,7 +83,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
 
         $writed = $this->filePutContent($vhostFile, $content);
         if ($writed === false) {
-            $this->throwError('Error while writing ' . $vhostFile . '.');
+            throw new \Exception('Error while writing ' . $vhostFile . '.');
         }
 
         return $this

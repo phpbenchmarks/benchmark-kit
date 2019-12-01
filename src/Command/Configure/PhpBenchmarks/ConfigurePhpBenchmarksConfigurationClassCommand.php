@@ -105,7 +105,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
                     JSON_THROW_ON_ERROR
                 );
             } catch (\Throwable $e) {
-                $this->throwError('Error while parsing: ' . $e->getMessage());
+                throw new \Exception('Error while parsing: ' . $e->getMessage());
             }
 
             $choices = [];

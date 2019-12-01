@@ -34,18 +34,16 @@ final class ValidateCircleciCommand extends AbstractCommand
         $configFilePath = Path::getCircleCiPath() . '/config.yml';
         $relativeConfigFilePath = Path::rmPrefix($configFilePath);
         if (is_readable($configFilePath) === false) {
-            $this->throwError("$relativeConfigFilePath does not exists or is not readable.");
+            throw new \Exception("$relativeConfigFilePath does not exists or is not readable.");
         }
         $content = file_get_contents($configFilePath);
 
         $expectedContent = $this->renderTemplate($relativeConfigFilePath);
 
         if ($expectedContent !== $content) {
-            $this->throwError("$relativeConfigFilePath content is not valid.");
+            throw new \Exception("$relativeConfigFilePath content is not valid.");
         }
 
-        $this->outputSuccess("$relativeConfigFilePath content is valid.");
-
-        return $this;
+        return $this->outputSuccess("$relativeConfigFilePath content is valid.");
     }
 }
