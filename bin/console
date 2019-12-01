@@ -35,6 +35,7 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksNginxVhostCommand,
     Command\Validate\ValidateAllCommand,
+    Command\Validate\ValidateCircleciCommand,
     Command\Validate\ValidateEntryPointCommand,
     Command\Validate\ValidateGitignoreCommand,
     Command\Validate\ValidateReadmeCommand
@@ -67,6 +68,7 @@ $application->add(new DefaultCommand());
 $application->add(new PhpVersionCliDefineCommand());
 
 $application->add(new ValidateAllCommand());
+$application->add(new ValidateCircleciCommand());
 $application->add(new ValidateComposerJsonCommand());
 $application->add(new ValidateComposerLockCommand());
 $application->add(new ValidateEntryPointCommand());
