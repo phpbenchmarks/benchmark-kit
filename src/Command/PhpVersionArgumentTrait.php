@@ -6,7 +6,8 @@ namespace App\Command;
 
 use App\{
     ComponentConfiguration\ComponentConfiguration,
-    PhpVersion\PhpVersion
+    PhpVersion\PhpVersion,
+    Utils\Path
 };
 use Symfony\Component\Console\{
     Command\Command,
@@ -44,7 +45,7 @@ trait PhpVersionArgumentTrait
                         'PHP '
                             . $phpVersion->toString()
                             . ' is not compatible with this benchmark. Enable it into '
-                            . $command->getConfigurationFilePath(true)
+                            . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
                             . '.'
                     :
                         'Invalid PHP version '

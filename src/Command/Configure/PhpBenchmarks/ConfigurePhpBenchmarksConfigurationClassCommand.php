@@ -20,14 +20,20 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
     {
         parent::configure();
 
-        $this->setDescription('Create ' . $this->getConfigurationFilePath(true) . ' and configure it');
+        $this->setDescription(
+            'Create '
+                . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                . ' and configure it'
+        );
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $this->outputTitle('Creation of ' . $this->getConfigurationFilePath(true));
+        $this->outputTitle(
+            'Creation of ' . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+        );
 
-        $configurationPath = Path::getBenchmarkPath() . '/' . $this->getConfigurationFilePath(true);
+        $configurationPath = Path::getBenchmarkConfigurationClassPath();
         if (file_exists($configurationPath)) {
             unlink($configurationPath);
             $this->outputSuccess('Remove file ' . Path::removeBenchmarkPathPrefix($configurationPath));
@@ -56,7 +62,7 @@ final class ConfigurePhpBenchmarksConfigurationClassCommand extends AbstractComm
 
         return $this
             ->writeFileFromTemplate(
-                $this->getConfigurationFilePath(true),
+                Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath()),
                 [
                     'componentType' => $componentType,
                     'componentName' => $componentName,
