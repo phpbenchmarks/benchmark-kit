@@ -42,11 +42,7 @@ trait PhpVersionArgumentTrait
             throw new \Exception(
                 PhpVersion::getAll()->exists($phpVersion)
                     ?
-                        'PHP '
-                            . $phpVersion->toString()
-                            . ' is not compatible with this benchmark. Enable it into '
-                            . Path::rmPrefix(Path::getBenchmarkConfigurationClassPath())
-                            . '.'
+                        'PHP ' . $phpVersion->toString() . ' is not compatible with this benchmark.'
                     :
                         'Invalid PHP version '
                             . $phpVersion->toString()

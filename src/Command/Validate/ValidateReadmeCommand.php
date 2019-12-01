@@ -34,7 +34,7 @@ final class ValidateReadmeCommand extends AbstractCommand
 
         $readmeFileName = Path::getBenchmarkPath() . '/README.md';
         if (is_readable($readmeFileName) === false) {
-            $this->throwError('README.md does not exists or is not readable.');
+            throw new \Exception('README.md does not exists or is not readable.');
         }
         $content = file_get_contents($readmeFileName);
 
@@ -49,11 +49,9 @@ final class ValidateReadmeCommand extends AbstractCommand
         );
 
         if ($expectedContent !== $content) {
-            $this->throwError('README.md content is not valid.');
+            throw new \Exception('README.md content is not valid.');
         }
 
-        $this->outputSuccess('README.md content is valid.');
-
-        return $this;
+        return $this->outputSuccess('README.md content is valid.');
     }
 }

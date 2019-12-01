@@ -69,11 +69,10 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
             foreach ($allowedValues as $allowedValue => $allowedValueDescription) {
                 $allowedValuesError[] = $allowedValue . ' (' . $allowedValueDescription . ')';
             }
-            $this->throwError($method . '() should return a value in ' . implode(', ', $allowedValuesError) . '.');
+            throw new \Exception($method . '() should return a value in ' . implode(', ', $allowedValuesError) . '.');
         }
-        $this->outputSuccess($method . '() return ' . $value . ' (' . $allowedValues[$value] . ').');
 
-        return $this;
+        return $this->outputSuccess($method . '() return ' . $value . ' (' . $allowedValues[$value] . ').');
     }
 
     /** @param mixed $shouldNotReturn */
@@ -100,7 +99,7 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
         $entryPointFileName = ComponentConfiguration::getEntryPointFileName();
 
         if (is_readable(Path::getBenchmarkPath() . '/' . $entryPointFileName) === false) {
-            $this->throwError("getEntryPoint() return $entryPointFileName who is not readable.");
+            throw new \Exception("getEntryPoint() return $entryPointFileName who is not readable.");
         }
 
         return $this->outputSuccess("getEntryPoint() return $entryPointFileName who is readable.");

@@ -44,7 +44,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
         $content = file_get_contents($entryPointFilePath);
 
         if (strpos($content, ConfigureEntryPointCommand::STATS_COMMENT) === false) {
-            $this->throwError(
+            throw new \Exception(
                 Path::rmPrefix($entryPointFilePath)
                     . ' should contains "'
                     . ConfigureEntryPointCommand::STATS_COMMENT

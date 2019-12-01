@@ -41,13 +41,13 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
     {
         $composerJsonFile = Path::getBenchmarkPath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
-            $this->throwError('File does not exist.');
+            throw new \Exception('File does not exist.');
         }
 
         try {
             $data = json_decode(file_get_contents($composerJsonFile), false, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
-            $this->throwError('Error while parsing: ' . $e->getMessage());
+            throw new \Exception('Error while parsing: ' . $e->getMessage());
         }
 
         return $this

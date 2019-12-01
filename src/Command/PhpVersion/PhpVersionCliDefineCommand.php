@@ -30,7 +30,7 @@ final class PhpVersionCliDefineCommand extends AbstractCommand
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
 
-        $this
+        return $this
             ->outputTitle('Define PHP CLI version to ' . $phpVersion->toString())
             ->assertPhpVersionArgument($this)
             ->runProcess(
@@ -38,7 +38,5 @@ final class PhpVersionCliDefineCommand extends AbstractCommand
                 OutputInterface::VERBOSITY_VERBOSE
             )
             ->outputSuccess('PHP CLI defined to ' . $phpVersion->toString() . '.');
-
-        return $this;
     }
 }

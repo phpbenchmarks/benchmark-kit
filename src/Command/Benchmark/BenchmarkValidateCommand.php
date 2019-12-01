@@ -68,7 +68,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
         curl_close($curl);
 
         if ($httpCode !== 200) {
-            $this->throwError('Http code should be 200 but is ' . $httpCode . '.');
+            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
         }
 
         return $this
@@ -91,7 +91,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
         }
 
         if ($validated === false) {
-            $this->throwError(
+            throw new \Exception(
                 'Invalid body, it should be equal to a file in ' . Path::rmPrefix($responseBodyPath) . '.'
             );
         }

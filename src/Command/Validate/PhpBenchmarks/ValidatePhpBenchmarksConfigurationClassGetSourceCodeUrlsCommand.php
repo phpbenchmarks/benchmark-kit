@@ -85,7 +85,7 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
             $urls = ComponentConfiguration::getSourceCodeUrls();
             foreach ($urls as $id => $url) {
                 if (in_array($id, $expectedUrlIds) === false) {
-                    $this->throwError('getSourceCodeUrls() return an array with unknown key "' . $id . '".');
+                    throw new \Exception('getSourceCodeUrls() return an array with unknown key "' . $id . '".');
                 }
 
                 $violations = static::validateSourCodeUrl($url);
@@ -94,7 +94,7 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
                     foreach ($violations as $violation) {
                         $errors[] = $violation->getMessage();
                     }
-                    $this->throwError(
+                    throw new \Exception(
                         'getSourceCodeUrls() value "'
                         . $url
                         . '" for key "'
@@ -107,7 +107,7 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
 
             $missingIds = array_diff($expectedUrlIds, array_keys($urls));
             if (count($missingIds) > 0) {
-                $this->throwError(
+                throw new \Exception(
                     'getSourceCodeUrls() return an array with missing key'
                     . (count($missingIds) === 1 ? null : 's')
                     . ' '

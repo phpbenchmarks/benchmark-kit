@@ -73,7 +73,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         $vhostFile = $this->getContainerVhostFilePath();
         $content = file_get_contents($vhostFile);
         if ($content === false) {
-            $this->throwError('Error while reading ' . $vhostFile . '.');
+            throw new \Exception('Error while reading ' . $vhostFile . '.');
         }
 
         $content = str_replace('____HOST____', static::HOST, $content);

@@ -8,7 +8,6 @@ use App\{
     Benchmark\BenchmarkType,
     Component\ComponentType,
     Exception\HiddenException,
-    Exception\ValidationException,
     Utils\Path
 };
 use Symfony\Component\Console\{
@@ -86,7 +85,7 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function outputTitle(string $title): self
     {
-        $this->output->writeln("\e[44m " . $title . " \e[00m");
+        $this->getOutput()->writeln("\e[44m " . $title . " \e[00m");
 
         return $this;
     }
@@ -94,7 +93,7 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function outputSuccess(string $message): self
     {
-        $this->output->writeln("  \e[42m > \e[00m " . $message);
+        $this->getOutput()->writeln("  \e[42m > \e[00m " . $message);
 
         return $this;
     }
@@ -103,7 +102,7 @@ abstract class AbstractCommand extends Command
     protected function outputWarning(string $message, bool $indent = true): self
     {
         $prefix = $indent ? "  \e[43m > \e[00m " : null;
-        $this->output->writeln($prefix . "\e[43m " . $message . " \e[00m");
+        $this->getOutput()->writeln($prefix . "\e[43m " . $message . " \e[00m");
 
         return $this;
     }
@@ -112,11 +111,6 @@ abstract class AbstractCommand extends Command
     protected function outputCallPhpbenchkitWarning(string $command): self
     {
         return $this->outputWarning("You can use \"phpbenchkit $command\" to configure it.");
-    }
-
-    protected function throwError(string $error = null): void
-    {
-        throw new ValidationException($error);
     }
 
     /** @return $this */
@@ -320,8 +314,7 @@ abstract class AbstractCommand extends Command
                     . '" to create it.'
             );
         }
-        $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exist.');
 
-        return $this;
+        return $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exist.');
     }
 }

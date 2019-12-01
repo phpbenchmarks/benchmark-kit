@@ -108,9 +108,9 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
     ): PhpVersionArray {
         $phpVersion = new PhpVersion($major, $minor);
         if (PhpVersion::getAll()->exists($phpVersion) === false) {
-            $this->throwError(
+            throw new \Exception(
                 'PHP version ' . $phpVersionConfiguration . ' is not compatible with Benchmark kit.'
-                . ' Compatibles PHP versions: ' . PhpVersion::getAll()->toString() . '.'
+                    . ' Compatibles PHP versions: ' . PhpVersion::getAll()->toString() . '.'
             );
         }
 
