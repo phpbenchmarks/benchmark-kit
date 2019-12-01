@@ -8,7 +8,8 @@ use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 use Symfony\Component\Validator\{
     Constraints\NotBlank,
@@ -39,29 +40,33 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . $this->getConfigurationFilePath(true) . '::getSourceCodeUrls()');
+        $this->setDescription(
+            'Validate '
+                . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                . '::getSourceCodeUrls()'
+        );
     }
 
     protected function doExecute(): parent
     {
-        $this
-            ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true) . '::getSourceCodeUrls()')
+        return $this
+            ->outputTitle(
+                'Validation of '
+                    . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                    . '::getSourceCodeUrls()'
+            )
             ->assertCodeSourceUrls();
-
-        return $this;
     }
 
     protected function onError(): parent
     {
-        $this
+        return $this
             ->outputWarning(
                 'You can call "phpbenchkit '
                     . ConfigurePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand::getDefaultName()
                     . '" to configure it.'
             )
             ->outputWarning('You can add --skip-source-code-urls parameter to skip this validation.');
-
-        return $this;
     }
 
     private function assertCodeSourceUrls(): self

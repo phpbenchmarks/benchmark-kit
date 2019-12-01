@@ -23,13 +23,17 @@ final class ValidatePhpBenchmarksConfigurationClassCommand extends AbstractComma
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . $this->getConfigurationFilePath(true));
+        $this->setDescription(
+            'Validate ' . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+        );
     }
 
     protected function doExecute(): parent
     {
         return $this
-            ->outputTitle('Validation of ' . $this->getConfigurationFilePath(true))
+            ->outputTitle(
+                'Validation of ' . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+            )
             ->assertInArray('getComponentType', ComponentType::getAll())
             ->assertCallMethod('getComponentName')
             ->assertCallMethod('getComponentSlug')

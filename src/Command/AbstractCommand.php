@@ -144,11 +144,6 @@ abstract class AbstractCommand extends Command
         return $this->getConfigurationPath($relative) . '/responseBody';
     }
 
-    protected function getConfigurationFilePath(bool $relative = false): string
-    {
-        return $this->getConfigurationPath($relative) . '/Configuration.php';
-    }
-
     protected function renderTemplate(
         string $templatePath,
         array $templateParameters = [],
