@@ -33,7 +33,7 @@ final class BenchmarkInitCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
-        $initBenchmarkPath = Path::getInitBenchmarkPath();
+        $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
         $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
         return $this
@@ -49,10 +49,10 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
             ->runProcess(['cp', $composerLockFilePath, 'composer.lock'])
-            ->outputSuccess(Path::removeBenchmarkPathPrefix($composerLockFilePath) . ' copied to composer.lock.')
-            ->outputTitle('Call ' . Path::removeBenchmarkPathPrefix($initBenchmarkPath))
+            ->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' copied to composer.lock.')
+            ->outputTitle('Call ' . Path::rmPrefix($initBenchmarkPath))
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
-            ->outputSuccess(Path::removeBenchmarkPathPrefix($initBenchmarkPath) . ' called.')
+            ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
             ->removeFile(Path::getBenchmarkPath() . '/composer.lock');
     }
 }

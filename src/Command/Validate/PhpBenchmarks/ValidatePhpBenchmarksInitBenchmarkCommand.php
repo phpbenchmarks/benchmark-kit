@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Validate\PhpBenchmarks;
 
-use App\{
-    Command\AbstractCommand,
+use App\{Command\AbstractCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
-    Utils\Path
-};
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path};
 
 final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 {
@@ -19,16 +18,20 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()));
+        $this->setDescription('Validate initBenchmark.sh');
     }
 
     protected function doExecute(): parent
     {
-        return $this
-            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()))
-            ->assertFileExist(
-                Path::getInitBenchmarkPath(),
-                ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName()
-            );
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+            $this
+                ->outputTitle('Validation of ' . Path::rmPrefix(Path::getInitBenchmarkPath($phpVersion)))
+                ->assertFileExist(
+                    Path::getInitBenchmarkPath($phpVersion),
+                    ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName()
+                );
+        }
+
+        return $this;
     }
 }

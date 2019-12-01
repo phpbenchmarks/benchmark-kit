@@ -7,7 +7,8 @@ namespace App\Command\Configure\PhpBenchmarks;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration
+    ComponentConfiguration\ComponentConfiguration,
+    Utils\Path
 };
 
 final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
@@ -19,17 +20,25 @@ final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . $this->getResponseBodyPath(true) . ' files');
+        $this->setDescription('Create responseBody files');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $this
-            ->outputTitle('Creation of ' . $this->getResponseBodyPath(true) . ' files')
-            ->removeDirectory($this->getResponseBodyPath());
+        $this->outputTitle('Creation of responseBody files');
 
-        foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
-            $this->writeFileFromTemplate($this->getResponseBodyPath(true) . '/' . $file);
+        foreach (ComponentConfiguration::getIncompatiblesPhpVersions() as $phpVersion) {
+            $this->removeDirectory(Path::getResponseBodyPath($phpVersion));
+        }
+
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+            $this->removeDirectory(Path::getResponseBodyPath($phpVersion));
+
+            foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
+                $this->writeFileFromTemplate(
+                    Path::rmPrefix(Path::getResponseBodyPath($phpVersion)) . '/' . $file
+                );
+            }
         }
 
         return $this;

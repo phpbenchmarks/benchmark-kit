@@ -9,13 +9,12 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand,
     Utils\Path
 };
+use steevanb\PhpTypedArray\ScalarArray\StringArray;
 
 final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
 {
     /** @var string */
     protected static $defaultName = 'validate:phpbenchmarks:nginx:vhost';
-
-    private ?string $vhostContent;
 
     protected function configure(): void
     {
@@ -27,23 +26,25 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         return $this
-            ->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix(Path::getVhostPath()))
+            ->outputTitle('Validation of ' . Path::rmPrefix(Path::getVhostPath()))
             ->assertFileExist(Path::getVhostPath(), ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
-            ->assertContainsVariable('____HOST____')
-            ->assertContainsVariable('____INSTALLATION_PATH____')
-            ->assertContainsVariable('____PHP_FPM_SOCK____');
+            ->assertContainsVariables(
+                new StringArray(
+                    ['____HOST____', '____INSTALLATION_PATH____', '____PHP_FPM_SOCK____']
+                )
+            );
     }
 
-    private function assertContainsVariable(string $name): self
+    private function assertContainsVariables(StringArray $variables): self
     {
-        if ($this->vhostContent === null) {
-            $this->vhostContent = file_get_contents(Path::getVhostPath());
-        }
+        $vhostContent = file_get_contents(Path::getVhostPath());
 
-        if (strpos($this->vhostContent, $name) === false) {
-            $this->throwError('File should contains ' . $name . ' variable.');
+        foreach ($variables as $variable) {
+            if (strpos($vhostContent, $variable) === false) {
+                $this->throwError('File should contains ' . $variable . ' variable.');
+            }
+            $this->outputSuccess('File contains ' . $variable . ' variable.');
         }
-        $this->outputSuccess('File contains ' . $name . ' variable.');
 
         return $this;
     }

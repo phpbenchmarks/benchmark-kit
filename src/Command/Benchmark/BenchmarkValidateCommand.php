@@ -71,22 +71,20 @@ final class BenchmarkValidateCommand extends AbstractCommand
             $this->throwError('Http code should be 200 but is ' . $httpCode . '.');
         }
 
-        $this
+        return $this
             ->outputSuccess('Http code is 200.')
-            ->validateBody($body);
-
-        return $this;
+            ->validateBody($body, $phpVersion);
     }
 
-    private function validateBody(string $body): self
+    private function validateBody(string $body, PhpVersion $phpVersion): self
     {
         $validated = false;
+        $responseBodyPath = Path::getResponseBodyPath($phpVersion);
+
         foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
-            $responseFile = $this->getResponseBodyPath() . '/' . $file;
+            $responseFile = $responseBodyPath . '/' . $file;
             if ($body === file_get_contents($responseFile)) {
-                $this->outputSuccess(
-                    'Body is equal to ' . Path::removeBenchmarkPathPrefix($responseFile) . ' content.'
-                );
+                $this->outputSuccess('Body is equal to ' . Path::rmPrefix($responseFile) . ' content.');
                 $validated = true;
                 break;
             }
@@ -94,7 +92,7 @@ final class BenchmarkValidateCommand extends AbstractCommand
 
         if ($validated === false) {
             $this->throwError(
-                'Invalid body, it should be equal to a file in ' . $this->getResponseBodyPath(true) . '.'
+                'Invalid body, it should be equal to a file in ' . Path::rmPrefix($responseBodyPath) . '.'
             );
         }
 

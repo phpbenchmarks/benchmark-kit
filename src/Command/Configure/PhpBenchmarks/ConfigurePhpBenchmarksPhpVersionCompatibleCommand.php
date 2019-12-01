@@ -32,7 +32,7 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
             if ($this->askConfirmationQuestion('Is PHP ' . $phpVersion->toString() . ' compatible?')) {
                 $this
                     ->createDirectory($phpConfigurationPath)
-                    ->filePutContent($phpConfigurationPath . '/php.ini', '');
+                    ->writeFileFromTemplate(Path::rmPrefix($phpConfigurationPath) . '/php.ini');
             } else {
                 $this->removeDirectory($phpConfigurationPath);
             }

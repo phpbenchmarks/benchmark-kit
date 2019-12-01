@@ -42,7 +42,7 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
 
         $this->setDescription(
             'Validate '
-                . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                . Path::rmPrefix(Path::getBenchmarkConfigurationClassPath())
                 . '::getSourceCodeUrls()'
         );
     }
@@ -52,7 +52,7 @@ final class ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand exte
         return $this
             ->outputTitle(
                 'Validation of '
-                    . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                    . Path::rmPrefix(Path::getBenchmarkConfigurationClassPath())
                     . '::getSourceCodeUrls()'
             )
             ->assertCodeSourceUrls();

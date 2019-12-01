@@ -6,6 +6,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
+    ComponentConfiguration\ComponentConfiguration,
     Utils\Path
 };
 
@@ -18,21 +19,26 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . Path::removeBenchmarkPathPrefix(Path::getInitBenchmarkPath()));
+        $this->setDescription('Create initBenchmark.sh');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        $initBenchmarkPath = Path::getInitBenchmarkPath();
-        $initBenchmarkRelativePath = Path::removeBenchmarkPathPrefix($initBenchmarkPath);
+        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+            $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
+            $initBenchmarkRelativePath = Path::rmPrefix($initBenchmarkPath);
 
-        return $this
-            ->outputTitle('Creation of ' . $initBenchmarkRelativePath)
-            ->writeFileFromTemplate($initBenchmarkRelativePath)
-            ->outputWarning(
-                'Default initBenchmark.sh (called to initialize your benchmark) has been created. Feel free to edit it.'
-            )
-            ->runProcess(['chmod', '+x', $initBenchmarkPath])
-            ->outputSuccess('Make ' . $initBenchmarkRelativePath . ' executable.');
+            $this
+                ->outputTitle('Creation of ' . $initBenchmarkRelativePath)
+                ->writeFileFromTemplate($initBenchmarkRelativePath)
+                ->runProcess(['chmod', '+x', $initBenchmarkPath])
+                ->outputSuccess('Make ' . $initBenchmarkRelativePath . ' executable.')
+                ->outputWarning(
+                    "$initBenchmarkRelativePath (called to initialize your benchmark) has been created."
+                        . 'Feel free to edit it.'
+                );
+        }
+
+        return $this;
     }
 }
