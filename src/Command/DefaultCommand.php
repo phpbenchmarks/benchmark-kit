@@ -22,43 +22,46 @@ use Symfony\Component\Process\Process;
 
 final class DefaultCommand extends ListCommand
 {
+    use OutputBlockTrait;
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $isConfigurationValid = $this->isConfigurationValid();
+        $backgroundColor = $isConfigurationValid ? 'cyan' : 'yellow';
 
-        $this->writeHeaderLines(
+        $this->outputBlock(
             [
                 '',
                 'Welcome to http://www.phpbenchmarks.com benchmark kit ' . Version::getVersion() . '.',
                 '',
                 'Host source code path: ' . getenv('HOST_SOURCE_CODE_PATH') . '.'
             ],
-            $output,
-            $isConfigurationValid
+            $backgroundColor,
+            $output
         );
 
         if ($isConfigurationValid === true) {
-            $this->writeHeaderLines(
+            $this->outputBlock(
                 [
                     'Current PHP version: ' . $this->getBenchmarkPhpVersion() . '.',
                     'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.',
                     'Go to ' . $this->getBenchmarkUrl() . ' to execute your code.'
                 ],
-                $output,
-                $isConfigurationValid
+                $backgroundColor,
+                $output
             );
         } else {
-            $this->writeHeaderLines(
+            $this->outputBlock(
                 [
                     'Benchmark need to be configured before doing anything.',
                     'Call "phpbenchkit configure:all" to configure it.'
                 ],
-                $output,
-                $isConfigurationValid
+                $backgroundColor,
+                $output
             );
         }
 
-        $this->writeHeaderLines([''], $output, $isConfigurationValid);
+        $this->outputBlock([''], $backgroundColor, $output);
 
         $output->writeln('');
 
@@ -85,17 +88,6 @@ final class DefaultCommand extends ListCommand
             )
             ->mustRun()
             ->getOutput();
-    }
-
-    private function writeHeaderLines(array $lines, OutputInterface $output, bool $isConfigurationValid): self
-    {
-        foreach ($lines as $line) {
-            $output->writeln(
-                '<fg=black;bg=' . ($isConfigurationValid ? 'cyan' : 'yellow') . '>  ' . str_pad($line, 115) . '</>'
-            );
-        }
-
-        return $this;
     }
 
     private function getBenchmarkUrl(): string
