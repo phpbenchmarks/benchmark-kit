@@ -18,14 +18,14 @@ final class ConfigureCircleCiCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Configure CircleCI');
+        $this->setDescription('Configure ' . Path::rmPrefix(Path::getCircleCiPath()));
     }
 
     protected function doExecute(): parent
     {
         return $this
             ->outputTitle('Configure CircleCI')
-            ->removeDirectory(Path::getBenchmarkPath() . '/.circleci')
-            ->writeFileFromTemplate('.circleci/config.yml');
+            ->removeDirectory(Path::getCircleCiPath())
+            ->writeFileFromTemplate(Path::rmPrefix(Path::getCircleCiPath()) . '/config.yml');
     }
 }

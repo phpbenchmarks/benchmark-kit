@@ -31,6 +31,7 @@ final class ValidateAllCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         $this
+            ->runCommand(ValidateCircleciCommand::getDefaultName())
             ->runCommand(ValidateComposerJsonCommand::getDefaultName())
             ->runCommand(ValidateComposerLockCommand::getDefaultName())
             ->runCommand(ValidateEntryPointCommand::getDefaultName())

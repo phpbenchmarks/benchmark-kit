@@ -57,4 +57,9 @@ class Path
     {
         return static::getPhpConfigurationPath($phpVersion) . '/responseBody';
     }
+
+    public static function getCircleCiPath(): string
+    {
+        return static::getBenchmarkPath() . '/.circleci';
+    }
 }

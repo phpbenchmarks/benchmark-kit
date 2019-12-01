@@ -6,8 +6,8 @@ namespace App\Command;
 
 use App\{
     Command\Benchmark\BenchmarkInitCommand,
+    Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Validate\ValidateAllCommand,
-    Command\Nginx\NginxVhostBenchmarkCreateCommand,
     ComponentConfiguration\ComponentConfiguration,
     Version
 };
@@ -106,6 +106,6 @@ final class DefaultCommand extends ListCommand
             $benchmarkUrl = null;
         }
 
-        return 'http://' . NginxVhostBenchmarkCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
+        return 'http://' . NginxVhostBenchmarkKitCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
     }
 }
