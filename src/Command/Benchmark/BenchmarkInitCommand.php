@@ -8,6 +8,7 @@ use App\{
     Command\AbstractCommand,
     Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
+    Command\OutputBlockTrait,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\PhpVersionArgumentTrait,
     Utils\Path
@@ -16,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class BenchmarkInitCommand extends AbstractCommand
 {
+    use OutputBlockTrait;
     use PhpVersionArgumentTrait;
 
     /** @var string */
@@ -40,11 +42,11 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->assertPhpVersionArgument($this)
             ->runCommand(
                 NginxVhostBenchmarkKitCreateCommand::getDefaultName(),
-                ['phpVersion' => $phpVersion->toString()]
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
             )
             ->runCommand(
                 NginxVhostPhpInfoCreateCommand::getDefaultName(),
-                ['phpVersion' => $phpVersion->toString()]
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
             )
             ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
@@ -53,6 +55,23 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputTitle('Call ' . Path::rmPrefix($initBenchmarkPath))
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
-            ->removeFile(Path::getBenchmarkPath() . '/composer.lock');
+            ->removeFile(Path::getBenchmarkPath() . '/composer.lock')
+            ->outputUrls();
+    }
+
+    private function outputUrls(): self
+    {
+        $this->getOutput()->writeln('');
+
+        return $this->outputBlock(
+            [
+                '',
+                'You can test your code at this url: ' . NginxVhostBenchmarkKitCreateCommand::getUrl(),
+                'View phpinfo() at this url: ' . NginxVhostPhpInfoCreateCommand::getUrl(),
+                ''
+            ],
+            'green',
+            $this->getOutput()
+        );
     }
 }
