@@ -7,12 +7,14 @@ namespace App\Command\Validate\Composer;
 use App\{
     Command\AbstractCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
-    ComponentConfiguration\ComponentConfiguration,
-    Utils\Path
+    Command\GetComposerConfiguration,
+    ComponentConfiguration\ComponentConfiguration
 };
 
 final class ValidateComposerJsonCommand extends AbstractCommand
 {
+    use GetComposerConfiguration;
+
     /** @var string */
     protected static $defaultName = 'validate:composer:json';
 
@@ -27,27 +29,18 @@ final class ValidateComposerJsonCommand extends AbstractCommand
     {
         $this->outputTitle('Validation of composer.json');
 
-        $composerJsonFile = Path::getBenchmarkPath() . '/composer.json';
-        if (is_readable($composerJsonFile) === false) {
-            $this->throwError('File does not exist.');
-        }
-
-        try {
-            $data = json_decode(file_get_contents($composerJsonFile), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\Throwable $e) {
-            $this->throwError('Error while parsing: ' . $e->getMessage());
-        }
+        $composerConfiguration = $this->getComposerConfiguration();
 
         return $this
-            ->validateName($data)
-            ->validateLicense($data)
-            ->validateRequireComponent($data);
+            ->validateName($composerConfiguration)
+            ->validateLicense($composerConfiguration)
+            ->validateRequireComponent($composerConfiguration);
     }
 
-    private function validateName(array $data): self
+    private function validateName(array $composerConfiguration): self
     {
-        ($data['name'] ?? null) === ConfigureComposerJsonCommand::getComposerName()
-            ? $this->outputSuccess('Name ' . $data['name'] . ' is valid.')
+        ($composerConfiguration['name'] ?? null) === ConfigureComposerJsonCommand::getComposerName()
+            ? $this->outputSuccess('Name ' . $composerConfiguration['name'] . ' is valid.')
             :
                 $this->throwError(
                     'Repository name must be "' . ConfigureComposerJsonCommand::getComposerName() . '".'
@@ -56,18 +49,18 @@ final class ValidateComposerJsonCommand extends AbstractCommand
         return $this;
     }
 
-    private function validateLicense(array $data): self
+    private function validateLicense(array $composerConfiguration): self
     {
-        ($data['license'] ?? null) === ConfigureComposerJsonCommand::LICENSE
-            ? $this->outputSuccess('License ' . $data['license'] . ' is valid.')
+        ($composerConfiguration['license'] ?? null) === ConfigureComposerJsonCommand::LICENSE
+            ? $this->outputSuccess('License ' . $composerConfiguration['license'] . ' is valid.')
             : $this->throwError('License must be "' . ConfigureComposerJsonCommand::LICENSE . '".');
 
         return $this;
     }
 
-    private function validateRequireComponent(array $data): self
+    private function validateRequireComponent(array $composerConfiguration): self
     {
-        if (is_null($data['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
+        if (is_null($composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
             $this->throwError(
                 'It should require '
                 . ComponentConfiguration::getCoreDependencyName()
@@ -76,16 +69,16 @@ final class ValidateComposerJsonCommand extends AbstractCommand
         }
 
         if (
-            $data['require'][ComponentConfiguration::getCoreDependencyName()]
+            $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
                 === ComponentConfiguration::getCoreDependencyVersion()
-            || $data['require'][ComponentConfiguration::getCoreDependencyName()]
+            || $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
                 === 'v' . ComponentConfiguration::getCoreDependencyVersion()
         ) {
             $this->outputSuccess(
                 'Require '
                     . ComponentConfiguration::getCoreDependencyName()
                     . ':'
-                    . $data['require'][ComponentConfiguration::getCoreDependencyName()]
+                    . $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
                     . '.'
             );
         } else {
