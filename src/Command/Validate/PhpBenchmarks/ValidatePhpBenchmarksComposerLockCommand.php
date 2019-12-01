@@ -28,18 +28,18 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
     {
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
-            $this->outputTitle('Validation of ' . Path::removeBenchmarkPathPrefix($composerLockFilePath));
+            $this->outputTitle('Validation of ' . Path::rmPrefix($composerLockFilePath));
 
             if (is_readable($composerLockFilePath) === false) {
                 $this->throwError(
-                    Path::removeBenchmarkPathPrefix($composerLockFilePath)
+                    Path::rmPrefix($composerLockFilePath)
                     . ' does not exist. Call "phpbenchkit '
                     . ComposerUpdateCommand::getDefaultName()
                     . '" to create it.'
                 );
             }
 
-            $this->outputSuccess(Path::removeBenchmarkPathPrefix($composerLockFilePath) . ' exist.');
+            $this->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' exist.');
 
             if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
                 continue;

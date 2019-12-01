@@ -45,7 +45,7 @@ trait PhpVersionArgumentTrait
                         'PHP '
                             . $phpVersion->toString()
                             . ' is not compatible with this benchmark. Enable it into '
-                            . Path::removeBenchmarkPathPrefix(Path::getBenchmarkConfigurationClassPath())
+                            . Path::rmPrefix(Path::getBenchmarkConfigurationClassPath())
                             . '.'
                     :
                         'Invalid PHP version '

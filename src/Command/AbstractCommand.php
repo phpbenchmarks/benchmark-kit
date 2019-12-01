@@ -31,8 +31,6 @@ abstract class AbstractCommand extends Command
 {
     abstract protected function doExecute(): self;
 
-    protected const PHPBENCHMARKS_DIRECTORY = '.phpbenchmarks';
-
     private ?InputInterface $input;
 
     private ?OutputInterface $output;
@@ -124,24 +122,9 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function outputError(string $error): self
     {
-        $this->output->writeln("  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m" . $error . "\e[00m");
+        $this->getOutput()->writeln("  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m" . $error . "\e[00m");
 
         return $this;
-    }
-
-    protected function getBenchmarkKitPath(): string
-    {
-        return realpath(__DIR__ . '/../..');
-    }
-
-    protected function getConfigurationPath(bool $relative = false): string
-    {
-        return ($relative ? null : Path::getBenchmarkPath() . '/') . static::PHPBENCHMARKS_DIRECTORY;
-    }
-
-    protected function getResponseBodyPath(bool $relative = false): string
-    {
-        return $this->getConfigurationPath($relative) . '/responseBody';
     }
 
     protected function renderTemplate(
@@ -164,7 +147,7 @@ abstract class AbstractCommand extends Command
 
         $templateTwigPath = null;
         foreach ($templates as $template) {
-            if (is_readable($this->getBenchmarkKitPath() . '/templates/' . $template) === true) {
+            if (is_readable(Path::getBenchmarkKitPath() . '/templates/' . $template) === true) {
                 $templateTwigPath = $template;
                 break;
             }
@@ -199,7 +182,7 @@ abstract class AbstractCommand extends Command
         (new Filesystem())->dumpFile($filename, $content);
         $this->outputSuccess(
             'File '
-                . Path::removeBenchmarkPathPrefix($filename)
+                . Path::rmPrefix($filename)
                 . ' '
                 . ($fileExists ? 'modified' : 'created')
                 . '.'
@@ -212,7 +195,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory) === false) {
             (new Filesystem())->mkdir($directory);
-            $this->outputSuccess('Directory ' . Path::removeBenchmarkPathPrefix($directory) . ' created.');
+            $this->outputSuccess('Directory ' . Path::rmPrefix($directory) . ' created.');
         }
 
         return $this;
@@ -222,7 +205,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_dir($directory)) {
             (new Filesystem())->remove($directory);
-            $this->outputSuccess('Directory ' . Path::removeBenchmarkPathPrefix($directory) . ' removed.');
+            $this->outputSuccess('Directory ' . Path::rmPrefix($directory) . ' removed.');
         }
 
         return $this;
@@ -232,7 +215,7 @@ abstract class AbstractCommand extends Command
     {
         if (is_file($file)) {
             (new Filesystem())->remove($file);
-            $this->outputSuccess('File ' . Path::removeBenchmarkPathPrefix($file) . ' removed.');
+            $this->outputSuccess('File ' . Path::rmPrefix($file) . ' removed.');
         }
 
         return $this;
@@ -331,13 +314,13 @@ abstract class AbstractCommand extends Command
         if (is_readable($filePath) === false) {
             $this->throwError(
                 'File '
-                    . Path::removeBenchmarkPathPrefix($filePath)
+                    . Path::rmPrefix($filePath)
                     . ' does not exist. Use "phpbenchkit '
                     . $configureCommandName
                     . '" to create it.'
             );
         }
-        $this->outputSuccess('File ' . Path::removeBenchmarkPathPrefix($filePath) . ' exist.');
+        $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exist.');
 
         return $this;
     }

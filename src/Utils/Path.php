@@ -8,12 +8,17 @@ use App\PhpVersion\PhpVersion;
 
 class Path
 {
+    public static function getBenchmarkKitPath(): string
+    {
+        return __DIR__ . '/../..';
+    }
+
     public static function getBenchmarkPath(): string
     {
         return '/var/www/benchmark';
     }
 
-    public static function removeBenchmarkPathPrefix(string $path): string
+    public static function rmPrefix(string $path): string
     {
         return substr($path, strlen(static::getBenchmarkPath()) + 1);
     }
@@ -43,8 +48,13 @@ class Path
         return static::getBenchmarkConfigurationPath() . '/nginx/vhost.conf';
     }
 
-    public static function getInitBenchmarkPath(): string
+    public static function getInitBenchmarkPath(PhpVersion $phpVersion): string
     {
-        return static::getBenchmarkConfigurationPath() . '/initBenchmark.sh';
+        return static::getPhpConfigurationPath($phpVersion) . '/initBenchmark.sh';
+    }
+
+    public static function getResponseBodyPath(PhpVersion $phpVersion): string
+    {
+        return static::getPhpConfigurationPath($phpVersion) . '/responseBody';
     }
 }
