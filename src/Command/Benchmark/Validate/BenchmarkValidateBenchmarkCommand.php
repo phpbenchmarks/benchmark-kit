@@ -2,34 +2,42 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Benchmark;
+namespace App\Command\Benchmark\Validate;
 
 use App\{
     Benchmark\BenchmarkType,
+    Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
+    Command\Benchmark\BenchmarkInitCommand,
+    Command\PrepareBenchmarkCurlTrait,
     Command\Validate\ValidateAllCommand,
     ComponentConfiguration\ComponentConfiguration,
-    Component\ComponentType,
     PhpVersion\PhpVersion,
     Utils\Path
 };
 
-final class BenchmarkValidateCommand extends AbstractCommand
+final class BenchmarkValidateBenchmarkCommand extends AbstractCommand
 {
+    use PrepareBenchmarkCurlTrait;
+
     /** @var string */
-    protected static $defaultName = 'benchmark:validate';
+    protected static $defaultName = 'benchmark:validate:benchmark';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this->setDescription('Validate configurations and features for the benchmark');
+        $this
+            ->setDescription('Validate configurations and features for the benchmark')
+            ->addOption('no-validate')
+            ->addOption('no-url-output');
     }
 
     protected function doExecute(): parent
     {
-        $this->runCommand(ValidateAllCommand::getDefaultName());
+        if ($this->getInput()->getOption('no-validate') === false) {
+            $this->runCommand(ValidateAllCommand::getDefaultName());
+        }
 
         foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
@@ -40,29 +48,17 @@ final class BenchmarkValidateCommand extends AbstractCommand
 
     private function validateForPhpVersion(PhpVersion $phpVersion): self
     {
-        $benchmarkUrl = ComponentConfiguration::getBenchmarkUrl();
-        $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
-            ComponentConfiguration::getComponentType()
-        );
-        if (is_string($showResultsQueryParameter)) {
-            $benchmarkUrl .= (strpos($benchmarkUrl, '?') === false) ? '?' : '&';
-            $benchmarkUrl .= $showResultsQueryParameter;
-        }
-
-        $url = 'http://' . NginxVhostBenchmarkKitCreateCommand::HOST . $benchmarkUrl;
-        $urlWithPort = 'http://'
-            . NginxVhostBenchmarkKitCreateCommand::HOST
-            . ':'
-            . getenv('NGINX_PORT')
-            . $benchmarkUrl;
-
         $this
-            ->runCommand(BenchmarkInitCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
-            ->outputTitle('Validation of ' . $urlWithPort);
+            ->runCommand(
+                BenchmarkInitCommand::getDefaultName(),
+                [
+                    'phpVersion' => $phpVersion->toString(),
+                    '--no-url-output' => $this->getInput()->getOption('no-url-output')
+                ]
+            )
+            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(true));
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $curl = $this->prepareBenchmarkCurl(true);
         $body = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);

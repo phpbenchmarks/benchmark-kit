@@ -7,13 +7,13 @@ namespace App\Command\Validate\Composer;
 use App\{
     Command\AbstractCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
-    Command\GetComposerConfiguration,
+    Command\GetComposerConfigurationTrait,
     ComponentConfiguration\ComponentConfiguration
 };
 
 final class ValidateComposerJsonCommand extends AbstractCommand
 {
-    use GetComposerConfiguration;
+    use GetComposerConfigurationTrait;
 
     /** @var string */
     protected static $defaultName = 'validate:composer:json';

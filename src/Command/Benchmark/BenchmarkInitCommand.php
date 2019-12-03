@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Command\Benchmark;
 
 use App\{
+    Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
     Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\OutputBlockTrait,
+    Command\PhpFpm\PhpFpmRestartCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\PhpVersionArgumentTrait,
     Utils\Path
@@ -29,7 +31,8 @@ final class BenchmarkInitCommand extends AbstractCommand
 
         $this
             ->setDescription('Define PHP version and call initBenchmark.sh')
-            ->addPhpVersionArgument($this);
+            ->addPhpVersionArgument($this)
+            ->addOption('no-url-output');
     }
 
     protected function doExecute(): parent
@@ -49,6 +52,7 @@ final class BenchmarkInitCommand extends AbstractCommand
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
             )
             ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
+            ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
             ->runProcess(['cp', $composerLockFilePath, 'composer.lock'])
             ->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' copied to composer.lock.')
@@ -61,12 +65,16 @@ final class BenchmarkInitCommand extends AbstractCommand
 
     private function outputUrls(): self
     {
+        if ($this->getInput()->getOption('no-url-output') === true) {
+            return $this;
+        }
+
         $this->getOutput()->writeln('');
 
         return $this->outputBlock(
             [
                 '',
-                'You can test your code at this url: ' . NginxVhostBenchmarkKitCreateCommand::getUrl(),
+                'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
                 'View phpinfo() at this url: ' . NginxVhostPhpInfoCreateCommand::getUrl(),
                 ''
             ],

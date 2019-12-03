@@ -205,11 +205,11 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    protected function removeFile(string $file): self
+    protected function removeFile(string $file, bool $rmPrefix = true): self
     {
         if (is_file($file)) {
             (new Filesystem())->remove($file);
-            $this->outputSuccess('File ' . Path::rmPrefix($file) . ' removed.');
+            $this->outputSuccess('File ' . ($rmPrefix ? Path::rmPrefix($file) : $file) . ' removed.');
         }
 
         return $this;
@@ -306,7 +306,7 @@ abstract class AbstractCommand extends Command
     protected function assertFileExist(string $filePath, string $configureCommandName): self
     {
         if (is_readable($filePath) === false) {
-            $this->throwError(
+            throw new \Exception(
                 'File '
                     . Path::rmPrefix($filePath)
                     . ' does not exist. Use "phpbenchkit '

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\{
+    Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
-    Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Validate\ValidateAllCommand,
-    ComponentConfiguration\ComponentConfiguration,
     Version
 };
 use Symfony\Component\Console\{
@@ -41,15 +40,17 @@ final class DefaultCommand extends ListCommand
         );
 
         if ($isConfigurationValid === true) {
-            $this->outputBlock(
-                [
-                    'Current PHP version: ' . $this->getBenchmarkPhpVersion() . '.',
-                    'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.',
-                    'Go to ' . $this->getBenchmarkUrl() . ' to execute your code.'
-                ],
-                $backgroundColor,
-                $output
-            );
+            $lines = [
+                'Current PHP version: ' . $this->getBenchmarkPhpVersion() . '.',
+                'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.'
+            ];
+            try {
+                $lines[] = 'Go to ' . BenchmarkUrlService::getUrlWithPort(false) . ' to execute your code.';
+            } catch (\Throwable $exception) {
+                // Don't add url when impossible
+            }
+
+            $this->outputBlock($lines, $backgroundColor, $output);
         } else {
             $this->outputBlock(
                 [
@@ -88,16 +89,5 @@ final class DefaultCommand extends ListCommand
             )
             ->mustRun()
             ->getOutput();
-    }
-
-    private function getBenchmarkUrl(): string
-    {
-        try {
-            $benchmarkUrl = ComponentConfiguration::getBenchmarkUrl();
-        } catch (\Throwable $throwable) {
-            $benchmarkUrl = null;
-        }
-
-        return 'http://' . NginxVhostBenchmarkKitCreateCommand::HOST . ':' . getenv('NGINX_PORT') . $benchmarkUrl;
     }
 }
