@@ -8,7 +8,7 @@ use App\{
     Utils\Path
 };
 
-trait GetComposerConfiguration
+trait GetComposerConfigurationTrait
 {
     protected function getComposerConfiguration(): array
     {

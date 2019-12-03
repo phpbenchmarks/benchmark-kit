@@ -6,7 +6,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    Command\GetComposerConfiguration,
+    Command\GetComposerConfigurationTrait,
     PhpVersion\PhpVersion,
     PhpVersion\PhpVersionArray,
     Utils\Path
@@ -14,7 +14,7 @@ use App\{
 
 final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCommand
 {
-    use GetComposerConfiguration;
+    use GetComposerConfigurationTrait;
 
     /** @var string */
     protected static $defaultName = 'configure:phpbenchmarks:phpVersionCompatible';
