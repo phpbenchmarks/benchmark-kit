@@ -37,6 +37,13 @@ final class PhpFpmRestartCommand extends AbstractCommand
                 ['sudo', '/usr/sbin/service', 'php' . $phpVersion->toString() . '-fpm', 'restart'],
                 OutputInterface::VERBOSITY_VERBOSE
             )
+            ->runProcessFromShellCommmandLine(
+                'ps -ax | grep -v grep | grep /etc/php/' . $phpVersion->toString() . '/fpm/php-fpm.conf',
+                OutputInterface::VERBOSITY_VERBOSE,
+                null,
+                60,
+                'php' . $phpVersion->toString() . '-fpm is not started. Check your PHP configuration.'
+            )
             ->outputSuccess('PHP-FPM ' . $phpVersion->toString() . ' restarted.');
     }
 }

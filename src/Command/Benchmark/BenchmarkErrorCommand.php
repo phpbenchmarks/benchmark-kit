@@ -25,7 +25,7 @@ final class BenchmarkErrorCommand extends AbstractCommand
     {
         return $this
             ->outputWarning('Output logs contained in ' . static::ERROR_LOG_PATH . '.', false)
-            ->outputWarning('CTRL + C to exit.', false)
+            ->outputWarning('CTRL+C to exit.', false)
             ->runProcess(
                 ['tail', '-f', static::ERROR_LOG_PATH],
                 OutputInterface::VERBOSITY_NORMAL,

@@ -7,34 +7,40 @@ namespace App\Command\Benchmark\Validate;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
-    PhpVersion\PhpVersion
+    PhpVersion\PhpVersion,
+    Utils\Path
 };
 
-final class BenchmarkValidateOpcacheDisabledCommand extends AbstractValidateBenchmarkCommand
+final class BenchmarkValidatePreloadDisabledCommand extends AbstractValidateBenchmarkCommand
 {
     /** @var string */
-    protected static $defaultName = 'benchmark:validate:opcacheDisabled';
+    protected static $defaultName = 'benchmark:validate:preloadDisabled';
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setDescription('Validate benchmark with opcache disabled')
+            ->setDescription('Validate benchmark with preload disabled')
             ->addNoValidateConfigurationOption();
     }
 
     protected function initBenchmark(PhpVersion $phpVersion): parent
     {
+        if ($phpVersion->isPreloadAvailable() === false) {
+            return $this;
+        }
+
         return $this
             ->runCommand(
                 BenchmarkInitCommand::getDefaultName(),
                 [
                     'phpVersion' => $phpVersion->toString(),
                     '--no-url-output' => true,
-                    '--opcache-enabled' => false
+                    '--opcache-enabled' => true,
+                    '--preload-enabled' => false
                 ]
             )
-            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(false) . ' with opcache disabled');
+            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(true) . ' with preload disabled.');
     }
 }

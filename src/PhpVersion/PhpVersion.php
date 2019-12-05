@@ -49,4 +49,9 @@ final class PhpVersion
     {
         return $this->getMajor() . '.' . $this->getMinor();
     }
+
+    public function isPreloadAvailable(): bool
+    {
+        return $this->getMajor() >= 7 && $this->getMinor() >= 4;
+    }
 }

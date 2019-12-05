@@ -37,7 +37,8 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->setDescription('Define PHP version and call initBenchmark.sh')
             ->addPhpVersionArgument($this)
             ->addOption('no-url-output')
-            ->addOption('opcache-enabled', null, InputOption::VALUE_OPTIONAL);
+            ->addOption('opcache-enabled', null, InputOption::VALUE_OPTIONAL)
+            ->addOption('preload-enabled', null, InputOption::VALUE_OPTIONAL);
     }
 
     protected function doExecute(): parent
@@ -48,8 +49,10 @@ final class BenchmarkInitCommand extends AbstractCommand
         $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
         $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
+        $opcacheEnabled = $this->configureOpcache($phpVersion);
+
         return $this
-            ->configureOpcache($phpVersion)
+            ->configurePreload($phpVersion, $opcacheEnabled)
             ->runCommand(
                 NginxVhostBenchmarkKitCreateCommand::getDefaultName(),
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
@@ -70,7 +73,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputUrls();
     }
 
-    private function configureOpcache(PhpVersion $phpVersion): self
+    private function configureOpcache(PhpVersion $phpVersion): bool
     {
         $this->outputTitle('Configure opcache');
         $opcacheEnabled = $this->getInput()->getOption('opcache-enabled');
@@ -84,6 +87,36 @@ final class BenchmarkInitCommand extends AbstractCommand
             $this->removeFile(Path::getOpcacheDisableIniPath($phpVersion), false);
         } else {
             $this->filePutContent(Path::getOpcacheDisableIniPath($phpVersion), 'opcache.enable=Off', false);
+        }
+
+        return $opcacheEnabled;
+    }
+
+    private function configurePreload(PhpVersion $phpVersion, bool $opcacheEnabled): self
+    {
+        if ($opcacheEnabled === true && $phpVersion->isPreloadAvailable() === true) {
+            $this->outputTitle('Configure preload');
+            $preloadEnabled = $this->getInput()->getOption('preload-enabled');
+            if ($preloadEnabled === null) {
+                $preloadEnabled = $this->askConfirmationQuestion('Enable preload?');
+            } elseif (is_string($preloadEnabled)) {
+                $preloadEnabled = $preloadEnabled === 'true';
+            }
+
+            if ($preloadEnabled) {
+                $this->filePutContent(
+                    Path::getPreloadIniPath($phpVersion),
+                    'opcache.preload='
+                        . Path::getPreloadPath($phpVersion)
+                        . "\n"
+                        . 'opcache.preload_user=phpbenchmarks',
+                    false
+                );
+            } else {
+                $this->removeFile(Path::getPreloadIniPath($phpVersion), false);
+            }
+        } else {
+            $this->removeFile(Path::getPreloadIniPath($phpVersion), false);
         }
 
         return $this;

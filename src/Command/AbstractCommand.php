@@ -20,7 +20,10 @@ use Symfony\Component\Console\{
     Question\Question
 };
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\{
+    Exception\ProcessFailedException,
+    Process
+};
 use Twig\{
     Environment,
     Loader\FilesystemLoader
@@ -222,14 +225,48 @@ abstract class AbstractCommand extends Command
         string $cwd = null,
         ?int $timeout = 60
     ): self {
-        (new Process($commands, $cwd ?? Path::getBenchmarkPath(), null, null, $timeout))
-            ->mustRun(
-                function (string $type, string $line) use ($outputVerbosity) {
-                    if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {
-                        $this->getOutput()->writeln($line);
-                    }
+        return $this->processMustRun(
+            new Process($commands, $cwd ?? Path::getBenchmarkPath(), null, null, $timeout),
+            $outputVerbosity
+        );
+    }
+
+    /** @return $this */
+    protected function runProcessFromShellCommmandLine(
+        string $shellCommandLine,
+        int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
+        string $cwd = null,
+        ?int $timeout = 60,
+        string $error = null
+    ): self {
+        return $this->processMustRun(
+            Process::fromShellCommandline($shellCommandLine, $cwd, null, null, $timeout),
+            $outputVerbosity,
+            $error
+        );
+    }
+
+    /** @return $this */
+    protected function processMustRun(
+        Process $process,
+        int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
+        string $error = null
+    ): self {
+        $processResult = $process->run(
+            function (string $type, string $line) use ($outputVerbosity) {
+                if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {
+                    $this->getOutput()->writeln($line);
                 }
-            );
+            }
+        );
+
+        if ($processResult !== 0) {
+            if (is_string($error)) {
+                throw new \Exception($error);
+            } else {
+                throw new ProcessFailedException($process);
+            }
+        }
 
         return $this;
     }

@@ -7,8 +7,7 @@ namespace App\Command\Benchmark\Validate;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
-    PhpVersion\PhpVersion,
-    Utils\Path
+    PhpVersion\PhpVersion
 };
 
 final class BenchmarkValidateBenchmarkCommand extends AbstractValidateBenchmarkCommand
@@ -25,15 +24,16 @@ final class BenchmarkValidateBenchmarkCommand extends AbstractValidateBenchmarkC
             ->addNoValidateConfigurationOption();
     }
 
-    protected function initBenchmark(PhpVersion $phpVersion): AbstractValidateBenchmarkCommand
+    protected function initBenchmark(PhpVersion $phpVersion): parent
     {
         return $this
-            ->removeFile(Path::getOpcacheDisableIniPath($phpVersion))
             ->runCommand(
                 BenchmarkInitCommand::getDefaultName(),
                 [
                     'phpVersion' => $phpVersion->toString(),
-                    '--no-url-output' => true
+                    '--no-url-output' => true,
+                    '--opcache-enabled' => true,
+                    '--preload-enabled' => true
                 ]
             )
             ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(true));

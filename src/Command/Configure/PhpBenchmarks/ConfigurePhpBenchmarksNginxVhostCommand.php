@@ -18,7 +18,7 @@ final class ConfigurePhpBenchmarksNginxVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . Path::getVhostPath());
+        $this->setDescription('Create ' . Path::rmPrefix(Path::getVhostPath()));
     }
 
     protected function doExecute(): AbstractCommand
