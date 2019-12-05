@@ -6,8 +6,7 @@ namespace App\Command;
 
 use App\{
     ComponentConfiguration\ComponentConfiguration,
-    PhpVersion\PhpVersion,
-    Utils\Path
+    PhpVersion\PhpVersion
 };
 use Symfony\Component\Console\{
     Command\Command,

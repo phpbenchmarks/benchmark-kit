@@ -9,7 +9,7 @@ if [ $(which docker || false) ]; then
         -e PHPCS_BOOTSTRAP=/var/phpcs.bootstrap.php \
         -v ${PROJECT_DIRECTORY}:/var/phpcs:ro \
         --entrypoint=/var/phpcs/bin/phpcs \
-        steevanb/php-code-sniffs:3.0.0
+        steevanb/php-code-sniffs:3.0.1
 else
     php -d memory_limit=512M /var/steevanb/php-code-sniffs/vendor/bin/phpcs \
         --warning-severity=0 \

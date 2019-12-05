@@ -62,4 +62,9 @@ class Path
     {
         return static::getBenchmarkPath() . '/.circleci';
     }
+
+    public static function getOpcacheDisableIniPath(PhpVersion $phpVersion): string
+    {
+        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d/99-disable-opcache.ini';
+    }
 }

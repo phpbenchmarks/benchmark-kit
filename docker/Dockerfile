@@ -61,10 +61,18 @@ RUN \
 # We have some commands to do in this directory with phpbenchmarks user.
 # So instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
 # change this directory mod to 777
-RUN chmod 777 /etc/nginx/sites-enabled
-RUN chmod -R 777 /var/log/nginx
+RUN \
+    chmod -R 777 \
+        /etc/nginx/sites-enabled \
+        /var/log/nginx \
+        /etc/php/5.6/fpm/conf.d \
+        /etc/php/7.0/fpm/conf.d \
+        /etc/php/7.1/fpm/conf.d \
+        /etc/php/7.2/fpm/conf.d \
+        /etc/php/7.3/fpm/conf.d \
+        /etc/php/7.4/fpm/conf.d
 
-# Create phpbenchmarks user, we assume final host user id will be 1000 (should be 99% of the time)
+# Create phpbenchmarks user, we assume final host user id will be 1000 (should be it 99% of the time)
 RUN \
     useradd -ms /bin/bash --uid 1000 phpbenchmarks \
     && usermod -a -G www-data phpbenchmarks

@@ -9,17 +9,13 @@ use App\{
     Command\AbstractCommand,
     Command\Benchmark\BenchmarkInitCommand,
     Command\Configure\ConfigureEntryPointCommand,
-    Command\PrepareBenchmarkCurlTrait,
-    Command\Validate\ValidateAllCommand,
     ComponentConfiguration\ComponentConfiguration,
     PhpVersion\PhpVersion,
     Utils\Path
 };
 
-final class BenchmarkValidateStatisticsCommand extends AbstractCommand
+final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmarkCommand
 {
-    use PrepareBenchmarkCurlTrait;
-
     private const REQUIRE_CODE = 'require(\'/var/benchmark-kit/benchmark/statistics.php\');';
     private const STATS_RESULTS_FILE_PATH = '/tmp/phpbenchmarks-stats-php';
 
@@ -31,22 +27,25 @@ final class BenchmarkValidateStatisticsCommand extends AbstractCommand
         parent::configure();
 
         $this
-            ->setDescription('Validate PHP statistics')
-            ->addOption('no-validate')
-            ->addOption('no-url-output');
+            ->setDescription('Validate benchmark statistics (memory, declared classes etc)')
+            ->addNoValidateConfigurationOption();
     }
 
-    protected function doExecute(): parent
+    protected function initBenchmark(PhpVersion $phpVersion): parent
     {
-        if ($this->getInput()->getOption('no-validate') === false) {
-            $this->runCommand(ValidateAllCommand::getDefaultName());
-        }
-
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
-            $this->validateForPhpVersion($phpVersion);
-        }
-
-        return $this;
+        return $this
+            ->outputTitle('Prepare benchmark')
+            ->removeFile(Path::getOpcacheDisableIniPath($phpVersion))
+            ->removeFile(static::STATS_RESULTS_FILE_PATH, false)
+            ->replaceInEntryPoint(ConfigureEntryPointCommand::STATS_COMMENT, static::REQUIRE_CODE)
+            ->runCommand(
+                BenchmarkInitCommand::getDefaultName(),
+                [
+                    'phpVersion' => $phpVersion->toString(),
+                    '--no-url-output' => true
+                ]
+            )
+            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrlWithPort(false));
     }
 
     protected function onError(): AbstractCommand
@@ -54,50 +53,7 @@ final class BenchmarkValidateStatisticsCommand extends AbstractCommand
         return $this->replaceInEntryPoint(static::REQUIRE_CODE, ConfigureEntryPointCommand::STATS_COMMENT);
     }
 
-    private function validateForPhpVersion(PhpVersion $phpVersion): self
-    {
-        $this
-            ->outputTitle('Prepare benchmark')
-            ->removeFile(static::STATS_RESULTS_FILE_PATH, false)
-            ->replaceInEntryPoint(ConfigureEntryPointCommand::STATS_COMMENT, static::REQUIRE_CODE)
-            ->runCommand(
-                BenchmarkInitCommand::getDefaultName(),
-                [
-                    'phpVersion' => $phpVersion->toString(),
-                    '--no-url-output' => $this->getInput()->getOption('no-url-output')
-                ]
-            )
-            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrlWithPort(false));
-
-        $curl = $this->prepareBenchmarkCurl(false);
-
-        curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpCode !== 200) {
-            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
-        }
-
-        $this->outputSuccess('Http code is 200.');
-
-        return $this
-            ->validateStatistics()
-            ->replaceInEntryPoint(static::REQUIRE_CODE, ConfigureEntryPointCommand::STATS_COMMENT);
-    }
-
-    private function replaceInEntryPoint(string $search, string $replace): self
-    {
-        $entryPointFilePath = Path::getBenchmarkPath() . '/' . ComponentConfiguration::getEntryPointFileName();
-        $entryPointContent = file_get_contents($entryPointFilePath);
-
-        return $this->filePutContent(
-            $entryPointFilePath,
-            str_replace($search, $replace, $entryPointContent)
-        );
-    }
-
-    private function validateStatistics(): self
+    protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
         if (is_readable(static::STATS_RESULTS_FILE_PATH) === false) {
             throw new \Exception(static::STATS_RESULTS_FILE_PATH . ' does not exists or is not readable.');
@@ -115,6 +71,19 @@ final class BenchmarkValidateStatisticsCommand extends AbstractCommand
             }
         }
 
-        return $this->outputSuccess('Statistics found.');
+        return $this
+            ->outputSuccess('Statistics found.')
+            ->replaceInEntryPoint(static::REQUIRE_CODE, ConfigureEntryPointCommand::STATS_COMMENT);
+    }
+
+    private function replaceInEntryPoint(string $search, string $replace): self
+    {
+        $entryPointFilePath = Path::getBenchmarkPath() . '/' . ComponentConfiguration::getEntryPointFileName();
+        $entryPointContent = file_get_contents($entryPointFilePath);
+
+        return $this->filePutContent(
+            $entryPointFilePath,
+            str_replace($search, $replace, $entryPointContent)
+        );
     }
 }
