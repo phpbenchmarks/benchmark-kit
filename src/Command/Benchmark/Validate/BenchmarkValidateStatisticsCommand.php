@@ -35,14 +35,15 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
     {
         return $this
             ->outputTitle('Prepare benchmark')
-            ->removeFile(Path::getOpcacheDisableIniPath($phpVersion))
             ->removeFile(static::STATS_RESULTS_FILE_PATH, false)
             ->replaceInEntryPoint(ConfigureEntryPointCommand::STATS_COMMENT, static::REQUIRE_CODE)
             ->runCommand(
                 BenchmarkInitCommand::getDefaultName(),
                 [
                     'phpVersion' => $phpVersion->toString(),
-                    '--no-url-output' => true
+                    '--no-url-output' => true,
+                    '--opcache-enabled' => true,
+                    '--preload-enabled' => false
                 ]
             )
             ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrlWithPort(false));

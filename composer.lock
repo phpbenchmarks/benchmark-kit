@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98f9e7afa5009a0fd8057f8724f4acb5",
+    "content-hash": "f7f2e4ebc91989d9babec6ba5289aa41",
     "packages": [
         {
             "name": "psr/container",
@@ -1682,6 +1682,38 @@
             "time": "2019-11-01T11:05:21+00:00"
         },
         {
+            "name": "steevanb/php-backtrace",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/steevanb/php-backtrace.git",
+                "reference": "b64a8e3abd8134a967b13d0e9de02bb862ee4557"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/steevanb/php-backtrace/zipball/b64a8e3abd8134a967b13d0e9de02bb862ee4557",
+                "reference": "b64a8e3abd8134a967b13d0e9de02bb862ee4557",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "DebugBacktrace.php",
+                    "DebugBacktraceHtml.php",
+                    "DebugBacktraceConsole.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nice debug_backtrace() dump, with call and code preview",
+            "time": "2017-03-30T13:42:32+00:00"
+        },
+        {
             "name": "symfony/finder",
             "version": "v4.4.0",
             "source": {
@@ -2009,7 +2041,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-json": "*",
         "ext-curl": "*"
     },

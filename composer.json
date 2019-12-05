@@ -14,6 +14,7 @@
         "php": "^7.4",
         "ext-json": "*",
         "ext-curl": "*",
+        "ext-zend-opcache": "*",
         "symfony/console": "4.3.*",
         "symfony/validator": "4.3.*",
         "symfony/process": "4.3.*",
@@ -24,7 +25,8 @@
     "require-dev": {
         "symfony/var-dumper": "4.3.*",
         "phpstan/phpstan": "0.11.*",
-        "maglnet/composer-require-checker": "2.0.*"
+        "maglnet/composer-require-checker": "2.0.*",
+        "steevanb/php-backtrace": "2.0.*"
     },
     "autoload": {
         "psr-4": {

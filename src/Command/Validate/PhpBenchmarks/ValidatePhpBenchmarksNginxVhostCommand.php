@@ -20,7 +20,7 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate ' . Path::getVhostPath());
+        $this->setDescription('Validate ' . Path::rmPrefix(Path::getVhostPath()));
     }
 
     protected function doExecute(): parent
