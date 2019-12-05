@@ -3,7 +3,7 @@ version: '2.1'
 jobs:
     phpcs:
         docker:
-            - image: steevanb/php-code-sniffs:3.0.0
+            - image: steevanb/php-code-sniffs:3.0.1
         working_directory: /var/phpcs
         steps:
             - checkout

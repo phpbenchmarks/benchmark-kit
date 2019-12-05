@@ -170,13 +170,13 @@ abstract class AbstractCommand extends Command
             );
     }
 
-    protected function filePutContent(string $filename, string $content): self
+    protected function filePutContent(string $filename, string $content, bool $rmPathPrefix = true): self
     {
         $fileExists = file_exists($filename);
         (new Filesystem())->dumpFile($filename, $content);
         $this->outputSuccess(
             'File '
-                . Path::rmPrefix($filename)
+                . ($rmPathPrefix ? Path::rmPrefix($filename) : $filename)
                 . ' '
                 . ($fileExists ? 'modified' : 'created')
                 . '.'

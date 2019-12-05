@@ -13,9 +13,13 @@ use App\{
     Command\PhpFpm\PhpFpmRestartCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\PhpVersionArgumentTrait,
+    PhpVersion\PhpVersion,
     Utils\Path
 };
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\{
+    Input\InputOption,
+    Output\OutputInterface
+};
 
 final class BenchmarkInitCommand extends AbstractCommand
 {
@@ -32,17 +36,20 @@ final class BenchmarkInitCommand extends AbstractCommand
         $this
             ->setDescription('Define PHP version and call initBenchmark.sh')
             ->addPhpVersionArgument($this)
-            ->addOption('no-url-output');
+            ->addOption('no-url-output')
+            ->addOption('opcache-enabled', null, InputOption::VALUE_OPTIONAL);
     }
 
     protected function doExecute(): parent
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
+        $this->assertPhpVersionArgument($this);
+
         $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
         $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
         return $this
-            ->assertPhpVersionArgument($this)
+            ->configureOpcache($phpVersion)
             ->runCommand(
                 NginxVhostBenchmarkKitCreateCommand::getDefaultName(),
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
@@ -61,6 +68,25 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
             ->removeFile(Path::getBenchmarkPath() . '/composer.lock')
             ->outputUrls();
+    }
+
+    private function configureOpcache(PhpVersion $phpVersion): self
+    {
+        $this->outputTitle('Configure opcache');
+        $opcacheEnabled = $this->getInput()->getOption('opcache-enabled');
+        if ($opcacheEnabled === null) {
+            $opcacheEnabled = $this->askConfirmationQuestion('Enable opcache?');
+        } elseif (is_string($opcacheEnabled)) {
+            $opcacheEnabled = $opcacheEnabled === 'true';
+        }
+
+        if ($opcacheEnabled) {
+            $this->removeFile(Path::getOpcacheDisableIniPath($phpVersion), false);
+        } else {
+            $this->filePutContent(Path::getOpcacheDisableIniPath($phpVersion), 'opcache.enable=Off', false);
+        }
+
+        return $this;
     }
 
     private function outputUrls(): self

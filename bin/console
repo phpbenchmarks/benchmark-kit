@@ -10,6 +10,7 @@ use App\{
     Command\Benchmark\BenchmarkInitCommand,
     Command\Benchmark\Validate\BenchmarkValidateAllCommand,
     Command\Benchmark\Validate\BenchmarkValidateBenchmarkCommand,
+    Command\Benchmark\Validate\BenchmarkValidateOpcacheDisabledCommand,
     Command\Benchmark\Validate\BenchmarkValidateStatisticsCommand,
     Command\Composer\ComposerUpdateCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
@@ -52,6 +53,7 @@ $application->add(new BenchmarkInitCommand());
 
 $application->add(new BenchmarkValidateAllCommand());
 $application->add(new BenchmarkValidateBenchmarkCommand());
+$application->add(new BenchmarkValidateOpcacheDisabledCommand());
 $application->add(new BenchmarkValidateStatisticsCommand());
 
 $application->add(new ComposerUpdateCommand());
