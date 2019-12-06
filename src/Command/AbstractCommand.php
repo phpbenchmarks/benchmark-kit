@@ -352,6 +352,6 @@ abstract class AbstractCommand extends Command
             );
         }
 
-        return $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exist.');
+        return $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exists.');
     }
 }

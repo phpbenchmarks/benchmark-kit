@@ -6,7 +6,7 @@ namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{Command\AbstractCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path};
 
 final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
@@ -23,7 +23,7 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $this
                 ->outputTitle('Validation of ' . Path::rmPrefix(Path::getInitBenchmarkPath($phpVersion)))
                 ->assertFileExist(

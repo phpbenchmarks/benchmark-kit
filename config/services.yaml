@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Command\:
+        resource: '../src/Command/**/*Command.php'

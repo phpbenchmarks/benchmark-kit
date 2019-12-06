@@ -9,7 +9,7 @@ use App\{
     Command\AbstractCommand,
     Command\Benchmark\BenchmarkInitCommand,
     Command\Configure\ConfigureEntryPointCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -79,7 +79,7 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
 
     private function replaceInEntryPoint(string $search, string $replace): self
     {
-        $entryPointFilePath = Path::getBenchmarkPath() . '/' . ComponentConfiguration::getEntryPointFileName();
+        $entryPointFilePath = Path::getBenchmarkPath() . '/' . Benchmark::getBenchmarkEntryPoint();
         $entryPointContent = file_get_contents($entryPointFilePath);
 
         return $this->filePutContent(

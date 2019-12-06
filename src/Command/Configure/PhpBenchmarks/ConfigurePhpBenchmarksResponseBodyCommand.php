@@ -7,7 +7,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -27,14 +27,14 @@ final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
     {
         $this->outputTitle('Creation of responseBody files');
 
-        foreach (ComponentConfiguration::getIncompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getIncompatiblesPhpVersions() as $phpVersion) {
             $this->removeDirectory(Path::getResponseBodyPath($phpVersion));
         }
 
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $this->removeDirectory(Path::getResponseBodyPath($phpVersion));
 
-            foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
+            foreach (BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType()) as $file) {
                 $this->writeFileFromTemplate(
                     Path::rmPrefix(Path::getResponseBodyPath($phpVersion)) . '/' . $file
                 );

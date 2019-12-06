@@ -8,7 +8,7 @@ use App\{
     Command\AbstractCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
     Command\GetComposerConfigurationTrait,
-    ComponentConfiguration\ComponentConfiguration
+    Benchmark\Benchmark
 };
 
 final class ValidateComposerJsonCommand extends AbstractCommand
@@ -59,33 +59,33 @@ final class ValidateComposerJsonCommand extends AbstractCommand
 
     private function validateRequireComponent(array $composerConfiguration): self
     {
-        if (is_null($composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()] ?? null)) {
+        if (is_null($composerConfiguration['require'][Benchmark::getCoreDependencyName()] ?? null)) {
             throw new \Exception(
                 'It should require '
-                    . ComponentConfiguration::getCoreDependencyName()
+                    . Benchmark::getCoreDependencyName()
                     . '. See README.md for more informations.'
             );
         }
 
         if (
-            $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
-                === ComponentConfiguration::getCoreDependencyVersion()
-            || $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
-                === 'v' . ComponentConfiguration::getCoreDependencyVersion()
+            $composerConfiguration['require'][Benchmark::getCoreDependencyName()]
+                === Benchmark::getCoreDependencyVersion()
+            || $composerConfiguration['require'][Benchmark::getCoreDependencyName()]
+                === 'v' . Benchmark::getCoreDependencyVersion()
         ) {
             $this->outputSuccess(
                 'Require '
-                    . ComponentConfiguration::getCoreDependencyName()
+                    . Benchmark::getCoreDependencyName()
                     . ':'
-                    . $composerConfiguration['require'][ComponentConfiguration::getCoreDependencyName()]
+                    . $composerConfiguration['require'][Benchmark::getCoreDependencyName()]
                     . '.'
             );
         } else {
             throw new \Exception(
                 'It should require '
-                    . ComponentConfiguration::getCoreDependencyName()
-                    . ': '
-                    . ComponentConfiguration::getCoreDependencyVersion()
+                    . Benchmark::getCoreDependencyName()
+                    . ':'
+                    . Benchmark::getCoreDependencyVersion()
                     . '. See README.md for more informations.'
             );
         }

@@ -8,7 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Command\AbstractCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -26,11 +26,11 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
 
     protected function doExecute(): parent
     {
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $responseBodyPath = Path::getResponseBodyPath($phpVersion);
 
             $this->outputTitle('Validation of ' . Path::rmPrefix($responseBodyPath) . ' files');
-            foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
+            foreach (BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType()) as $file) {
                 $this->validateResponseBodyFile($responseBodyPath . '/' . $file);
             }
         }
@@ -42,7 +42,7 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
     {
         $this->assertFileExist($filePath, ConfigurePhpBenchmarksResponseBodyCommand::getDefaultName());
 
-        $minSize = BenchmarkType::getResponseBodyFileMinSize(ComponentConfiguration::getBenchmarkType());
+        $minSize = BenchmarkType::getResponseBodyFileMinSize(Benchmark::getBenchmarkType());
         $minSizeFormated = number_format($minSize, 0, '.', ',');
         $fileSize = filesize($filePath);
         if ($fileSize < $minSize) {

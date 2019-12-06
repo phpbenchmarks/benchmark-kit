@@ -28,9 +28,9 @@ class Path
         return static::getBenchmarkPath() . '/.phpbenchmarks';
     }
 
-    public static function getBenchmarkConfigurationClassPath(): string
+    public static function getConfigFilePath(): string
     {
-        return static::getBenchmarkConfigurationPath() . '/Configuration.php';
+        return static::getBenchmarkConfigurationPath() . '/config.yml';
     }
 
     public static function getPhpConfigurationPath(PhpVersion $phpVersion): string

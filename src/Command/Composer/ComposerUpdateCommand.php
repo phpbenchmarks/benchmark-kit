@@ -8,7 +8,7 @@ use App\{
     Command\AbstractCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,7 +29,7 @@ final class ComposerUpdateCommand extends AbstractCommand
     {
         $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
             $this

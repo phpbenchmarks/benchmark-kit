@@ -6,7 +6,6 @@ namespace App\Benchmark;
 
 use App\{
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration,
     SourceCodeUrl\SourceCodeUrl
 };
 
@@ -255,13 +254,13 @@ class BenchmarkType
     {
         $ids = static::getConfiguration($type, 'sourceCodeUrlIds');
 
-        return $ids[$componentType ?? ComponentConfiguration::getComponentType()];
+        return $ids[$componentType ?? Benchmark::getComponentType()];
     }
 
     /** @return mixed */
     protected static function getConfiguration(?int $type, string $name)
     {
-        $type = $type ?? ComponentConfiguration::getBenchmarkType();
+        $type = $type ?? Benchmark::getBenchmarkType();
 
         if (array_key_exists($type, static::CONFIGURATIONS) === false) {
             throw new \Exception('Unknown benchmark type ' . $type . '.');

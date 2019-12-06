@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\{
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     PhpVersion\PhpVersion
 };
 use Symfony\Component\Console\{
@@ -37,7 +37,7 @@ trait PhpVersionArgumentTrait
             return $this;
         }
 
-        if (ComponentConfiguration::getCompatiblesPhpVersions()->exists($phpVersion) === false) {
+        if (Benchmark::getCompatiblesPhpVersions()->exists($phpVersion) === false) {
             throw new \Exception(
                 PhpVersion::getAll()->exists($phpVersion)
                     ?
@@ -46,7 +46,7 @@ trait PhpVersionArgumentTrait
                         'Invalid PHP version '
                             . $phpVersion->toString()
                             . '. Available versions: '
-                            . ComponentConfiguration::getCompatiblesPhpVersions()->toString()
+                            . Benchmark::getCompatiblesPhpVersions()->toString()
                             . '.'
             );
         }

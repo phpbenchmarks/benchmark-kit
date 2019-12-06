@@ -6,7 +6,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -24,7 +24,7 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
 
     protected function doExecute(): AbstractCommand
     {
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
             $initBenchmarkRelativePath = Path::rmPrefix($initBenchmarkPath);
 

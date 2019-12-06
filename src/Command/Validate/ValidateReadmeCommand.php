@@ -7,7 +7,7 @@ namespace App\Command\Validate;
 use App\{
     Command\AbstractCommand,
     Command\Configure\ConfigureReadmeCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -41,10 +41,10 @@ final class ValidateReadmeCommand extends AbstractCommand
         $expectedContent = $this->renderTemplate(
             'README.md',
             [
-                'componentName' => ComponentConfiguration::getComponentName(),
-                'componentSlug' => ComponentConfiguration::getComponentSlug(),
-                'coreDependencyMajorVersion' => (string) ComponentConfiguration::getCoreDependencyMajorVersion(),
-                'coreDependencyMinorVersion' => (string) ComponentConfiguration::getCoreDependencyMinorVersion()
+                'componentName' => Benchmark::getComponentName(),
+                'componentSlug' => Benchmark::getComponentSlug(),
+                'coreDependencyMajorVersion' => (string) Benchmark::getCoreDependencyMajorVersion(),
+                'coreDependencyMinorVersion' => (string) Benchmark::getCoreDependencyMinorVersion()
             ]
         );
 

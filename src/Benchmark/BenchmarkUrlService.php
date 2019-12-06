@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Benchmark;
 
-use App\{
-    Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration
-};
+use App\Component\ComponentType;
 
 class BenchmarkUrlService
 {
@@ -20,11 +17,11 @@ class BenchmarkUrlService
 
     public static function getUrlWithoutHost(bool $showResult): string
     {
-        $return = ComponentConfiguration::getBenchmarkUrl();
+        $return = Benchmark::getBenchmarkUrl();
 
         if ($showResult === true) {
             $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
-                ComponentConfiguration::getComponentType()
+                Benchmark::getComponentType()
             );
             if (is_string($showResultsQueryParameter)) {
                 $return .= (strpos($return, '?') === false) ? '?' : '&';

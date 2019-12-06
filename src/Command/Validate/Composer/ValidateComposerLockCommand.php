@@ -25,9 +25,9 @@ final class ValidateComposerLockCommand extends AbstractCommand
     protected function onError(): AbstractCommand
     {
         return $this->outputWarning(
-            'You can use phpbenchkit '
+            'You can use "phpbenchkit '
                 . ComposerUpdateCommand::getDefaultName()
-                . ' to update your dependencies for each compatible PHP version.'
+                . '" to update your dependencies for each compatible PHP version.'
         );
     }
 

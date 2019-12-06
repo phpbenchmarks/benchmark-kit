@@ -8,7 +8,7 @@ use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
-    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigurationClassCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksPhpVersionCompatibleCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
@@ -30,7 +30,7 @@ final class ConfigureAllCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         return $this
-            ->runCommand(ConfigurePhpBenchmarksConfigurationClassCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksConfigCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksPhpVersionCompatibleCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
