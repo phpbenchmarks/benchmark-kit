@@ -53,6 +53,7 @@ final class BenchmarkInitCommand extends AbstractCommand
 
         return $this
             ->configurePreload($phpVersion, $opcacheEnabled)
+            ->configurePhpIni($phpVersion)
             ->runCommand(
                 NginxVhostBenchmarkKitCreateCommand::getDefaultName(),
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
@@ -73,6 +74,14 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputUrls();
     }
 
+    private function configurePhpIni(PhpVersion $phpVersion): self
+    {
+        return $this->filePutContent(
+            $this->getPhpConfPath($phpVersion) . '/97-benchmark.ini',
+            file_get_contents(Path::getPhpIniPath($phpVersion))
+        );
+    }
+
     private function configureOpcache(PhpVersion $phpVersion): bool
     {
         $this->outputTitle('Configure opcache');
@@ -83,10 +92,11 @@ final class BenchmarkInitCommand extends AbstractCommand
             $opcacheEnabled = $opcacheEnabled === 'true';
         }
 
+        $opCacheIniPath = $this->getPhpConfPath($phpVersion) . '/99-disable-opcache.ini';
         if ($opcacheEnabled) {
-            $this->removeFile(Path::getOpcacheDisableIniPath($phpVersion), false);
+            $this->removeFile($opCacheIniPath, false);
         } else {
-            $this->filePutContent(Path::getOpcacheDisableIniPath($phpVersion), 'opcache.enable=Off', false);
+            $this->filePutContent($opCacheIniPath, 'opcache.enable=Off', false);
         }
 
         return $opcacheEnabled;
@@ -94,6 +104,8 @@ final class BenchmarkInitCommand extends AbstractCommand
 
     private function configurePreload(PhpVersion $phpVersion, bool $opcacheEnabled): self
     {
+        $preloadIniPath = $this->getPhpConfPath($phpVersion) . '/98-preload.ini';
+
         if ($opcacheEnabled === true && $phpVersion->isPreloadAvailable() === true) {
             $this->outputTitle('Configure preload');
             $preloadEnabled = $this->getInput()->getOption('preload-enabled');
@@ -105,7 +117,7 @@ final class BenchmarkInitCommand extends AbstractCommand
 
             if ($preloadEnabled) {
                 $this->filePutContent(
-                    Path::getPreloadIniPath($phpVersion),
+                    $preloadIniPath,
                     'opcache.preload='
                         . Path::getPreloadPath($phpVersion)
                         . "\n"
@@ -113,10 +125,10 @@ final class BenchmarkInitCommand extends AbstractCommand
                     false
                 );
             } else {
-                $this->removeFile(Path::getPreloadIniPath($phpVersion), false);
+                $this->removeFile($preloadIniPath, false);
             }
         } else {
-            $this->removeFile(Path::getPreloadIniPath($phpVersion), false);
+            $this->removeFile($preloadIniPath, false);
         }
 
         return $this;
@@ -140,5 +152,10 @@ final class BenchmarkInitCommand extends AbstractCommand
             'green',
             $this->getOutput()
         );
+    }
+
+    private function getPhpConfPath(PhpVersion $phpVersion): string
+    {
+        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d/';
     }
 }

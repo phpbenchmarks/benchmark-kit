@@ -63,18 +63,13 @@ class Path
         return static::getBenchmarkPath() . '/.circleci';
     }
 
-    public static function getOpcacheDisableIniPath(PhpVersion $phpVersion): string
-    {
-        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d/99-disable-opcache.ini';
-    }
-
     public static function getPreloadPath(PhpVersion $phpVersion): string
     {
         return static::getPhpConfigurationPath($phpVersion) . '/preload.php';
     }
 
-    public static function getPreloadIniPath(PhpVersion $phpVersion): string
+    public static function getPhpIniPath(PhpVersion $phpVersion): string
     {
-        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d/98-preload.ini';
+        return static::getPhpConfigurationPath($phpVersion) . '/php.ini';
     }
 }
