@@ -8,7 +8,7 @@ use App\{
     Command\AbstractCommand,
     Command\Composer\ComposerUpdateCommand,
     Component\ComponentType,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -26,7 +26,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
 
     protected function doExecute(): AbstractCommand
     {
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
             $this->outputTitle('Validation of ' . Path::rmPrefix($composerLockFilePath));
 
@@ -39,9 +39,9 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
                 );
             }
 
-            $this->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' exist.');
+            $this->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' exists.');
 
-            if (ComponentConfiguration::getComponentType() === ComponentType::PHP) {
+            if (Benchmark::getComponentType() === ComponentType::PHP) {
                 continue;
             }
 
@@ -66,18 +66,18 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
     {
         $packageFound = false;
         foreach ($data['packages'] as $package) {
-            if ($package['name'] === ComponentConfiguration::getCoreDependencyName()) {
+            if ($package['name'] === Benchmark::getCoreDependencyName()) {
                 $packageFound = true;
 
                 if (
-                    $package['version'] !== ComponentConfiguration::getCoreDependencyVersion()
-                    && $package['version'] !== 'v' . ComponentConfiguration::getCoreDependencyVersion()
+                    $package['version'] !== Benchmark::getCoreDependencyVersion()
+                    && $package['version'] !== 'v' . Benchmark::getCoreDependencyVersion()
                 ) {
                     throw new \Exception(
                         'Package '
-                            . ComponentConfiguration::getCoreDependencyName()
+                            . Benchmark::getCoreDependencyName()
                             . ' version should be '
-                            . ComponentConfiguration::getCoreDependencyVersion()
+                            . Benchmark::getCoreDependencyVersion()
                             . ', '
                             . $package['version']
                             . ' found.'
@@ -85,9 +85,9 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
                 } else {
                     $this->outputSuccess(
                         'Package '
-                            . ComponentConfiguration::getCoreDependencyName()
+                            . Benchmark::getCoreDependencyName()
                             . ' version is '
-                            . ComponentConfiguration::getCoreDependencyVersion()
+                            . Benchmark::getCoreDependencyVersion()
                             . '.'
                     );
                     break;
@@ -96,7 +96,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
         }
 
         if ($packageFound === false) {
-            throw new \Exception('Package ' . ComponentConfiguration::getCoreDependencyName() . ' not found.');
+            throw new \Exception('Package ' . Benchmark::getCoreDependencyName() . ' not found.');
         }
 
         return $this;

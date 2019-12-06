@@ -1,0 +1,8 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
+    php_errors:
+        log: true

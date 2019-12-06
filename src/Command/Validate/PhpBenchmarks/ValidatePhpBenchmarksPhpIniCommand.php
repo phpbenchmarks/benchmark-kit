@@ -6,7 +6,7 @@ namespace App\Command\Validate\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 
@@ -25,7 +25,7 @@ final class ValidatePhpBenchmarksPhpIniCommand extends AbstractCommand
     protected function doExecute(): parent
     {
         $this->outputTitle('Validation of php.ini');
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $iniPath = Path::getPhpIniPath($phpVersion);
             if (is_readable(Path::getPhpIniPath($phpVersion))) {
                 $this->outputSuccess(Path::rmPrefix($iniPath) . ' exists and is readable.');

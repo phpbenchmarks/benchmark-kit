@@ -9,8 +9,8 @@ use App\{
     Command\Validate\Composer\ValidateComposerJsonCommand,
     Command\Validate\Composer\ValidateComposerLockCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksComposerLockCommand,
-    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
-    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigSourceCodeUrlsCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksPhpIniCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
@@ -39,14 +39,14 @@ final class ValidateAllCommand extends AbstractCommand
             ->runCommand(ValidateGitignoreCommand::getDefaultName())
             ->runCommand(ValidateReadmeCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksComposerLockCommand::getDefaultName())
-            ->runCommand(ValidatePhpBenchmarksConfigurationClassCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksConfigCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksInitBenchmarkCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksPhpIniCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksResponseBodyCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksNginxVhostCommand::getDefaultName());
 
         if ($this->skipSourceCodeUrls() === false) {
-            $this->runCommand(ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand::getDefaultName());
+            $this->runCommand(ValidatePhpBenchmarksConfigSourceCodeUrlsCommand::getDefaultName());
         }
 
         return $this;

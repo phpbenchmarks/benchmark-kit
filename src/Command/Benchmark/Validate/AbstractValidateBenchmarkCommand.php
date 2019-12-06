@@ -9,7 +9,7 @@ use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
     Command\Validate\ValidateAllCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -29,7 +29,7 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
             $this->runCommand(ValidateAllCommand::getDefaultName());
         }
 
-        foreach (ComponentConfiguration::getCompatiblesPhpVersions() as $phpVersion) {
+        foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $this->validateForPhpVersion($phpVersion);
         }
 
@@ -62,7 +62,7 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
         $validated = false;
         $responseBodyPath = Path::getResponseBodyPath($phpVersion);
 
-        foreach (BenchmarkType::getResponseBodyFiles(ComponentConfiguration::getBenchmarkType()) as $file) {
+        foreach (BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType()) as $file) {
             $responseFile = $responseBodyPath . '/' . $file;
             if ($body === file_get_contents($responseFile)) {
                 $this->outputSuccess('Body is equal to ' . Path::rmPrefix($responseFile) . ' content.');

@@ -6,7 +6,7 @@ namespace App\Command\Configure\Composer;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration,
+    Benchmark\Benchmark,
     Utils\Path
 };
 use Symfony\Component\Console\Input\InputOption;
@@ -20,7 +20,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
 
     public static function getComposerName(): string
     {
-        return 'phpbenchmarks/' . ComponentConfiguration::getComponentSlug();
+        return 'phpbenchmarks/' . Benchmark::getComponentSlug();
     }
 
     protected function configure(): void
@@ -74,13 +74,13 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
 
     private function configureVersions(object $data): self
     {
-        $dependencyVersion = ComponentConfiguration::getCoreDependencyMajorVersion()
+        $dependencyVersion = Benchmark::getCoreDependencyMajorVersion()
             . '.'
-            . ComponentConfiguration::getCoreDependencyMinorVersion()
+            . Benchmark::getCoreDependencyMinorVersion()
             . '.'
-            . ComponentConfiguration::getCoreDependencyPatchVersion();
+            . Benchmark::getCoreDependencyPatchVersion();
 
-        $data->require->{ComponentConfiguration::getCoreDependencyName()} = $dependencyVersion;
+        $data->require->{Benchmark::getCoreDependencyName()} = $dependencyVersion;
 
         $minorDependencies = $this->getInput()->getOption('minor-dependencies');
         if (is_string($minorDependencies)) {

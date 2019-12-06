@@ -6,7 +6,7 @@ namespace App\Command\Configure;
 
 use App\{
     Command\AbstractCommand,
-    ComponentConfiguration\ComponentConfiguration
+    Benchmark\Benchmark
 };
 
 final class ConfigureReadmeCommand extends AbstractCommand
@@ -28,10 +28,10 @@ final class ConfigureReadmeCommand extends AbstractCommand
             ->writeFileFromTemplate(
                 'README.md',
                 [
-                    'componentName' => ComponentConfiguration::getComponentName(),
-                    'componentSlug' => ComponentConfiguration::getComponentSlug(),
-                    'coreDependencyMajorVersion' => (string) ComponentConfiguration::getCoreDependencyMajorVersion(),
-                    'coreDependencyMinorVersion' => (string) ComponentConfiguration::getCoreDependencyMinorVersion()
+                    'componentName' => Benchmark::getComponentName(),
+                    'componentSlug' => Benchmark::getComponentSlug(),
+                    'coreDependencyMajorVersion' => (string) Benchmark::getCoreDependencyMajorVersion(),
+                    'coreDependencyMinorVersion' => (string) Benchmark::getCoreDependencyMinorVersion()
                 ]
             );
     }

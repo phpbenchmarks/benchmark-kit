@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Component;
 
-use App\ComponentConfiguration\ComponentConfiguration;
+use App\Benchmark\Benchmark;
 
 class ComponentType
 {
@@ -63,7 +63,7 @@ class ComponentType
 
     protected static function getConfiguration(int $type = null): array
     {
-        $type = $type ?? ComponentConfiguration::getComponentType();
+        $type = $type ?? Benchmark::getComponentType();
 
         if (array_key_exists($type, static::TYPES) === false) {
             throw new \Exception('Unknown component type "' . $type . '".');
