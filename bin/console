@@ -37,6 +37,7 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksPhpIniCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksNginxVhostCommand,
     Command\Validate\ValidateAllCommand,
@@ -89,6 +90,7 @@ $application->add(new ValidatePhpBenchmarksComposerLockCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassCommand());
 $application->add(new ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand());
 $application->add(new ValidatePhpBenchmarksInitBenchmarkCommand());
+$application->add(new ValidatePhpBenchmarksPhpIniCommand());
 $application->add(new ValidatePhpBenchmarksResponseBodyCommand());
 $application->add(new ValidatePhpBenchmarksNginxVhostCommand());
 

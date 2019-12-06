@@ -12,6 +12,7 @@ use App\{
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksConfigurationClassGetSourceCodeUrlsCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksInitBenchmarkCommand,
+    Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksPhpIniCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksResponseBodyCommand,
     Command\Validate\PhpBenchmarks\ValidatePhpBenchmarksNginxVhostCommand
 };
@@ -40,6 +41,7 @@ final class ValidateAllCommand extends AbstractCommand
             ->runCommand(ValidatePhpBenchmarksComposerLockCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksConfigurationClassCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksInitBenchmarkCommand::getDefaultName())
+            ->runCommand(ValidatePhpBenchmarksPhpIniCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksResponseBodyCommand::getDefaultName())
             ->runCommand(ValidatePhpBenchmarksNginxVhostCommand::getDefaultName());
 
