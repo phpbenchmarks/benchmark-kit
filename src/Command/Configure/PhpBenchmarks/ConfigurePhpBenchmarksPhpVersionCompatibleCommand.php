@@ -42,6 +42,9 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
                 $this
                     ->createDirectory($phpConfigurationPath)
                     ->writeFileFromTemplate(Path::rmPrefix($phpConfigurationPath) . '/php.ini');
+                if ($phpVersion->isPreloadAvailable()) {
+                    $this->writeFileFromTemplate(Path::rmPrefix(Path::getPreloadPath($phpVersion)));
+                }
             } else {
                 $this->removeDirectory($phpConfigurationPath);
             }

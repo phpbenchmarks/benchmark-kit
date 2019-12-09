@@ -145,7 +145,7 @@ final class BenchmarkInitCommand extends AbstractCommand
         return $this->outputBlock(
             [
                 '',
-                'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
+                'You can test your code at this url: ' . BenchmarkUrlService::getUrlWithPort(false),
                 'View phpinfo() at this url: ' . NginxVhostPhpInfoCreateCommand::getUrl(),
                 ''
             ],
