@@ -14,7 +14,7 @@ jobs:
                 command: /var/entrypoint.sh --nginx-as-service
             - run:
                 name: "benchmark:validate"
-                command: "/var/benchmark-kit/bin/console benchmark:validate"
+                command: "/var/benchmark-kit/bin/console benchmark:validate:all"
 
 workflows:
     version: '2.1'

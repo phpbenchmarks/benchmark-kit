@@ -97,14 +97,20 @@ RUN \
 RUN /usr/bin/update-alternatives --set php /usr/bin/php7.4
 
 # Copy benchmark kit source code
+COPY benchmark/statistics.php /var/benchmark-kit/benchmark/statistics.php
 COPY bin/console /var/benchmark-kit/bin/console
+COPY config /var/benchmark-kit/config
 COPY documentation /var/benchmark-kit/documentation
 COPY src /var/benchmark-kit/src
 COPY templates /var/benchmark-kit/templates
 COPY vendor /var/benchmark-kit/vendor
+COPY .env /var/benchmark-kit/.env
 COPY changelog.md /var/benchmark-kit/changelog.md
 COPY README.md /var/benchmark-kit/README.md
 COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
+RUN \
+    mkdir /var/benchmark-kit/var \
+    && chmod -R 777 /var/benchmark-kit/var
 
 # Configure nginx default page
 COPY docker/html /var/www/html
