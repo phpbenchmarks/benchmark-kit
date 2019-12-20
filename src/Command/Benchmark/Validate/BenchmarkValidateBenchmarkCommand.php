@@ -36,6 +36,6 @@ final class BenchmarkValidateBenchmarkCommand extends AbstractValidateBenchmarkC
                     '--preload-enabled' => true
                 ]
             )
-            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(true));
+            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrl(true));
     }
 }

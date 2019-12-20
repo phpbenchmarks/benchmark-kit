@@ -41,6 +41,6 @@ final class BenchmarkValidatePreloadDisabledCommand extends AbstractValidateBenc
                     '--preload-enabled' => false
                 ]
             )
-            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(true) . ' with preload disabled.');
+            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrl(true) . ' with preload disabled.');
     }
 }
