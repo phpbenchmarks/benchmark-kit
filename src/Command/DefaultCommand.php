@@ -7,6 +7,7 @@ namespace App\Command;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
+    Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\Validate\ValidateAllCommand,
     Version
 };
@@ -45,6 +46,7 @@ final class DefaultCommand extends ListCommand
                 'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.'
             ];
             try {
+                $lines[] = 'Go to ' . NginxVhostPhpInfoCreateCommand::getUrl() . ' to view phpinfo().';
                 $lines[] = 'Go to ' . BenchmarkUrlService::getUrlWithPort(false) . ' to execute your code.';
             } catch (\Throwable $exception) {
                 // Don't add url when impossible

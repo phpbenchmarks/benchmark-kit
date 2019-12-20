@@ -30,7 +30,12 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
             ->assertFileExist(Path::getVhostPath(), ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->assertContainsVariables(
                 new StringArray(
-                    ['____HOST____', '____INSTALLATION_PATH____', '____PHP_FPM_SOCK____']
+                    [
+                        '____PORT____',
+                        '____HOST____',
+                        '____INSTALLATION_PATH____',
+                        '____PHP_FPM_SOCK____'
+                    ]
                 )
             );
     }

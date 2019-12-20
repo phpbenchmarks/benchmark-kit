@@ -79,14 +79,16 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
         }
 
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
+        $content = str_replace('____PORT____', $_ENV['NGINX_PORT'], $content);
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
-        $writed = $this->filePutContent($vhostFile, $content);
+        $writed = $this->filePutContent($vhostFile, $content, false);
         if ($writed === false) {
             throw new \Exception('Error while writing ' . $vhostFile . '.');
         }
 
         return $this
+            ->outputSuccess('____PORT____ replaced by ' . $_ENV['NGINX_PORT'] . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
     }
 
