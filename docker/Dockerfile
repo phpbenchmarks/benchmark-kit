@@ -50,7 +50,6 @@ RUN \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.3" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/bin/update-alternatives --set php /usr/bin/php7.4" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload" >> /etc/sudoers.d/phpbenchmarks \
-    && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php5.6-fpm restart" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.0-fpm restart" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.1-fpm restart" >> /etc/sudoers.d/phpbenchmarks \

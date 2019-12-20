@@ -27,7 +27,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
             'http://'
             . static::HOST
             . ':'
-            . getenv('NGINX_PORT');
+            . $_ENV['NGINX_PORT'];
     }
 
     protected function configure(): void

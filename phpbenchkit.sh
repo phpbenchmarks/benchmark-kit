@@ -65,6 +65,9 @@ function startContainer() {
     echo "defaultSourceCodePath=$sourceCodePath" >> $DEFAULT_CONFIG_PATH
     echo "defaultNginxPort=$nginxPort" >> $DEFAULT_CONFIG_PATH
 
+    echo "NGINX_PORT=$nginxPort" > ${ROOT_DIR}/.env.local
+    echo "HOST_SOURCE_CODE_PATH=$sourceCodePath" >> ${ROOT_DIR}/.env.local
+
     if [ $kitAsVolume == true ]; then
         kitAsVolumeDockerRunParameter="-v $ROOT_DIR:/var/benchmark-kit"
     else
@@ -80,8 +83,6 @@ function startContainer() {
         -p 127.0.0.1:$nginxPort:80 \
         -v $sourceCodePath:/var/www/benchmark \
         $kitAsVolumeDockerRunParameter \
-        -e NGINX_PORT=$nginxPort \
-        -e HOST_SOURCE_CODE_PATH=$sourceCodePath \
         $DOCKER_IMAGE_NAME \
         > /dev/null
 

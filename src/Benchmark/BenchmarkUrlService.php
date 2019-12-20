@@ -38,7 +38,7 @@ class BenchmarkUrlService
             'http://'
             . static::HOST
             . ':'
-            . getenv('NGINX_PORT')
+            . $_ENV['NGINX_PORT']
             . static::getUrlWithoutHost($showResult);
     }
 }
