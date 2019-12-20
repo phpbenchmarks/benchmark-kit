@@ -47,7 +47,7 @@ final class DefaultCommand extends ListCommand
             ];
             try {
                 $lines[] = 'Go to ' . NginxVhostPhpInfoCreateCommand::getUrl() . ' to view phpinfo().';
-                $lines[] = 'Go to ' . BenchmarkUrlService::getUrlWithPort(false) . ' to execute your code.';
+                $lines[] = 'Go to ' . BenchmarkUrlService::getUrl(false) . ' to execute your code.';
             } catch (\Throwable $exception) {
                 // Don't add url when impossible
             }

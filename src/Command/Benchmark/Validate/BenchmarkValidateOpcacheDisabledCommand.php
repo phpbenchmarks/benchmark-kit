@@ -35,6 +35,6 @@ final class BenchmarkValidateOpcacheDisabledCommand extends AbstractValidateBenc
                     '--opcache-enabled' => false
                 ]
             )
-            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrlWithPort(false) . ' with opcache disabled');
+            ->outputTitle('Validation of ' . BenchmarkUrlService::getUrl(false) . ' with opcache disabled');
     }
 }

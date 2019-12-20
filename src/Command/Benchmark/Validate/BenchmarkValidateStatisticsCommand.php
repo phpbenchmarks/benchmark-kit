@@ -46,7 +46,7 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
                     '--preload-enabled' => false
                 ]
             )
-            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrlWithPort(false));
+            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrl(false));
     }
 
     protected function onError(): AbstractCommand

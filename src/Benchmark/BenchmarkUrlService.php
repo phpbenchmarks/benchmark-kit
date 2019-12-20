@@ -12,7 +12,12 @@ class BenchmarkUrlService
 
     public static function getUrl(bool $showResult): string
     {
-        return 'http://' . static::HOST . static::getUrlWithoutHost($showResult);
+        return
+            'http://'
+            . static::HOST
+            . ':'
+            . $_ENV['NGINX_PORT']
+            . static::getUrlWithoutHost($showResult);
     }
 
     public static function getUrlWithoutHost(bool $showResult): string
@@ -30,15 +35,5 @@ class BenchmarkUrlService
         }
 
         return $return;
-    }
-
-    public static function getUrlWithPort(bool $showResult): string
-    {
-        return
-            'http://'
-            . static::HOST
-            . ':'
-            . $_ENV['NGINX_PORT']
-            . static::getUrlWithoutHost($showResult);
     }
 }
