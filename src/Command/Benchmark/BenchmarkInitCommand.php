@@ -166,6 +166,6 @@ final class BenchmarkInitCommand extends AbstractCommand
 
     private function getPhpConfPath(PhpVersion $phpVersion): string
     {
-        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d/';
+        return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d';
     }
 }
