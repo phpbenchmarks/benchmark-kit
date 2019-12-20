@@ -80,7 +80,7 @@ function startContainer() {
         -d \
         --name=$CONTAINER_NAME \
         --rm \
-        -p 127.0.0.1:$nginxPort:80 \
+        -p 127.0.0.1:$nginxPort:$nginxPort \
         -v $sourceCodePath:/var/www/benchmark \
         $kitAsVolumeDockerRunParameter \
         $DOCKER_IMAGE_NAME \
