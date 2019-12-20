@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $opcachePreloadUser: '%env(OPCACHE_PRELOAD_USER)%'
 
     App\Command\:
         resource: '../src/Command/**/*Command.php'

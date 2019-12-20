@@ -29,6 +29,15 @@ final class BenchmarkInitCommand extends AbstractCommand
     /** @var string */
     protected static $defaultName = 'benchmark:init';
 
+    private string $opcachePreloadUser;
+
+    public function __construct(string $opcachePreloadUser)
+    {
+        parent::__construct();
+
+        $this->opcachePreloadUser = $opcachePreloadUser;
+    }
+
     protected function configure(): void
     {
         parent::configure();
@@ -121,7 +130,8 @@ final class BenchmarkInitCommand extends AbstractCommand
                     'opcache.preload='
                         . Path::getPreloadPath($phpVersion)
                         . "\n"
-                        . 'opcache.preload_user=phpbenchmarks',
+                        . 'opcache.preload_user='
+                        . $this->opcachePreloadUser,
                     false
                 );
             } else {
