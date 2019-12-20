@@ -5,8 +5,6 @@ jobs:
         docker:
             - image: phpbenchmarks/benchmark-kit:4
         working_directory: /var/www/benchmark
-        environment:
-            NGINX_PORT: 80
         steps:
             - checkout
             - run:

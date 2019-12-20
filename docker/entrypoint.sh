@@ -11,6 +11,12 @@ service php7.2-fpm start
 service php7.3-fpm start
 service php7.4-fpm start
 
+source /var/benchmark-kit/.env
+if [ -f "/var/benchmark-kit/.env.local" ]; then
+    source /var/benchmark-kit/.env.local
+fi
+sed -i "s/____PORT____/${NGINX_PORT}/g" /etc/nginx/sites-enabled/default
+
 if [ "$1" == "--nginx-as-service" ]; then
     service nginx start
 else

@@ -85,10 +85,13 @@ final class BenchmarkInitCommand extends AbstractCommand
 
     private function configurePhpIni(PhpVersion $phpVersion): self
     {
-        return $this->filePutContent(
-            $this->getPhpConfPath($phpVersion) . '/97-benchmark.ini',
-            file_get_contents(Path::getPhpIniPath($phpVersion))
-        );
+        return $this
+            ->outputTitle('Configure php.ini')
+            ->filePutContent(
+                $this->getPhpConfPath($phpVersion) . '/97-benchmark.ini',
+                file_get_contents(Path::getPhpIniPath($phpVersion)),
+                false
+            );
     }
 
     private function configureOpcache(PhpVersion $phpVersion): bool
