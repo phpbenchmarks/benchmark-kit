@@ -21,6 +21,7 @@ readonly CONTAINER_NAME="phpbenchmarks_benchmark-kit"
 readonly SELFUPDATE_CONTAINER_NAME="${CONTAINER_NAME}_selfupdate"
 readonly DEFAULT_CONFIG_PATH="/tmp/phpbenchmarkkit.default.sh"
 readonly DOCKER_IMAGE_NAME="phpbenchmarks/benchmark-kit:4"
+readonly BENCHMARK_KIT_PATH="/var/benchmark-kit"
 
 function addHost() {
     local HOST="$1"
@@ -65,11 +66,8 @@ function startContainer() {
     echo "defaultSourceCodePath=$sourceCodePath" >> $DEFAULT_CONFIG_PATH
     echo "defaultNginxPort=$nginxPort" >> $DEFAULT_CONFIG_PATH
 
-    echo "NGINX_PORT=$nginxPort" > ${ROOT_DIR}/.env.local
-    echo "HOST_SOURCE_CODE_PATH=$sourceCodePath" >> ${ROOT_DIR}/.env.local
-
     if [ $kitAsVolume == true ]; then
-        kitAsVolumeDockerRunParameter="-v $ROOT_DIR:/var/benchmark-kit"
+        kitAsVolumeDockerRunParameter="-v $ROOT_DIR:$BENCHMARK_KIT_PATH"
     else
         kitAsVolumeDockerRunParameter=""
     fi
@@ -86,6 +84,9 @@ function startContainer() {
         $DOCKER_IMAGE_NAME \
         > /dev/null
 
+    docker exec -it $CONTAINER_NAME /bin/bash -c "echo NGINX_PORT=$nginxPort > $BENCHMARK_KIT_PATH/.env.local"
+    docker exec -it $CONTAINER_NAME /bin/bash -c "echo HOST_SOURCE_CODE_PATH=$sourceCodePath >> $BENCHMARK_KIT_PATH/.env.local"
+
     containerStarted=true
 }
 
@@ -97,7 +98,7 @@ function updatePhpBenchKitScript()
         --name=$SELFUPDATE_CONTAINER_NAME \
         --rm \
         $DOCKER_IMAGE_NAME
-    docker cp $SELFUPDATE_CONTAINER_NAME:/var/benchmark-kit/phpbenchkit.sh $ROOT_DIR/$(basename $0)
+    docker cp $SELFUPDATE_CONTAINER_NAME:$BENCHMARK_KIT_PATH/phpbenchkit.sh $ROOT_DIR/$(basename $0)
     docker stop $SELFUPDATE_CONTAINER_NAME
 }
 
@@ -147,7 +148,7 @@ fi
 if [ $selfUpdate == true ]; then
     stopContainer
     set +e
-    docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep phpbenchmarks/benchmark-kit)
+    docker rmi --force $(docker images --format '{{.Repository}}:{{.Tag}}' | grep phpbenchmarks/benchmark-kit)
     set -e
     updatePhpBenchKitScript
     exit 0

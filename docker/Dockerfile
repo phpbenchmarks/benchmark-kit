@@ -100,6 +100,7 @@ COPY benchmark/statistics.php /var/benchmark-kit/benchmark/statistics.php
 COPY bin/console /var/benchmark-kit/bin/console
 COPY config /var/benchmark-kit/config
 COPY documentation /var/benchmark-kit/documentation
+COPY public /var/benchmark-kit/public
 COPY src /var/benchmark-kit/src
 COPY templates /var/benchmark-kit/templates
 COPY vendor /var/benchmark-kit/vendor
