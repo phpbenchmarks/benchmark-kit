@@ -32,7 +32,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
     {
         $this->outputTitle('Validate entrypoint');
 
-        $entryPointRelativeFilePath = Benchmark::getBenchmarkEntryPoint();
+        $entryPointRelativeFilePath = Benchmark::getSourceCodeEntryPoint();
         $entryPointFilePath = Path::getBenchmarkPath() . '/' . $entryPointRelativeFilePath;
 
         if (is_readable($entryPointFilePath) === false) {

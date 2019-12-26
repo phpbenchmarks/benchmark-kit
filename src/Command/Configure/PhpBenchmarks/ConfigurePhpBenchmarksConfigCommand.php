@@ -31,7 +31,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
 
         $componentId = $this->getComponentId();
         $benchmarkType = $this->getBenchmarkType($componentId);
-        $benchmarkEntryPoint = $this->askQuestion('Entry point file name?', 'public/index.php');
+        $sourceCodeEntryPoint = $this->askQuestion('Entry point file name?', 'public/index.php');
         $benchmarkUrl = $this->askQuestion(
             'Benchmark url, after host?',
             BenchmarkType::getDefaultBenchmarkUrl($benchmarkType)
@@ -50,6 +50,9 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
             $currentConfig = [];
         }
 
+        $sourceCode = $currentConfig['sourceCode'] ?? [];
+        $sourceCode['entryPoint'] = $sourceCodeEntryPoint;
+
         return $this->filePutContent(
             Path::getConfigFilePath(),
             Yaml::dump(
@@ -57,10 +60,9 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
                     'component' => ['id' => $componentId],
                     'benchmark' => [
                         'type' => $benchmarkType,
-                        'entryPoint' => $benchmarkEntryPoint,
                         'url' => $benchmarkUrl
                     ],
-                    'sourceCode' => $currentConfig['sourceCode'] ?? [],
+                    'sourceCode' => $sourceCode,
                     'coreDependency' => [
                         'name' => $coreDependency['name'],
                         'version' => $coreDependency['version']

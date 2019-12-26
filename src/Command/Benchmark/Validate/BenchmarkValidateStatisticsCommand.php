@@ -79,7 +79,7 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
 
     private function replaceInEntryPoint(string $search, string $replace): self
     {
-        $entryPointFilePath = Path::getBenchmarkPath() . '/' . Benchmark::getBenchmarkEntryPoint();
+        $entryPointFilePath = Path::getBenchmarkPath() . '/' . Benchmark::getSourceCodeEntryPoint();
         $entryPointContent = file_get_contents($entryPointFilePath);
 
         return $this->filePutContent(

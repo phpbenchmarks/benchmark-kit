@@ -28,7 +28,7 @@ class Benchmark
 
     protected static ?int $benchmarkType;
 
-    protected static ?string $benchmarkEntryPoint;
+    protected static ?string $sourceCodeEntryPoint;
 
     protected static ?string $benchmarkUrl;
 
@@ -43,6 +43,13 @@ class Benchmark
     protected static ?int $coreDependencyMinorVersion;
 
     protected static ?int $coreDependencyPatchVersion;
+
+    public static function getComponentId(): int
+    {
+        static::load();
+
+        return static::$componentId;
+    }
 
     public static function getComponentName(): string
     {
@@ -72,18 +79,18 @@ class Benchmark
         return static::$benchmarkType;
     }
 
-    public static function getBenchmarkEntryPoint(): string
-    {
-        static::load();
-
-        return static::$benchmarkEntryPoint;
-    }
-
     public static function getBenchmarkUrl(): string
     {
         static::load();
 
         return static::$benchmarkUrl;
+    }
+
+    public static function getSourceCodeEntryPoint(): string
+    {
+        static::load();
+
+        return static::$sourceCodeEntryPoint;
     }
 
     public static function getSourceCodeUrls(): StringArray
@@ -152,6 +159,15 @@ class Benchmark
         return $return;
     }
 
+    public static function getResponseBodySize(PhpVersion $phpVersion): int
+    {
+        return filesize(
+            Path::getResponseBodyPath($phpVersion)
+                . '/'
+                . BenchmarkType::getResponseBodyFiles(static::getBenchmarkType())[0]
+        );
+    }
+
     protected static function isCompatibleWithPhp(PhpVersion $phpVersion): bool
     {
         return is_dir(Path::getPhpConfigurationPath($phpVersion));
@@ -173,9 +189,9 @@ class Benchmark
             static::$componentType = Component::getType(static::$componentId);
 
             static::$benchmarkType = $config['benchmark']['type'];
-            static::$benchmarkEntryPoint = $config['benchmark']['entryPoint'];
             static::$benchmarkUrl = $config['benchmark']['url'];
 
+            static::$sourceCodeEntryPoint = $config['sourceCode']['entryPoint'];
             static::$sourceCodeUrls = new StringArray($config['sourceCode']['urls'] ?? []);
 
             static::$coreDependencyName = $config['coreDependency']['name'];
