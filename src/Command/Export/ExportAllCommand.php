@@ -67,9 +67,7 @@ final class ExportAllCommand extends Command
                         'minorVersion' => Benchmark::getCoreDependencyMinorVersion(),
                         'patchVersion' => Benchmark::getCoreDependencyPatchVersion()
                     ],
-                    'phpVersions' => [
-                        $this->getPhpVersions(),
-                    ],
+                    'phpVersions' => $this->getPhpVersions(),
                     'nginx' => [
                         'vhost' => Path::rmPrefix(Path::getVhostPath())
                     ],
