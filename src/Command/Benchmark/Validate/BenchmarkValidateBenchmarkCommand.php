@@ -19,9 +19,7 @@ final class BenchmarkValidateBenchmarkCommand extends AbstractValidateBenchmarkC
     {
         parent::configure();
 
-        $this
-            ->setDescription('Validate benchmark')
-            ->addNoValidateConfigurationOption();
+        $this->setDescription('Validate benchmark');
     }
 
     protected function initBenchmark(PhpVersion $phpVersion): parent

@@ -29,7 +29,7 @@ class BenchmarkUrlService
 
     public static function getStatisticsUrl(bool $showStatistics): string
     {
-        $url = 'http://' . static::STATISTICS_HOST . ':' . $_ENV['NGINX_PORT'];
+        $url = 'http://' . static::STATISTICS_HOST . ':' . $_ENV['NGINX_PORT'] . Benchmark::getBenchmarkUrl();
 
         if ($showStatistics === true) {
             $url = static::appendToQueryString($url, 'phpBenchmarksShowStatistics=true');

@@ -7,14 +7,13 @@ namespace App\Command\Benchmark\Validate;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
-    PhpVersion\PhpVersion
+    PhpVersion\PhpVersion,
+    Utils\Path
 };
 use steevanb\SymfonyOptionsResolver\OptionsResolver;
 
 final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmarkCommand
 {
-    private const STATISTICS_FILE_PATH = '/tmp/phpbenchmarks-statistics.json';
-
     /** @var string */
     protected static $defaultName = 'benchmark:validate:statistics';
 
@@ -22,16 +21,14 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
     {
         parent::configure();
 
-        $this
-            ->setDescription('Validate benchmark statistics (memory, declared classes etc)')
-            ->addNoValidateConfigurationOption();
+        $this->setDescription('Validate benchmark statistics (memory, declared classes etc)');
     }
 
     protected function initBenchmark(PhpVersion $phpVersion): parent
     {
         return $this
             ->outputTitle('Prepare benchmark')
-            ->removeFile(static::STATISTICS_FILE_PATH, false)
+            ->removeFile(Path::getStatisticsPath(), false)
             ->runCommand(
                 BenchmarkInitCommand::getDefaultName(),
                 [
@@ -51,14 +48,14 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
 
     protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
-        if (is_readable(static::STATISTICS_FILE_PATH) === false) {
-            throw new \Exception(static::STATISTICS_FILE_PATH . ' does not exists or is not readable.');
+        if (is_readable(Path::getStatisticsPath()) === false) {
+            throw new \Exception(Path::getStatisticsPath() . ' does not exists or is not readable.');
         }
         $this->outputSuccess('Statistics JSON file found.');
 
         try {
             $statistics = json_decode(
-                file_get_contents(static::STATISTICS_FILE_PATH),
+                file_get_contents(Path::getStatisticsPath()),
                 true,
                 512,
                 JSON_THROW_ON_ERROR

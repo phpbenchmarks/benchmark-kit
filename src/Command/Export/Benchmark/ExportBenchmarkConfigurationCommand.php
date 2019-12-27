@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Export;
+namespace App\Command\Export\Benchmark;
 
 use App\{
     Benchmark\Benchmark,
@@ -16,17 +16,17 @@ use Symfony\Component\Console\{
     Output\OutputInterface
 };
 
-final class ExportAllCommand extends Command
+final class ExportBenchmarkConfigurationCommand extends Command
 {
     /** @var string */
-    protected static $defaultName = 'export:all';
+    protected static $defaultName = 'export:benchmark:configuration';
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setDescription('Export all configurations in JSON')
+            ->setDescription('Export benchmark configuration in JSON')
             ->addOption('pretty');
     }
 
