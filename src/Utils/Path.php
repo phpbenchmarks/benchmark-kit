@@ -72,4 +72,9 @@ class Path
     {
         return static::getPhpConfigurationPath($phpVersion) . '/php.ini';
     }
+
+    public static function getStatisticsPath(): string
+    {
+        return '/tmp/phpbenchmarks-statistics.json';
+    }
 }

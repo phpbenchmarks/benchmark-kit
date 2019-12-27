@@ -19,9 +19,7 @@ final class BenchmarkValidateOpcacheDisabledCommand extends AbstractValidateBenc
     {
         parent::configure();
 
-        $this
-            ->setDescription('Validate benchmark with opcache disabled')
-            ->addNoValidateConfigurationOption();
+        $this->setDescription('Validate benchmark with opcache disabled');
     }
 
     protected function initBenchmark(PhpVersion $phpVersion): parent

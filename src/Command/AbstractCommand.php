@@ -14,6 +14,7 @@ use Symfony\Component\Console\{
     Command\Command,
     Input\ArrayInput,
     Input\InputInterface,
+    Output\NullOutput,
     Output\OutputInterface,
     Question\ChoiceQuestion,
     Question\ConfirmationQuestion,
@@ -286,7 +287,7 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function runCommand(string $name, array $arguments = []): self
+    protected function runCommand(string $name, array $arguments = [], bool $showOutput = true): self
     {
         if ($this->skipSourceCodeUrls()) {
             $arguments['--skip-source-code-urls'] = true;
@@ -295,7 +296,7 @@ abstract class AbstractCommand extends Command
         $returnCode = $this
             ->getApplication()
             ->find($name)
-            ->run(new ArrayInput($arguments), $this->output);
+            ->run(new ArrayInput($arguments), $showOutput ? $this->output : new NullOutput());
         if ($returnCode > 0) {
             throw new HiddenException();
         }

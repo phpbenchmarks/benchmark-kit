@@ -13,14 +13,25 @@ use App\{
     PhpVersion\PhpVersion,
     Utils\Path
 };
+use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
 {
     abstract protected function initBenchmark(PhpVersion $phpVersion): self;
 
-    protected function addNoValidateConfigurationOption(): self
+    protected function configure(): void
     {
-        return $this->addOption('no-validate-configuration');
+        parent::configure();
+
+        $this
+            ->addOption('no-validate-configuration')
+            ->addOption(
+                'init-calls',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Calls to benchmark url before doing anything to init caches',
+                0
+            );
     }
 
     protected function doExecute(): parent
@@ -40,16 +51,17 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
     {
         $this->initBenchmark($phpVersion);
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $body = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpCode !== 200) {
-            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
+        $initCalls = $this->getInput()->getOption('init-calls');
+        if (is_numeric($initCalls) && $initCalls > 0) {
+            for ($i = 0; $i < $this->getInput()->getOption('init-calls'); $i++) {
+                $this->callBenchmarkUrl();
+            }
+            $this->outputSuccess(
+                "Init caches with $initCalls call" . ($initCalls > 1 ? 's' : null) . ' to benchmark url.'
+            );
         }
+
+        $body = $this->callBenchmarkUrl();
 
         return $this
             ->outputSuccess('Http code is 200.')
@@ -78,6 +90,22 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
         }
 
         return $this;
+    }
+
+    protected function callBenchmarkUrl(): ?string
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $body = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($httpCode !== 200) {
+            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
+        }
+
+        return $body;
     }
 
     protected function afterBodyValidated(PhpVersion $phpVersion): self

@@ -20,9 +20,7 @@ final class BenchmarkValidatePreloadDisabledCommand extends AbstractValidateBenc
     {
         parent::configure();
 
-        $this
-            ->setDescription('Validate benchmark with preload disabled')
-            ->addNoValidateConfigurationOption();
+        $this->setDescription('Validate benchmark with preload disabled');
     }
 
     protected function initBenchmark(PhpVersion $phpVersion): parent
