@@ -28,17 +28,16 @@ final class BenchmarkValidateAllCommand extends AbstractCommand
             ->runCommand(
                 BenchmarkValidateBenchmarkCommand::getDefaultName(),
                 ['--no-validate-configuration' => true]
-            )
-            ->runCommand(
-                BenchmarkValidateStatisticsCommand::getDefaultName(),
-                ['--no-validate-configuration' => true]
-            )
-            ->runCommand(
+            )->runCommand(
                 BenchmarkValidateOpcacheDisabledCommand::getDefaultName(),
                 ['--no-validate-configuration' => true]
             )
             ->runCommand(
                 BenchmarkValidatePreloadDisabledCommand::getDefaultName(),
+                ['--no-validate-configuration' => true]
+            )
+            ->runCommand(
+                BenchmarkValidateStatisticsCommand::getDefaultName(),
                 ['--no-validate-configuration' => true]
             );
     }

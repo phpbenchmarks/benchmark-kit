@@ -170,5 +170,6 @@ fi
 
 addHost "benchmark-kit.loc"
 addHost "phpinfo.benchmark-kit.loc"
+addHost "statistics.benchmark-kit.loc"
 
 docker exec $ttyParameter --user=phpbenchmarks $CONTAINER_NAME /usr/bin/php7.4 bin/console $consoleParams

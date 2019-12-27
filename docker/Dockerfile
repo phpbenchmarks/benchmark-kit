@@ -96,7 +96,6 @@ RUN \
 RUN /usr/bin/update-alternatives --set php /usr/bin/php7.4
 
 # Copy benchmark kit source code
-COPY benchmark/statistics.php /var/benchmark-kit/benchmark/statistics.php
 COPY bin/console /var/benchmark-kit/bin/console
 COPY config /var/benchmark-kit/config
 COPY documentation /var/benchmark-kit/documentation
@@ -115,7 +114,6 @@ RUN \
 # Configure nginx default page
 COPY docker/html /var/www/html
 COPY docker/nginx/default /etc/nginx/sites-available
-COPY docker/nginx/phpinfo.benchmark-kit.loc.conf /etc/nginx/sites-available
 RUN rm /var/www/html/index.nginx-debian.html
 
 # Run

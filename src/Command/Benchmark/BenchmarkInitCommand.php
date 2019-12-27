@@ -9,10 +9,12 @@ use App\{
     Command\AbstractCommand,
     Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
+    Command\Nginx\Vhost\NginxVhostStatisticsCreateCommand,
     Command\OutputBlockTrait,
     Command\PhpFpm\PhpFpmRestartCommand,
     Command\PhpVersion\PhpVersionCliDefineCommand,
     Command\PhpVersionArgumentTrait,
+    Command\ReloadNginxTrait,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -25,6 +27,7 @@ final class BenchmarkInitCommand extends AbstractCommand
 {
     use OutputBlockTrait;
     use PhpVersionArgumentTrait;
+    use ReloadNginxTrait;
 
     /** @var string */
     protected static $defaultName = 'benchmark:init';
@@ -65,12 +68,17 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->configurePhpIni($phpVersion)
             ->runCommand(
                 NginxVhostBenchmarkKitCreateCommand::getDefaultName(),
-                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
             )
             ->runCommand(
                 NginxVhostPhpInfoCreateCommand::getDefaultName(),
-                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true]
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
             )
+            ->runCommand(
+                NginxVhostStatisticsCreateCommand::getDefaultName(),
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
+            )
+            ->reloadNginx($this)
             ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
@@ -160,6 +168,7 @@ final class BenchmarkInitCommand extends AbstractCommand
                 '',
                 'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
                 'View phpinfo() at this url: ' . NginxVhostPhpInfoCreateCommand::getUrl(),
+                'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true),
                 ''
             ],
             'green',

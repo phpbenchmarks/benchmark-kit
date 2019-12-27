@@ -124,7 +124,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    protected function renderTemplate(
+    protected function renderBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
@@ -132,29 +132,43 @@ abstract class AbstractCommand extends Command
     ): string {
         static $twig;
         if ($twig instanceof Environment === false) {
-            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates'));
+            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates/benchmark'));
         }
 
-        $componentPath = 'benchmark/' . ComponentType::getCamelCaseName($componentType);
+        $componentPath = ComponentType::getCamelCaseName($componentType);
         $templates = [
             $componentPath . '/' . $templatePath . '.' . BenchmarkType::getCamelCaseName($benchmarkType) . '.twig',
             $componentPath . '/' . $templatePath . '.twig',
-            'benchmark/default/' . $templatePath . '.twig'
+            'default/' . $templatePath . '.twig'
         ];
 
         $templateTwigPath = null;
         foreach ($templates as $template) {
-            if (is_readable(Path::getBenchmarkKitPath() . '/templates/' . $template) === true) {
+            if (is_readable(Path::getBenchmarkKitPath() . '/templates/benchmark/' . $template) === true) {
                 $templateTwigPath = $template;
                 break;
             }
         }
 
         if ($templateTwigPath === null) {
-            throw new \Exception('Template ' . $templatePath . ' not found.');
+            throw new \Exception('Benchmark template ' . $templatePath . ' not found.');
         }
 
         return $twig->render($templateTwigPath, $templateParameters);
+    }
+
+    protected function renderVhostTemplate(string $templatePath, array $templateParameters = []): string
+    {
+        static $twig;
+        if ($twig instanceof Environment === false) {
+            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates/vhost'));
+        }
+
+        if (is_readable(Path::getBenchmarkKitPath() . '/templates/vhost/' . $templatePath) === false) {
+            throw new \Exception('Vhost template ' . $templatePath . ' not found.');
+        }
+
+        return $twig->render($templatePath, $templateParameters);
     }
 
     protected function writeFileFromTemplate(
@@ -169,7 +183,7 @@ abstract class AbstractCommand extends Command
             ->createDirectory(dirname($file))
             ->filePutContent(
                 $file,
-                $this->renderTemplate($templatePath, $templateParameters, $componentType, $benchmarkType)
+                $this->renderBenchmarkTemplate($templatePath, $templateParameters, $componentType, $benchmarkType)
             );
     }
 
@@ -179,7 +193,7 @@ abstract class AbstractCommand extends Command
         (new Filesystem())->dumpFile($filename, $content);
         $this->outputSuccess(
             'File '
-                . ($rmPathPrefix ? Path::rmPrefix($filename) : $filename)
+                . realpath(($rmPathPrefix ? Path::rmPrefix($filename) : $filename))
                 . ' '
                 . ($fileExists ? 'modified' : 'created')
                 . '.'

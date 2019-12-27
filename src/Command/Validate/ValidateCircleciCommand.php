@@ -38,7 +38,7 @@ final class ValidateCircleciCommand extends AbstractCommand
         }
         $content = file_get_contents($configFilePath);
 
-        $expectedContent = $this->renderTemplate($relativeConfigFilePath);
+        $expectedContent = $this->renderBenchmarkTemplate($relativeConfigFilePath);
 
         if ($expectedContent !== $content) {
             throw new \Exception("$relativeConfigFilePath content is not valid.");

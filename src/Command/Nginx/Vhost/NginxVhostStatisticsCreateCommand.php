@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Command\Nginx\Vhost;
 
 use App\{
+    Benchmark\Benchmark,
+    Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
     Command\OutputBlockTrait,
     Command\PhpVersionArgumentTrait,
@@ -12,32 +14,21 @@ use App\{
     Utils\Path
 };
 
-final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
+final class NginxVhostStatisticsCreateCommand extends AbstractCommand
 {
     use OutputBlockTrait;
     use PhpVersionArgumentTrait;
     use ReloadNginxTrait;
 
-    protected const HOST = 'phpinfo.benchmark-kit.loc';
-
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:phpInfo:create';
-
-    public static function getUrl(): string
-    {
-        return
-            'http://'
-            . static::HOST
-            . ':'
-            . $_ENV['NGINX_PORT'];
-    }
+    protected static $defaultName = 'nginx:vhost:statistics:create';
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setDescription('Create nginx vhost ' . static::HOST)
+            ->setDescription('Create nginx vhost ' . BenchmarkUrlService::STATISTICS_HOST)
             ->addPhpVersionArgument($this)
             ->addOption('no-url-output')
             ->addOption('no-nginx-reload');
@@ -46,9 +37,10 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->outputTitle('Create ' . static::HOST . ' virtual host')
+            ->outputTitle('Create ' . BenchmarkUrlService::STATISTICS_HOST . ' virtual host')
             ->assertPhpVersionArgument($this)
-            ->createVhostFile();
+            ->createVhostFile()
+            ->createPublicFile();
         if ($this->getInput()->getOption('no-nginx-reload') === false) {
             $this->reloadNginx($this);
         }
@@ -59,16 +51,28 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     private function createVhostFile(): self
     {
         return $this->filePutContent(
-            '/etc/nginx/sites-enabled/phpinfo.benchmark-kit.loc.conf',
+            '/etc/nginx/sites-enabled/statistics.benchmark-kit.loc.conf',
             $this->renderVhostTemplate(
                 'vhost.conf.twig',
                 [
                     'port' => $_ENV['NGINX_PORT'],
-                    'serverName' => static::HOST,
+                    'serverName' => BenchmarkUrlService::STATISTICS_HOST,
                     'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
-                    'entryPoint' => 'phpinfo.php',
+                    'entryPoint' => 'statistics.php',
                     'phpFpmSock' => 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock'
                 ]
+            ),
+            false
+        );
+    }
+
+    private function createPublicFile(): self
+    {
+        return $this->filePutContent(
+            Path::getBenchmarkKitPath() . '/public/statistics.php',
+            $this->renderVhostTemplate(
+                'statistics/statistics.php.twig',
+                ['entryPoint' => realpath(Path::getBenchmarkPath()) . '/' . Benchmark::getSourceCodeEntryPoint()]
             ),
             false
         );
@@ -85,7 +89,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
         return $this->outputBlock(
             [
                 '',
-                'View phpinfo() at this url: ' . static::getUrl(),
+                'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true),
                 ''
             ],
             'green',

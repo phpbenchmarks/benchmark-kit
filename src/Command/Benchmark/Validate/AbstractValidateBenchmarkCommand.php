@@ -41,7 +41,7 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
         $this->initBenchmark($phpVersion);
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, BenchmarkUrlService::getUrl(true));
+        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $body = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -83,5 +83,10 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
     protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
         return $this;
+    }
+
+    protected function getUrl(): string
+    {
+        return BenchmarkUrlService::getUrl(true);
     }
 }
