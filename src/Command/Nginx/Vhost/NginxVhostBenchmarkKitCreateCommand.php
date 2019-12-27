@@ -9,16 +9,15 @@ use App\{
     Command\AbstractCommand,
     Command\OutputBlockTrait,
     Command\PhpVersionArgumentTrait,
+    Command\ReloadNginxTrait,
     Utils\Path
 };
-use Symfony\Component\Console\Output\OutputInterface;
 
 final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 {
     use OutputBlockTrait;
     use PhpVersionArgumentTrait;
-
-    public const HOST = 'benchmark-kit.loc';
+    use ReloadNginxTrait;
 
     /** @var string */
     protected static $defaultName = 'nginx:vhost:benchmarkKit:create';
@@ -30,18 +29,22 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         $this
             ->setDescription('Create nginx vhost ' . BenchmarkUrlService::HOST)
             ->addPhpVersionArgument($this)
-            ->addOption('no-url-output');
+            ->addOption('no-url-output')
+            ->addOption('no-nginx-reload');
     }
 
     protected function doExecute(): AbstractCommand
     {
-        return $this
+        $this
             ->outputTitle('Create ' . BenchmarkUrlService::HOST . ' virtual host')
             ->assertPhpVersionArgument($this)
             ->createVhostFile()
-            ->defineVhostVariables()
-            ->reloadNginx()
-            ->outputUrl();
+            ->defineVhostVariables();
+        if ($this->getInput()->getOption('no-nginx-reload') === false) {
+            $this->reloadNginx($this);
+        }
+
+        return $this->outputUrl();
     }
 
     private function getContainerVhostFilePath(): string
@@ -79,14 +82,6 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
             ->outputSuccess('____HOST____ replaced by ' . BenchmarkUrlService::HOST . '.')
             ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkPath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
-    }
-
-    private function reloadNginx(): self
-    {
-        return $this
-            ->outputTitle('Reload nginx configuration')
-            ->runProcess(['sudo', '/usr/sbin/service', 'nginx', 'reload'], OutputInterface::VERBOSITY_VERBOSE)
-            ->outputSuccess('Nginx configuration reloaded.');
     }
 
     private function outputUrl(): self

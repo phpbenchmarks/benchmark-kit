@@ -38,7 +38,6 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigureGitignoreCommand::getDefaultName())
             ->runCommand(ConfigureReadmeCommand::getDefaultName())
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
-            ->runCommand(ConfigureEntryPointCommand::getDefaultName())
             ->runCommand(ConfigureComposerJsonCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
     }

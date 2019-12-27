@@ -6,18 +6,14 @@ namespace App\Command\Benchmark\Validate;
 
 use App\{
     Benchmark\BenchmarkUrlService,
-    Command\AbstractCommand,
     Command\Benchmark\BenchmarkInitCommand,
-    Command\Configure\ConfigureEntryPointCommand,
-    Benchmark\Benchmark,
-    PhpVersion\PhpVersion,
-    Utils\Path
+    PhpVersion\PhpVersion
 };
+use steevanb\SymfonyOptionsResolver\OptionsResolver;
 
 final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmarkCommand
 {
-    private const REQUIRE_CODE = 'require(\'/var/benchmark-kit/benchmark/statistics.php\');';
-    private const STATS_RESULTS_FILE_PATH = '/tmp/phpbenchmarks-stats-php';
+    private const STATISTICS_FILE_PATH = '/tmp/phpbenchmarks-statistics.json';
 
     /** @var string */
     protected static $defaultName = 'benchmark:validate:statistics';
@@ -35,56 +31,67 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
     {
         return $this
             ->outputTitle('Prepare benchmark')
-            ->removeFile(static::STATS_RESULTS_FILE_PATH, false)
-            ->replaceInEntryPoint(ConfigureEntryPointCommand::STATS_COMMENT, static::REQUIRE_CODE)
+            ->removeFile(static::STATISTICS_FILE_PATH, false)
             ->runCommand(
                 BenchmarkInitCommand::getDefaultName(),
                 [
                     'phpVersion' => $phpVersion->toString(),
                     '--no-url-output' => true,
                     '--opcache-enabled' => true,
-                    '--preload-enabled' => false
+                    '--preload-enabled' => true
                 ]
             )
-            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getUrl(false));
+            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getStatisticsUrl(false));
     }
 
-    protected function onError(): AbstractCommand
+    protected function getUrl(): string
     {
-        return $this->replaceInEntryPoint(static::REQUIRE_CODE, ConfigureEntryPointCommand::STATS_COMMENT);
+        return BenchmarkUrlService::getStatisticsUrl(false);
     }
 
     protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
-        if (is_readable(static::STATS_RESULTS_FILE_PATH) === false) {
-            throw new \Exception(static::STATS_RESULTS_FILE_PATH . ' does not exists or is not readable.');
+        if (is_readable(static::STATISTICS_FILE_PATH) === false) {
+            throw new \Exception(static::STATISTICS_FILE_PATH . ' does not exists or is not readable.');
+        }
+        $this->outputSuccess('Statistics JSON file found.');
+
+        try {
+            $statistics = json_decode(
+                file_get_contents(static::STATISTICS_FILE_PATH),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+        } catch (\Throwable $exception) {
+            throw new \Exception('Unable to parse statistics JSON file.', 0, $exception);
+        }
+        $this->outputSuccess('Statistics JSON file is a valid JSON file.');
+
+        try {
+            (new OptionsResolver())
+                ->configureRequiredOption('memory', ['array'])
+                ->configureRequiredOption('code', ['array'])
+                ->resolve($statistics);
+
+            (new OptionsResolver())
+                ->configureRequiredOption('usage', ['int'])
+                ->configureRequiredOption('realUsage', ['int'])
+                ->configureRequiredOption('peakUsage', ['int'])
+                ->configureRequiredOption('realPeakUsage', ['int'])
+                ->resolve($statistics['memory']);
+
+            (new OptionsResolver())
+                ->configureRequiredOption('classes', ['int'])
+                ->configureRequiredOption('interfaces', ['int'])
+                ->configureRequiredOption('traits', ['int'])
+                ->configureRequiredOption('functions', ['int'])
+                ->configureRequiredOption('constants', ['int'])
+                ->resolve($statistics['code']);
+        } catch (\Throwable $exception) {
+            throw new \Exception('Invalid statistics JSON file format.', 0, $exception);
         }
 
-        $stats = explode("\n", file_get_contents(static::STATS_RESULTS_FILE_PATH));
-        if (count($stats) !== 10) {
-            throw new \Exception('Invalid format for statistics.');
-        }
-
-        array_pop($stats);
-        foreach ($stats as $stat) {
-            if (is_numeric($stat) === false) {
-                throw new \Exception('Stat "' . $stat . '" should be numeric.');
-            }
-        }
-
-        return $this
-            ->outputSuccess('Statistics found.')
-            ->replaceInEntryPoint(static::REQUIRE_CODE, ConfigureEntryPointCommand::STATS_COMMENT);
-    }
-
-    private function replaceInEntryPoint(string $search, string $replace): self
-    {
-        $entryPointFilePath = Path::getBenchmarkPath() . '/' . Benchmark::getSourceCodeEntryPoint();
-        $entryPointContent = file_get_contents($entryPointFilePath);
-
-        return $this->filePutContent(
-            $entryPointFilePath,
-            str_replace($search, $replace, $entryPointContent)
-        );
+        return $this->outputSuccess('Statistics found.');
     }
 }

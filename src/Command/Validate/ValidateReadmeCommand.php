@@ -38,7 +38,7 @@ final class ValidateReadmeCommand extends AbstractCommand
         }
         $content = file_get_contents($readmeFileName);
 
-        $expectedContent = $this->renderTemplate(
+        $expectedContent = $this->renderBenchmarkTemplate(
             'README.md',
             [
                 'componentName' => Benchmark::getComponentName(),

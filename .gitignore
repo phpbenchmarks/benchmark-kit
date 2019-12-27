@@ -3,6 +3,7 @@
 !/var/.gitkeep
 /docker/.env
 /phpcs.bootstrap.local.php
+/public/statistics.php
 
 ###> symfony/framework-bundle ###
 /.env.local

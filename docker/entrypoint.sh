@@ -3,6 +3,7 @@
 set -e
 
 echo "127.0.0.1 benchmark-kit.loc" >> /etc/hosts
+echo "127.0.0.1 statistics.benchmark-kit.loc" >> /etc/hosts
 
 service php5.6-fpm start
 service php7.0-fpm start

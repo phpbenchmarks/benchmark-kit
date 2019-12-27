@@ -1,0 +1,29 @@
+<?php
+
+require('{{ entryPoint }}');
+
+$statistics = json_encode(
+    [
+        'memory' => [
+            'usage' => memory_get_usage(),
+            'realUsage' => memory_get_usage(true),
+            'peakUsage' => memory_get_peak_usage(),
+            'realPeakUsage' => memory_get_peak_usage(true)
+        ],
+        'code' => [
+            'classes' => count(get_declared_classes()),
+            'interfaces' => count(get_declared_interfaces()),
+            'traits' => count(get_declared_traits()),
+            'functions' => count(get_defined_functions()),
+            'constants' => count(get_defined_constants())
+        ]
+    ],
+    JSON_PRETTY_PRINT
+);
+
+file_put_contents('/tmp/phpbenchmarks-statistics.json', $statistics);
+
+if (@$_GET['phpBenchmarksShowStatistics'] === 'true') {
+    echo '<div style="background-color: #44a6d3; color: white; padding: 3px 5px">Statistics</div>';
+    echo '<pre>' . $statistics . '</pre>';
+}
