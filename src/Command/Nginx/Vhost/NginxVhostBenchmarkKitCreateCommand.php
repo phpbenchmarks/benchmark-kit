@@ -69,7 +69,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
             throw new \Exception('Error while reading ' . $vhostFile . '.');
         }
 
-        $content = str_replace('____PORT____', $_ENV['NGINX_PORT'], $content);
+        $content = str_replace('____PORT____', BenchmarkUrlService::getNginxPort(), $content);
         $content = str_replace('____HOST____', BenchmarkUrlService::HOST, $content);
         $content = str_replace('____INSTALLATION_PATH____', Path::getBenchmarkPath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
@@ -78,7 +78,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         $this->filePutContent($vhostFile, $content);
 
         return $this
-            ->outputSuccess('____PORT____ replaced by ' . $_ENV['NGINX_PORT'] . '.')
+            ->outputSuccess('____PORT____ replaced by ' . BenchmarkUrlService::getNginxPort() . '.')
             ->outputSuccess('____HOST____ replaced by ' . BenchmarkUrlService::HOST . '.')
             ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkPath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');

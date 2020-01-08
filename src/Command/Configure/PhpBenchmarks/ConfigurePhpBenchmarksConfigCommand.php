@@ -32,9 +32,9 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
         $componentId = $this->getComponentId();
         $benchmarkType = $this->getBenchmarkType($componentId);
         $sourceCodeEntryPoint = $this->askQuestion('Entry point file name?', 'public/index.php');
-        $benchmarkUrl = $this->askQuestion(
-            'Benchmark url, after host?',
-            BenchmarkType::getDefaultBenchmarkUrl($benchmarkType)
+        $benchmarkRelativeUrl = $this->askQuestion(
+            'Benchmark relative url (without protocol and host)?',
+            BenchmarkType::getDefaultBenchmarkRelativeUrl($benchmarkType)
         );
         $coreDependency = $this->getCoreDependency($componentId);
         while ($this->validateVersion($coreDependency['version']) === false) {
@@ -60,7 +60,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
                     'component' => ['id' => $componentId],
                     'benchmark' => [
                         'type' => $benchmarkType,
-                        'url' => $benchmarkUrl
+                        'relativeUrl' => $benchmarkRelativeUrl
                     ],
                     'sourceCode' => $sourceCode,
                     'coreDependency' => [

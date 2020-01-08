@@ -55,7 +55,7 @@ final class NginxVhostStatisticsCreateCommand extends AbstractCommand
             $this->renderVhostTemplate(
                 'vhost.conf.twig',
                 [
-                    'port' => $_ENV['NGINX_PORT'],
+                    'port' => BenchmarkUrlService::getNginxPort(),
                     'serverName' => BenchmarkUrlService::STATISTICS_HOST,
                     'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
                     'entryPoint' => 'statistics.php',

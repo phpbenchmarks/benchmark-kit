@@ -7,6 +7,7 @@ namespace App\Command\Export\Benchmark;
 use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkType,
+    Benchmark\BenchmarkUrlService,
     Component\ComponentType,
     Utils\Path
 };
@@ -50,12 +51,31 @@ final class ExportBenchmarkConfigurationCommand extends Command
                         ]
                     ],
                     'benchmark' => [
-                        'url' => Benchmark::getBenchmarkUrl(),
+                        'domain' => BenchmarkUrlService::HOST,
+                        'port' => BenchmarkUrlService::getNginxPort(),
+                        'urls' => [
+                            'showResult' => BenchmarkUrlService::getUrl(true),
+                            'hideResult' => BenchmarkUrlService::getUrl(false),
+                            'relative' => Benchmark::getBenchmarkRelativeUrl()
+                        ],
                         'type' => [
                             'id' => Benchmark::getBenchmarkType(),
                             'name' => BenchmarkType::getName(Benchmark::getBenchmarkType()),
                             'slug' => BenchmarkType::getSlug(Benchmark::getBenchmarkType())
                         ]
+                    ],
+                    'statistics' => [
+                        'domain' => BenchmarkUrlService::STATISTICS_HOST,
+                        'port' => BenchmarkUrlService::getNginxPort(),
+                        'urls' => [
+                            'showStatistics' => BenchmarkUrlService::getStatisticsUrl(true),
+                            'hideStatistics' => BenchmarkUrlService::getStatisticsUrl(false)
+                        ]
+                    ],
+                    'phpinfo' => [
+                        'domain' => BenchmarkUrlService::PHPINFO_HOST,
+                        'port' => BenchmarkUrlService::getNginxPort(),
+                        'url' => BenchmarkUrlService::getPhpinfoUrl()
                     ],
                     'sourceCode' => [
                         'entryPoint' => Benchmark::getSourceCodeEntryPoint(),
@@ -63,9 +83,12 @@ final class ExportBenchmarkConfigurationCommand extends Command
                     ],
                     'coreDependency' => [
                         'name' => Benchmark::getCoreDependencyName(),
-                        'majorVersion' => Benchmark::getCoreDependencyMajorVersion(),
-                        'minorVersion' => Benchmark::getCoreDependencyMinorVersion(),
-                        'patchVersion' => Benchmark::getCoreDependencyPatchVersion()
+                        'version' => [
+                            'name' => Benchmark::getCoreDependencyVersion(),
+                            'major' => Benchmark::getCoreDependencyMajorVersion(),
+                            'minor' => Benchmark::getCoreDependencyMinorVersion(),
+                            'patch' => Benchmark::getCoreDependencyPatchVersion()
+                        ]
                     ],
                     'phpVersions' => $this->getPhpVersions(),
                     'nginx' => [
@@ -89,7 +112,7 @@ final class ExportBenchmarkConfigurationCommand extends Command
                     'lock' => Path::rmPrefix(Path::getComposerLockPath($phpVersion))
                 ],
                 'initBenchmark' => Path::rmPrefix(Path::getInitBenchmarkPath($phpVersion)),
-                'configuration' => Path::rmPrefix(Path::getPhpIniPath($phpVersion)),
+                'ini' => Path::rmPrefix(Path::getPhpIniPath($phpVersion)),
                 'responseBody' => [
                     'size' => Benchmark::getResponseBodySize($phpVersion),
                     'files' => array_map(

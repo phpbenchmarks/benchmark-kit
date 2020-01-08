@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command\Nginx\Vhost;
 
 use App\{
+    Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
     Command\OutputBlockTrait,
     Command\PhpVersionArgumentTrait,
@@ -18,26 +19,15 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     use PhpVersionArgumentTrait;
     use ReloadNginxTrait;
 
-    protected const HOST = 'phpinfo.benchmark-kit.loc';
-
     /** @var string */
     protected static $defaultName = 'nginx:vhost:phpInfo:create';
-
-    public static function getUrl(): string
-    {
-        return
-            'http://'
-            . static::HOST
-            . ':'
-            . $_ENV['NGINX_PORT'];
-    }
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setDescription('Create nginx vhost ' . static::HOST)
+            ->setDescription('Create nginx vhost ' . BenchmarkUrlService::PHPINFO_HOST)
             ->addPhpVersionArgument($this)
             ->addOption('no-url-output')
             ->addOption('no-nginx-reload');
@@ -46,7 +36,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     protected function doExecute(): AbstractCommand
     {
         $this
-            ->outputTitle('Create ' . static::HOST . ' virtual host')
+            ->outputTitle('Create ' . BenchmarkUrlService::PHPINFO_HOST . ' virtual host')
             ->assertPhpVersionArgument($this)
             ->createVhostFile();
         if ($this->getInput()->getOption('no-nginx-reload') === false) {
@@ -63,8 +53,8 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
             $this->renderVhostTemplate(
                 'vhost.conf.twig',
                 [
-                    'port' => $_ENV['NGINX_PORT'],
-                    'serverName' => static::HOST,
+                    'port' => BenchmarkUrlService::getNginxPort(),
+                    'serverName' => BenchmarkUrlService::PHPINFO_HOST,
                     'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
                     'entryPoint' => 'phpinfo.php',
                     'phpFpmSock' => 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock'
@@ -85,7 +75,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
         return $this->outputBlock(
             [
                 '',
-                'View phpinfo() at this url: ' . static::getUrl(),
+                'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl(),
                 ''
             ],
             'green',

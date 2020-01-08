@@ -30,7 +30,7 @@ class Benchmark
 
     protected static ?string $sourceCodeEntryPoint;
 
-    protected static ?string $benchmarkUrl;
+    protected static ?string $benchmarkRelativeUrl;
 
     protected static ?StringArray $sourceCodeUrls;
 
@@ -79,11 +79,11 @@ class Benchmark
         return static::$benchmarkType;
     }
 
-    public static function getBenchmarkUrl(): string
+    public static function getBenchmarkRelativeUrl(): string
     {
         static::load();
 
-        return static::$benchmarkUrl;
+        return static::$benchmarkRelativeUrl;
     }
 
     public static function getSourceCodeEntryPoint(): string
@@ -189,7 +189,7 @@ class Benchmark
             static::$componentType = Component::getType(static::$componentId);
 
             static::$benchmarkType = $config['benchmark']['type'];
-            static::$benchmarkUrl = $config['benchmark']['url'];
+            static::$benchmarkRelativeUrl = $config['benchmark']['relativeUrl'];
 
             static::$sourceCodeEntryPoint = $config['sourceCode']['entryPoint'];
             static::$sourceCodeUrls = new StringArray($config['sourceCode']['urls'] ?? []);
