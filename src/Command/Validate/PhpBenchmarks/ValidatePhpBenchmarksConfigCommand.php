@@ -33,7 +33,7 @@ final class ValidatePhpBenchmarksConfigCommand extends AbstractCommand
             ->assertCallMethod('getComponentName', 'component.id', false)
             ->assertCallMethod('getComponentSlug', 'component.id')
             ->assertBenchmarkType()
-            ->assertCallMethod('getBenchmarkUrl', 'benchmark.url')
+            ->assertCallMethod('getBenchmarkRelativeUrl', 'benchmark.relativeUrl')
             ->assertCallMethod('getSourceCodeEntryPoint', 'sourceCode.entryPoint')
             ->assertCallMethod('getCoreDependencyName', 'coreDependency.name')
             ->assertCallMethod('getCoreDependencyVersion', 'coreDependency.version')
