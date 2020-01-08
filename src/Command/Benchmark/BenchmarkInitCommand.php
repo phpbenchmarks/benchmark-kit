@@ -167,7 +167,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             [
                 '',
                 'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
-                'View phpinfo() at this url: ' . NginxVhostPhpInfoCreateCommand::getUrl(),
+                'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl(),
                 'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true),
                 ''
             ],

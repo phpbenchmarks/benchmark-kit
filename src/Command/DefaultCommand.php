@@ -46,7 +46,7 @@ final class DefaultCommand extends ListCommand
                 'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.'
             ];
             try {
-                $lines[] = 'Go to ' . NginxVhostPhpInfoCreateCommand::getUrl() . ' to view phpinfo().';
+                $lines[] = 'Go to ' . BenchmarkUrlService::getPhpinfoUrl() . ' to view phpinfo().';
                 $lines[] = 'Go to ' . BenchmarkUrlService::getStatisticsUrl(true) . ' to view statistics.';
                 $lines[] = 'Go to ' . BenchmarkUrlService::getUrl(false) . ' to execute your code.';
             } catch (\Throwable $exception) {

@@ -24,7 +24,7 @@ class BenchmarkType
             'name' => 'Hello world',
             'camelCaseName' => 'helloWorld',
             'slug' => 'hello-world',
-            'defaultBenchmarkUrl' => '/benchmark/helloworld',
+            'defaultBenchmarkRelativeUrl' => '/benchmark/helloworld',
             'responseBodyFiles' => ['responseBody.txt'],
             'responseBodyFileMinSize' => 13,
             'sourceCodeUrlIds' => [
@@ -43,7 +43,7 @@ class BenchmarkType
             'name' => 'REST API',
             'camelCaseName' => 'restApi',
             'slug' => 'rest-api',
-            'defaultBenchmarkUrl' => '/benchmark/rest',
+            'defaultBenchmarkRelativeUrl' => '/benchmark/rest',
             'responseBodyFiles' => ['responseBody.en_GB.json', 'responseBody.fr_FR.json', 'responseBody.en.json'],
             'responseBodyFileMinSize' => 7541,
             'sourceCodeUrlIds' => [
@@ -70,7 +70,7 @@ class BenchmarkType
             'name' => 'Template engine small overload',
             'camelCaseName' => 'templateEngineSmallOverload',
             'slug' => 'templating-small-overload',
-            'defaultBenchmarkUrl' => '/',
+            'defaultBenchmarkRelativeUrl' => '/',
             'responseBodyFiles' => ['responseBody.html'],
             'responseBodyFileMinSize' => 520000,
             'sourceCodeUrlIds' => [
@@ -81,7 +81,7 @@ class BenchmarkType
             'name' => 'Template engine big overload',
             'camelCaseName' => 'templateEngineBigOverload',
             'slug' => 'templating-big-overload',
-            'defaultBenchmarkUrl' => '/',
+            'defaultBenchmarkRelativeUrl' => '/',
             'responseBodyFiles' => ['responseBody.html'],
             'responseBodyFileMinSize' => 5200000,
             'sourceCodeUrlIds' => [
@@ -92,7 +92,7 @@ class BenchmarkType
             'name' => 'Serialization of Hello world',
             'camelCaseName' => 'jsonSerializationHelloWorld',
             'slug' => 'json-serialization-hello-world',
-            'defaultBenchmarkUrl' => '/',
+            'defaultBenchmarkRelativeUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 17,
             'sourceCodeUrlIds' => [
@@ -104,7 +104,7 @@ class BenchmarkType
             'name' => 'Small JSON serialization',
             'camelCaseName' => 'jsonSerializationSmallOverload',
             'slug' => 'json-serialization-small-overload',
-            'defaultBenchmarkUrl' => '/',
+            'defaultBenchmarkRelativeUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 512000,
             'sourceCodeUrlIds' => [
@@ -135,7 +135,7 @@ class BenchmarkType
             'name' => 'Big JSON serialization',
             'camelCaseName' => 'jsonSerializationBigOverload',
             'slug' => 'json-serialization-big-overload',
-            'defaultBenchmarkUrl' => '/',
+            'defaultBenchmarkRelativeUrl' => '/',
             'responseBodyFiles' => ['responseBody.json'],
             'responseBodyFileMinSize' => 5241001,
             'sourceCodeUrlIds' => [
@@ -235,9 +235,9 @@ class BenchmarkType
         return static::getConfiguration($type, 'camelCaseName');
     }
 
-    public static function getDefaultBenchmarkUrl(int $type = null): string
+    public static function getDefaultBenchmarkRelativeUrl(int $type = null): string
     {
-        return static::getConfiguration($type, 'defaultBenchmarkUrl');
+        return static::getConfiguration($type, 'defaultBenchmarkRelativeUrl');
     }
 
     public static function getResponseBodyFiles(int $type = null): array
