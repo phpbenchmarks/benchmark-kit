@@ -48,7 +48,7 @@ final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCo
                     $currentConfig,
                     [
                         'sourceCode' => [
-                            'entrypoint' => $currentConfig['sourceCode']['entryPoint'] ?? null,
+                            'entryPoint' => $currentConfig['sourceCode']['entryPoint'] ?? null,
                             'urls' => $this->getUrls()->toArray()
                         ]
                     ]
