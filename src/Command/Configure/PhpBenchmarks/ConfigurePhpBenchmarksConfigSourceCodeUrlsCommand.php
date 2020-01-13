@@ -44,7 +44,15 @@ final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCo
         return $this->filePutContent(
             Path::getConfigFilePath(),
             Yaml::dump(
-                array_merge($currentConfig, ['sourceCode' => ['urls' => $this->getUrls()->toArray()]]),
+                array_merge(
+                    $currentConfig,
+                    [
+                        'sourceCode' => [
+                            'entrypoint' => $currentConfig['sourceCode']['entryPoint'] ?? null,
+                            'urls' => $this->getUrls()->toArray()
+                        ]
+                    ]
+                ),
                 100
             )
         );
