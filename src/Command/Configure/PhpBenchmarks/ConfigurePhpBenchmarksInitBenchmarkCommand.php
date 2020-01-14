@@ -35,7 +35,7 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
                 ->outputSuccess('Make ' . $initBenchmarkRelativePath . ' executable.')
                 ->outputWarning(
                     "$initBenchmarkRelativePath (called to initialize your benchmark) has been created."
-                        . 'Feel free to edit it.'
+                        . ' Feel free to edit it.'
                 );
         }
 
