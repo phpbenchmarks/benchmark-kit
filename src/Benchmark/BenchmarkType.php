@@ -74,7 +74,34 @@ class BenchmarkType
             'responseBodyFiles' => ['responseBody.html'],
             'responseBodyFileMinSize' => 520000,
             'sourceCodeUrlIds' => [
-                ComponentType::PHP => [SourceCodeUrl::URL_ENTRY_POINT]
+                ComponentType::PHP => [
+                    SourceCodeUrl::URL_TEMPLATE,
+                    SourceCodeUrl::URL_TEMPLATING_LAYOUT,
+                    SourceCodeUrl::URL_TEMPLATING_BLOCKS,
+                    SourceCodeUrl::URL_TEMPLATING_FUNCTIONS,
+                    SourceCodeUrl::URL_TEMPLATING_MACROS,
+                    SourceCodeUrl::URL_TEMPLATING_ESCAPE_STRING_HTML,
+                    SourceCodeUrl::URL_TEMPLATING_ESCAPE_STRING_JS,
+                    SourceCodeUrl::URL_TEMPLATING_VARIABLES,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_RAW,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_UNKNOWN_VARIABLES,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_METHOD_CALLS,
+                    SourceCodeUrl::URL_TEMPLATING_INCLUDE_TEMPLATES,
+                ],
+                ComponentType::TEMPLATE_ENGINE => [
+                    SourceCodeUrl::URL_TEMPLATE,
+                    SourceCodeUrl::URL_TEMPLATING_LAYOUT,
+                    SourceCodeUrl::URL_TEMPLATING_BLOCKS,
+                    SourceCodeUrl::URL_TEMPLATING_FUNCTIONS,
+                    SourceCodeUrl::URL_TEMPLATING_MACROS,
+                    SourceCodeUrl::URL_TEMPLATING_ESCAPE_STRING_HTML,
+                    SourceCodeUrl::URL_TEMPLATING_ESCAPE_STRING_JS,
+                    SourceCodeUrl::URL_TEMPLATING_VARIABLES,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_RAW,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_UNKNOWN_VARIABLES,
+                    SourceCodeUrl::URL_TEMPLATING_OUTPUT_METHOD_CALLS,
+                    SourceCodeUrl::URL_TEMPLATING_INCLUDE_TEMPLATES,
+                ]
             ]
         ],
         self::TEMPLATING_BIG_OVERLOAD => [
