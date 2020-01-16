@@ -194,7 +194,7 @@ abstract class AbstractCommand extends Command
         (new Filesystem())->dumpFile($filename, $content);
         $this->outputSuccess(
             'File '
-                . realpath(($rmPathPrefix ? Path::rmPrefix($filename) : $filename))
+                . ($rmPathPrefix ? Path::rmPrefix($filename) : realpath($filename))
                 . ' '
                 . ($fileExists ? 'modified' : 'created')
                 . '.'
