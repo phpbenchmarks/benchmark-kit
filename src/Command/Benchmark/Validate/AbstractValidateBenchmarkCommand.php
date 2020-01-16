@@ -8,6 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
+    Command\CallBenchmarkUrlTrait,
     Command\Validate\ValidateAllCommand,
     Benchmark\Benchmark,
     PhpVersion\PhpVersion,
@@ -17,6 +18,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
 {
+    use CallBenchmarkUrlTrait;
+
     abstract protected function initBenchmark(PhpVersion $phpVersion): self;
 
     protected function configure(): void
@@ -50,18 +53,19 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
     protected function validateForPhpVersion(PhpVersion $phpVersion): self
     {
         $this->initBenchmark($phpVersion);
+        $benchmarkUrl = $this->getUrl();
 
         $initCalls = $this->getInput()->getOption('init-calls');
         if (is_numeric($initCalls) && $initCalls > 0) {
             for ($i = 0; $i < $this->getInput()->getOption('init-calls'); $i++) {
-                $this->callBenchmarkUrl();
+                $this->callBenchmarkUrl($benchmarkUrl);
             }
             $this->outputSuccess(
                 "Init caches with $initCalls call" . ($initCalls > 1 ? 's' : null) . ' to benchmark url.'
             );
         }
 
-        $body = $this->callBenchmarkUrl();
+        $body = $this->callBenchmarkUrl($benchmarkUrl);
 
         return $this
             ->outputSuccess('Http code is 200.')
@@ -90,22 +94,6 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
         }
 
         return $this;
-    }
-
-    protected function callBenchmarkUrl(): ?string
-    {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $body = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpCode !== 200) {
-            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
-        }
-
-        return $body;
     }
 
     protected function afterBodyValidated(PhpVersion $phpVersion): self

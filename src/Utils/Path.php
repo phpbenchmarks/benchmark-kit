@@ -21,7 +21,12 @@ class Path
 
     public static function rmPrefix(string $path)
     {
-        return substr($path, strlen(static::getBenchmarkPath()) + 1);
+        $prefix = static::getBenchmarkPath();
+        if (substr($path, 0, strlen($prefix)) === $prefix) {
+            return substr($path, strlen($prefix) + 1);
+        }
+
+        return $path;
     }
 
     public static function getBenchmarkConfigurationPath()
