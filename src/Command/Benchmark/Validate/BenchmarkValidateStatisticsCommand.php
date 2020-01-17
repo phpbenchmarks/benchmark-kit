@@ -46,6 +46,11 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
         return BenchmarkUrlService::getStatisticsUrl(false);
     }
 
+    protected function validateBody(string $body, PhpVersion $phpVersion): self
+    {
+        return $this;
+    }
+
     protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
         if (is_readable(Path::getStatisticsPath()) === false) {
