@@ -55,7 +55,10 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
             ->configureName($data)
             ->configureLicense($data)
             ->configureVersions($data)
-            ->filePutContent($composerJsonFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            ->filePutContent(
+                $composerJsonFile,
+                json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
+            );
     }
 
     private function configureName(object $data): self
