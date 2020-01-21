@@ -47,7 +47,7 @@ final class ExportBenchmarkConfigurationCommand extends Command
                         'slug' => Benchmark::getComponentSlug(),
                         'type' => [
                             'id' => Benchmark::getBenchmarkType(),
-                            'name' => ComponentType::getName(Benchmark::getBenchmarkType())
+                            'name' => ComponentType::getName(Benchmark::getComponentType())
                         ]
                     ],
                     'benchmark' => [
