@@ -37,7 +37,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_ENTRY_POINT,
                     SourceCodeUrl::URL_TEMPLATE
                 ]
-            ]
+            ],
+            'resultHidden' => false
         ],
         self::REST_API => [
             'name' => 'REST API',
@@ -64,7 +65,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_TRANSLATE,
                     SourceCodeUrl::URL_SERIALIZE
                 ]
-            ]
+            ],
+            'resultHidden' => false
         ],
         self::TEMPLATING_SMALL_OVERLOAD => [
             'name' => 'Template engine small overload',
@@ -102,7 +104,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_TEMPLATING_OUTPUT_METHOD_CALLS,
                     SourceCodeUrl::URL_TEMPLATING_INCLUDE_TEMPLATES,
                 ]
-            ]
+            ],
+            'resultHidden' => false
         ],
         self::TEMPLATING_BIG_OVERLOAD => [
             'name' => 'Template engine big overload',
@@ -140,7 +143,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_TEMPLATING_OUTPUT_METHOD_CALLS,
                     SourceCodeUrl::URL_TEMPLATING_INCLUDE_TEMPLATES,
                 ]
-            ]
+            ],
+            'resultHidden' => false
         ],
         self::JSON_SERIALIZATION_HELLO_WORLD => [
             'name' => 'Serialization of Hello world',
@@ -152,7 +156,8 @@ class BenchmarkType
             'sourceCodeUrlIds' => [
                 ComponentType::PHP => [SourceCodeUrl::URL_JSON_SERIALIZATION],
                 ComponentType::JSON_SERIALIZER => [SourceCodeUrl::URL_JSON_SERIALIZATION]
-            ]
+            ],
+            'resultHidden' => true
         ],
         self::JSON_SERIALIZATION_SMALL_OVERLOAD => [
             'name' => 'Small JSON serialization',
@@ -183,7 +188,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_OBJECT_SERIALIZATION,
                     SourceCodeUrl::URL_CUSTOM_SERIALIZATION
                 ]
-            ]
+            ],
+            'resultHidden' => true
         ],
         self::JSON_SERIALIZATION_BIG_OVERLOAD => [
             'name' => 'Big JSON serialization',
@@ -214,7 +220,8 @@ class BenchmarkType
                     SourceCodeUrl::URL_OBJECT_SERIALIZATION,
                     SourceCodeUrl::URL_CUSTOM_SERIALIZATION
                 ]
-            ]
+            ],
+            'resultHidden' => true
         ]
     ];
 
@@ -309,6 +316,11 @@ class BenchmarkType
         $ids = static::getConfiguration($type, 'sourceCodeUrlIds');
 
         return $ids[$componentType ?? Benchmark::getComponentType()];
+    }
+
+    public static function isResultHidden(int $type = null): bool
+    {
+        return static::getConfiguration($type, 'resultHidden');
     }
 
     /** @return mixed */
