@@ -72,7 +72,7 @@ final class ExportBenchmarkConfigurationCommand extends Command
                             'hideStatistics' => BenchmarkUrlService::getStatisticsUrl(false)
                         ]
                     ],
-                    'phpinfo' => [
+                    'phpInfo' => [
                         'domain' => BenchmarkUrlService::PHPINFO_HOST,
                         'port' => BenchmarkUrlService::getNginxPort(),
                         'url' => BenchmarkUrlService::getPhpinfoUrl()
@@ -114,8 +114,9 @@ final class ExportBenchmarkConfigurationCommand extends Command
                 'initBenchmark' => Path::rmPrefix(Path::getInitBenchmarkPath($phpVersion)),
                 'ini' => Path::rmPrefix(Path::getPhpIniPath($phpVersion)),
                 'responseBody' => [
-                    'size' => Benchmark::getResponseBodySize($phpVersion),
-                    'files' => array_map(
+                    'hideResultSize' => Benchmark::getResponseBodySize($phpVersion, false),
+                    'showResultSize' => Benchmark::getResponseBodySize($phpVersion, true),
+                    'showResultFiles' => array_map(
                         function (string $responseBody) use ($phpVersion) {
                             return Path::rmPrefix(Path::getResponseBodyPath($phpVersion) . '/' . $responseBody);
                         },

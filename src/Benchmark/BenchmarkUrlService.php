@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Benchmark;
 
-use App\Component\ComponentType;
-
 class BenchmarkUrlService
 {
     public const HOST = 'benchmark-kit.loc';
@@ -17,12 +15,7 @@ class BenchmarkUrlService
         $url = 'http://' . static::HOST . ':' . static::getNginxPort() . Benchmark::getBenchmarkRelativeUrl();
 
         if ($showResult === true) {
-            $showResultsQueryParameter = ComponentType::getShowResultsQueryParameter(
-                Benchmark::getComponentType()
-            );
-            if (is_string($showResultsQueryParameter)) {
-                $url = static::appendToQueryString($url, $showResultsQueryParameter);
-            }
+            $url = static::appendToQueryString($url, 'phpBenchmarksShowResults=1');
         }
 
         return $url;
@@ -31,7 +24,12 @@ class BenchmarkUrlService
     public static function getStatisticsUrl(bool $showStatistics): string
     {
         $url =
-            'http://' . static::STATISTICS_HOST . ':' . static::getNginxPort() . Benchmark::getBenchmarkRelativeUrl();
+            'http://'
+            . static::STATISTICS_HOST
+            .
+            ':'
+            . static::getNginxPort()
+            . Benchmark::getBenchmarkRelativeUrl();
 
         if ($showStatistics === true) {
             $url = static::appendToQueryString($url, 'phpBenchmarksShowStatistics=true');

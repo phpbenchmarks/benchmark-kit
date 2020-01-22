@@ -159,13 +159,17 @@ class Benchmark
         return $return;
     }
 
-    public static function getResponseBodySize(PhpVersion $phpVersion): int
+    public static function getResponseBodySize(PhpVersion $phpVersion, bool $showResult): int
     {
-        return filesize(
-            Path::getResponseBodyPath($phpVersion)
-                . '/'
-                . BenchmarkType::getResponseBodyFiles(static::getBenchmarkType())[0]
-        );
+        return
+            $showResult === false && BenchmarkType::isResultHidden()
+                ? 0
+                :
+                    filesize(
+                        Path::getResponseBodyPath($phpVersion)
+                            . '/'
+                            . BenchmarkType::getResponseBodyFiles(static::getBenchmarkType())[0]
+                    );
     }
 
     protected static function isCompatibleWithPhp(PhpVersion $phpVersion): bool
