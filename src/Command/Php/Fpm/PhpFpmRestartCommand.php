@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\PhpFpm;
+namespace App\Command\Php\Fpm;
 
 use App\{
     Command\AbstractCommand,
@@ -15,7 +15,7 @@ final class PhpFpmRestartCommand extends AbstractCommand
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'phpFpm:restart';
+    protected static $defaultName = 'php:fpm:restart';
 
     protected function configure(): void
     {

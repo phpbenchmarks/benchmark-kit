@@ -12,6 +12,8 @@ service php7.2-fpm start
 service php7.3-fpm start
 service php7.4-fpm start
 
+chmod 744 /var/log/php*.log
+
 source /var/benchmark-kit/.env
 if [ -f "/var/benchmark-kit/.env.local" ]; then
     source /var/benchmark-kit/.env.local

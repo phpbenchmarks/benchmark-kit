@@ -53,33 +53,40 @@ for param in "$@"; do
     fi
 done
 
-echo "# composer install --no-dev"
+echo "Install Composer prod dependencies."
 composer install --no-dev > $LOG_FILE 2>&1
 rmLogFile
 
-echo "Build image..."
-docker build $DOCKER_DIRECTORY/.. --file=docker/Dockerfile --tag=$IMAGE_PATCH_TAG $dockerQuiet $dockerNoCache
+echo "Build image."
+docker \
+    build \
+    $DOCKER_DIRECTORY/.. \
+    --file=docker/Dockerfile \
+    --tag=$IMAGE_PATCH_TAG \
+    $dockerQuiet \
+    $dockerNoCache
 docker tag $IMAGE_PATCH_TAG $IMAGE_MINOR_TAG
 docker tag $IMAGE_PATCH_TAG $IMAGE_MAJOR_TAG
 
 if [ $push == true ]; then
-    echo "# docker login --username=phpbenchmarks"
-    docker logout
+    echo "Login to docker"
+    docker logout > $LOG_FILE 2>&1
+    rmLogFile
     docker login --username=phpbenchmarks
 
-    echo "# docker push $IMAGE_PATCH_TAG"
-    docker push $IMAGE_PATCH_TAG > $LOG_FILE
+    echo "Push Docker image $IMAGE_PATCH_TAG."
+    docker push $IMAGE_PATCH_TAG > $LOG_FILE 2>&1
     rmLogFile
 
-    echo "# docker push $IMAGE_MINOR_TAG"
-    docker push $IMAGE_MINOR_TAG > $LOG_FILE
+    echo "Push Docker image $IMAGE_MINOR_TAG."
+    docker push $IMAGE_MINOR_TAG > $LOG_FILE 2>&1
     rmLogFile
 
-    echo "# docker push $IMAGE_MAJOR_TAG"
-    docker push $IMAGE_MAJOR_TAG > $LOG_FILE
+    echo "Push Docker imageh $IMAGE_MAJOR_TAG."
+    docker push $IMAGE_MAJOR_TAG > $LOG_FILE 2>&1
     rmLogFile
 fi
 
-echo "# composer install"
+echo "Install Composer dev dependencie."
 composer install > $LOG_FILE 2>&1
 rmLogFile

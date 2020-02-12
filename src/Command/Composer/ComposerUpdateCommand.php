@@ -6,7 +6,7 @@ namespace App\Command\Composer;
 
 use App\{
     Command\AbstractCommand,
-    Command\PhpVersion\PhpVersionCliDefineCommand,
+    Command\Php\Cli\PhpCliChangeVersionCommand,
     Command\Validate\Composer\ValidateComposerJsonCommand,
     Benchmark\Benchmark,
     Utils\Path
@@ -33,7 +33,7 @@ final class ComposerUpdateCommand extends AbstractCommand
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
 
             $this
-                ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
+                ->runCommand(PhpCliChangeVersionCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
                 ->outputTitle('Update Composer dependencies')
                 ->runProcess(['composer', 'update', '--ansi'], OutputInterface::VERBOSITY_VERBOSE)
                 ->outputSuccess('Composer update done.')

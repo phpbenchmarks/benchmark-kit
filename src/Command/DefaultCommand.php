@@ -7,8 +7,8 @@ namespace App\Command;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\Benchmark\BenchmarkInitCommand,
-    Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\Validate\ValidateAllCommand,
+    Server\Server,
     Version
 };
 use Symfony\Component\Console\{
@@ -18,7 +18,6 @@ use Symfony\Component\Console\{
     Output\NullOutput,
     Output\OutputInterface
 };
-use Symfony\Component\Process\Process;
 
 final class DefaultCommand extends ListCommand
 {
@@ -42,7 +41,7 @@ final class DefaultCommand extends ListCommand
 
         if ($isConfigurationValid === true) {
             $lines = [
-                'Current PHP version: ' . $this->getBenchmarkPhpVersion() . '.',
+                'Current PHP version: ' . Server::getPhpVersion() . '.',
                 'Use "phpbenchkit ' . BenchmarkInitCommand::getDefaultName() . ' X.Y" to change it.'
             ];
             try {
@@ -80,17 +79,5 @@ final class DefaultCommand extends ListCommand
             ->getApplication()
             ->find(ValidateAllCommand::getDefaultName())
             ->run(new ArrayInput(['--skip-source-code-urls' => true]), new NullOutput()) === 0;
-    }
-
-    private function getBenchmarkPhpVersion(): string
-    {
-        return
-            (
-                new Process(
-                    ['php', '-r', 'echo PHP_MAJOR_VERSION . \'.\' . PHP_MINOR_VERSION . \'.\' . PHP_RELEASE_VERSION;']
-                )
-            )
-            ->mustRun()
-            ->getOutput();
     }
 }

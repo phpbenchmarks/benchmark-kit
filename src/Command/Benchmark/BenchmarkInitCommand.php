@@ -11,8 +11,8 @@ use App\{
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\Nginx\Vhost\NginxVhostStatisticsCreateCommand,
     Command\OutputBlockTrait,
-    Command\PhpFpm\PhpFpmRestartCommand,
-    Command\PhpVersion\PhpVersionCliDefineCommand,
+    Command\Php\Cli\PhpCliChangeVersionCommand,
+    Command\Php\Fpm\PhpFpmRestartCommand,
     Command\PhpVersionArgumentTrait,
     Command\ReloadNginxTrait,
     PhpVersion\PhpVersion,
@@ -79,8 +79,7 @@ final class BenchmarkInitCommand extends AbstractCommand
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
             )
             ->reloadNginx($this)
-            ->runCommand(PhpVersionCliDefineCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
-            ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
+            ->runCommand(PhpCliChangeVersionCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
             ->runProcess(['cp', $composerLockFilePath, 'composer.lock'])
             ->outputSuccess(Path::rmPrefix($composerLockFilePath) . ' copied to composer.lock.')
@@ -88,6 +87,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
             ->removeFile(Path::getBenchmarkPath() . '/composer.lock')
+            ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputUrls();
     }
 
