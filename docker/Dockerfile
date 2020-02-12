@@ -28,11 +28,11 @@ RUN \
 
 # Fix update-alternatives warning
 RUN \
-    touch /usr/share/man/man1/php5.6.1.gz \
-    && touch /usr/share/man/man1/php7.0.1.gz \
-    && touch /usr/share/man/man1/php7.1.1.gz \
-    && touch /usr/share/man/man1/php7.2.1.gz \
-    && touch /usr/share/man/man1/php7.3.1.gz \
+    touch /usr/share/man/man1/php5.6.40.gz \
+    && touch /usr/share/man/man1/php7.0.33.gz \
+    && touch /usr/share/man/man1/php7.1.33.gz \
+    && touch /usr/share/man/man1/php7.2.26.gz \
+    && touch /usr/share/man/man1/php7.3.13.gz \
     && touch /usr/share/man/man1/php7.4.1.gz
 
 # Composer

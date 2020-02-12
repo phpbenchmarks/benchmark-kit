@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\PhpVersion;
+namespace App\Command\Php\Cli;
 
 use App\{
     Command\AbstractCommand,
@@ -10,19 +10,19 @@ use App\{
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class PhpVersionCliDefineCommand extends AbstractCommand
+final class PhpCliChangeVersionCommand extends AbstractCommand
 {
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'phpVersion:cli:define';
+    protected static $defaultName = 'php:cli:changeVersion';
 
     protected function configure(): void
     {
         parent::configure();
 
         $this
-            ->setDescription('Define PHP CLI version')
+            ->setDescription('Change PHP CLI version')
             ->addPhpVersionArgument($this);
     }
 
@@ -31,12 +31,12 @@ final class PhpVersionCliDefineCommand extends AbstractCommand
         $phpVersion = $this->getPhpVersionFromArgument($this);
 
         return $this
-            ->outputTitle('Define PHP CLI version to ' . $phpVersion->toString())
+            ->outputTitle('Change PHP CLI version to ' . $phpVersion->toString())
             ->assertPhpVersionArgument($this)
             ->runProcess(
                 ['sudo', '/usr/bin/update-alternatives', '--set', 'php', '/usr/bin/php' . $phpVersion->toString()],
                 OutputInterface::VERBOSITY_VERBOSE
             )
-            ->outputSuccess('PHP CLI defined to ' . $phpVersion->toString() . '.');
+            ->outputSuccess('PHP CLI version changed to ' . $phpVersion->toString() . '.');
     }
 }
