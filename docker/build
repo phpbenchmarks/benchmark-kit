@@ -69,7 +69,7 @@ docker tag $IMAGE_PATCH_TAG $IMAGE_MINOR_TAG
 docker tag $IMAGE_PATCH_TAG $IMAGE_MAJOR_TAG
 
 if [ $push == true ]; then
-    echo "Login to docker"
+    echo "Login to dockerhub."
     docker logout > $LOG_FILE 2>&1
     rmLogFile
     docker login --username=phpbenchmarks
@@ -82,11 +82,11 @@ if [ $push == true ]; then
     docker push $IMAGE_MINOR_TAG > $LOG_FILE 2>&1
     rmLogFile
 
-    echo "Push Docker imageh $IMAGE_MAJOR_TAG."
+    echo "Push Docker image $IMAGE_MAJOR_TAG."
     docker push $IMAGE_MAJOR_TAG > $LOG_FILE 2>&1
     rmLogFile
 fi
 
-echo "Install Composer dev dependencie."
+echo "Install Composer dev dependencies."
 composer install > $LOG_FILE 2>&1
 rmLogFile
