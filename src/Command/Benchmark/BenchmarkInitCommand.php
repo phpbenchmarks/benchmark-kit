@@ -86,6 +86,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputTitle('Call ' . Path::rmPrefix($initBenchmarkPath))
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
+            ->outputTitle('Remove composer.lock')
             ->removeFile(Path::getBenchmarkPath() . '/composer.lock')
             ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputUrls();
