@@ -35,15 +35,15 @@ $opcacheStatus = opcache_get_status();
             </tr>
             <tr>
                 <td class="e">opcache.max_accelerated_files</td>
-                <td class="v"><?= ini_get('opcache.max_accelerated_files') ?></td>
+                <td class="v"><?= number_format(ini_get('opcache.max_accelerated_files')) ?></td>
             </tr>
             <tr>
                 <td class="e">opcache.max_file_size</td>
-                <td class="v"><?= ini_get('opcache.max_file_size') ?></td>
+                <td class="v"><?= number_format(ini_get('opcache.max_file_size')) ?></td>
             </tr>
             <tr>
                 <td class="e">opcache.revalidate_freq</td>
-                <td class="v"><?= ini_get('opcache.revalidate_freq') ?></td>
+                <td class="v"><?= number_format(ini_get('opcache.revalidate_freq')) ?></td>
             </tr>
             <tr>
                 <td class="e">opcache.save_comments</td>

@@ -12,6 +12,11 @@ trait CallBenchmarkUrlTrait
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $body = curl_exec($curl);
+
+        if ($body === false) {
+            throw new \Exception("Error while calling $url: " . curl_error($curl) . '.');
+        }
+
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
