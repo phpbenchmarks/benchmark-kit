@@ -125,17 +125,28 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    protected function renderTemplate(
+        string $templatePath,
+        array $parameters = [],
+        bool $isCustomTemplate = true
+    ): string {
+        if ($isCustomTemplate) {
+            $templateDir = dirname($templatePath);
+            $templatePath = basename($templatePath);
+        } else {
+            $templateDir = __DIR__ . '/../../templates/benchmark';
+        }
+
+        return (new Environment(new FilesystemLoader($templateDir)))
+            ->render($templatePath, $parameters);
+    }
+
     protected function renderBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
         int $benchmarkType = null
     ): string {
-        static $twig;
-        if ($twig instanceof Environment === false) {
-            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates/benchmark'));
-        }
-
         $componentPath = ComponentType::getCamelCaseName($componentType);
         $templates = [
             $componentPath . '/' . $templatePath . '.' . BenchmarkType::getCamelCaseName($benchmarkType) . '.twig',
@@ -155,7 +166,7 @@ abstract class AbstractCommand extends Command
             throw new \Exception('Benchmark template ' . $templatePath . ' not found.');
         }
 
-        return $twig->render($templateTwigPath, $templateParameters);
+        return $this->renderTemplate($templateTwigPath, $templateParameters, false);
     }
 
     protected function renderVhostTemplate(string $templatePath, array $templateParameters = []): string
@@ -173,6 +184,19 @@ abstract class AbstractCommand extends Command
     }
 
     protected function writeFileFromTemplate(
+        string $templatePath,
+        array $templateParameters,
+        string $destinationFile
+    ): self {
+        return $this
+            ->createDirectory(dirname($templatePath))
+            ->filePutContent(
+                Path::getBenchmarkPath() . '/' . $destinationFile,
+                $this->renderTemplate($templatePath, $templateParameters)
+            );
+    }
+
+    protected function writeFileFromBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
