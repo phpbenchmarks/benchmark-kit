@@ -103,6 +103,8 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
             }
         }
 
-        return $this->outputSuccess('License defined to ' . static::LICENSE . '.');
+        return $this->outputSuccess(
+            'Dependency ' . Benchmark::getCoreDependencyName() . " required as $dependencyVersion."
+        );
     }
 }

@@ -26,6 +26,6 @@ final class ConfigureCircleCiCommand extends AbstractCommand
         return $this
             ->outputTitle('Configure CircleCI')
             ->removeDirectory(Path::getCircleCiPath())
-            ->writeFileFromTemplate(Path::rmPrefix(Path::getCircleCiPath()) . '/config.yml');
+            ->writeFileFromBenchmarkTemplate(Path::rmPrefix(Path::getCircleCiPath()) . '/config.yml');
     }
 }

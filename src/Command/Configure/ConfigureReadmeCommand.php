@@ -25,7 +25,7 @@ final class ConfigureReadmeCommand extends AbstractCommand
     {
         return $this
             ->outputTitle('Creation of README.md')
-            ->writeFileFromTemplate(
+            ->writeFileFromBenchmarkTemplate(
                 'README.md',
                 [
                     'componentName' => Benchmark::getComponentName(),
