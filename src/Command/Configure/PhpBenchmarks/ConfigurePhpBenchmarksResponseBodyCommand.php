@@ -35,7 +35,7 @@ final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
             $this->removeDirectory(Path::getResponseBodyPath($phpVersion));
 
             foreach (BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType()) as $file) {
-                $this->writeFileFromBenchmarkTemplate(
+                $this->writeFileFromTemplate(
                     Path::rmPrefix(Path::getResponseBodyPath($phpVersion)) . '/' . $file
                 );
             }

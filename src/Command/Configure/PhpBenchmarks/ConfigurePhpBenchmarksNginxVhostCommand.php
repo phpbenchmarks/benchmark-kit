@@ -27,7 +27,7 @@ final class ConfigurePhpBenchmarksNginxVhostCommand extends AbstractCommand
 
         return $this
             ->outputTitle("Creation of $vhostPath")
-            ->writeFileFromBenchmarkTemplate($vhostPath)
+            ->writeFileFromTemplate($vhostPath)
             ->outputWarning("$vhostPath virtual host has been created. Feel free to edit it.");
     }
 }
