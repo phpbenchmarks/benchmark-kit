@@ -14,23 +14,35 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand
 };
+use Symfony\Component\Console\Input\InputOption;
 
 final class ConfigureAllCommand extends AbstractCommand
 {
     /** @var string */
     protected static $defaultName = 'configure:all';
 
+    private $configurePhpBenchmarksConfigParameters = [
+        'component' => 'Component id',
+        'benchmarkType' => 'Benchmark type id',
+        'entryPoint' => 'Entry point file name',
+        'benchmarkRelativeUrl' => 'Benchmark relative url (example: /benchmark/helloworld)',
+        'coreDependencyName' => 'Core dependency name (example: foo/bar)'
+    ];
+
     protected function configure(): void
     {
         parent::configure();
 
         $this->setDescription('Call all configure commands and ' . ComposerUpdateCommand::getDefaultName());
+        foreach ($this->configurePhpBenchmarksConfigParameters as $name => $description) {
+            $this->addOption($name, null, InputOption::VALUE_REQUIRED, $description);
+        }
     }
 
     protected function doExecute(): parent
     {
         return $this
-            ->runCommand(ConfigurePhpBenchmarksConfigCommand::getDefaultName())
+            ->runConfigurePhpBenchmarksConfigCommand()
             ->runCommand(ConfigurePhpBenchmarksPhpVersionCompatibleCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
@@ -40,5 +52,21 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ConfigureComposerJsonCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
+    }
+
+    protected function runConfigurePhpBenchmarksConfigCommand(): self
+    {
+        $parameters = [];
+        foreach (array_keys($this->configurePhpBenchmarksConfigParameters) as $parameter) {
+            if (is_string($this->getInput()->getOption($parameter))) {
+                $parameters["--$parameter"] = $this->getInput()->getOption($parameter);
+            }
+        }
+
+        return $this
+            ->runCommand(
+                ConfigurePhpBenchmarksConfigCommand::getDefaultName(),
+                $parameters
+            );
     }
 }

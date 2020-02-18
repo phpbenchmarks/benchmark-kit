@@ -84,14 +84,11 @@ class Component
         ]
     ];
 
-    public static function getAll(): array
+    public static function assertExists(int $id): void
     {
-        $return = [];
-        foreach (static::COMPONENTS as $id => $configuration) {
-            $return[$id] = static::getName($id);
+        if (array_key_exists($id, static::COMPONENTS) === false) {
+            throw new \Exception('Unknown component id "' . $id . '".');
         }
-
-        return $return;
     }
 
     public static function getByType(int $type): array
@@ -124,9 +121,7 @@ class Component
 
     protected static function getConfiguration(int $id): array
     {
-        if (array_key_exists($id, static::COMPONENTS) === false) {
-            throw new \Exception('Unknown component id "' . $id . '".');
-        }
+        static::assertExists($id);
 
         return static::COMPONENTS[$id];
     }

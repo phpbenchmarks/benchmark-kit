@@ -11,6 +11,7 @@ use App\{
     Component\ComponentType,
     Utils\Path
 };
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
@@ -22,7 +23,23 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create ' . Path::rmPrefix(Path::getConfigFilePath()));
+        $this
+            ->setDescription('Create ' . Path::rmPrefix(Path::getConfigFilePath()))
+            ->addOption('component', null, InputOption::VALUE_REQUIRED, 'Component id')
+            ->addOption('benchmarkType', null, InputOption::VALUE_REQUIRED, 'Benchmark type id')
+            ->addOption('entryPoint', null, InputOption::VALUE_REQUIRED, 'Entry point file name')
+            ->addOption(
+                'benchmarkRelativeUrl',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Benchmark relative url (example: /benchmark/helloworld)'
+            )
+            ->addOption(
+                'coreDependencyName',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Core dependency name (example: foo/bar)'
+            );
     }
 
     protected function doExecute(): AbstractCommand
@@ -31,11 +48,8 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
 
         $componentId = $this->getComponentId();
         $benchmarkType = $this->getBenchmarkType($componentId);
-        $sourceCodeEntryPoint = $this->askQuestion('Entry point file name?', 'public/index.php');
-        $benchmarkRelativeUrl = $this->askQuestion(
-            'Benchmark relative url (without protocol and host)?',
-            BenchmarkType::getDefaultBenchmarkRelativeUrl($benchmarkType)
-        );
+        $sourceCodeEntryPoint = $this->getSourceCodeEntryPoint();
+        $benchmarkRelativeUrl = $this->getBenchmarkRelativeUrl($benchmarkType);
         $coreDependency = $this->getCoreDependency($componentId);
         while ($this->validateVersion($coreDependency['version']) === false) {
             $coreDependency['version'] = $this->askQuestion('Core dependency version?');
@@ -73,8 +87,38 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
         );
     }
 
+    private function getSourceCodeEntryPoint(): string
+    {
+        $entryPoint = $this->getInput()->getOption('entryPoint');
+        if (is_string($entryPoint) === true) {
+            return $entryPoint;
+        }
+
+        return $this->askQuestion('Entry point file name?', 'public/index.php');
+    }
+
+    private function getBenchmarkRelativeUrl(int $benchmarkType): string
+    {
+        $benchmarkRelativeUrl = $this->getInput()->getOption('benchmarkRelativeUrl');
+        if (is_string($benchmarkRelativeUrl) === true) {
+            return $benchmarkRelativeUrl;
+        }
+
+        return $this->askQuestion(
+            'Benchmark relative url (without protocol and host)?',
+            BenchmarkType::getDefaultBenchmarkRelativeUrl($benchmarkType)
+        );
+    }
+
     private function getComponentId(): int
     {
+        $componentId = $this->getInput()->getOption('component');
+        if (is_string($componentId) === true) {
+            Component::assertExists((int) $componentId);
+
+            return (int) $componentId;
+        }
+
         $componentTypes = ComponentType::getAll();
         $componentType = (int) array_search(
             $this->askChoiceQuestion('Component type?', $componentTypes),
@@ -94,6 +138,15 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
         $benchmarkTypes = BenchmarkType::getByComponentType(
             Component::getType($componentId)
         );
+
+        $benchmarkType = $this->getInput()->getOption('benchmarkType');
+        if (is_string($benchmarkType) === true) {
+            if (array_key_exists($benchmarkType, $benchmarkTypes) === false) {
+                throw new \Exception("Benchmark type $benchmarkType does not exists.");
+            }
+
+            return (int) $benchmarkType;
+        }
 
         return (int) array_search(
             $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes),
@@ -136,10 +189,17 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
                     throw new \Exception('No dependency found in composer.json.');
                 }
 
-                $name = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);
+                $name = $this->getInput()->getOption('coreDependencyName');
+                if (is_string($name) === true) {
+                    if (in_array($name, $choices) === false) {
+                        throw new \Exception("Core dependency name $name not found in composer.json.");
+                    }
+                } else {
+                    $name = $this->askChoiceQuestion('Which dependency is the core of the component?', $choices);
+                }
             } else {
                 $name = $this->askQuestion(
-                    'Core dependency name? Example: symfony/framework-bundle, cakephp/cakephp'
+                    'Core dependency name (example: symfony/framework-bundle, cakephp/cakephp)?'
                 );
             }
         }
