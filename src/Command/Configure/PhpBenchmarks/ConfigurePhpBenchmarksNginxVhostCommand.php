@@ -21,13 +21,15 @@ final class ConfigurePhpBenchmarksNginxVhostCommand extends AbstractCommand
         $this->setDescription('Create ' . Path::rmPrefix(Path::getVhostPath()));
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $vhostPath = Path::rmPrefix(Path::getVhostPath());
 
-        return $this
+        $this
             ->outputTitle("Creation of $vhostPath")
             ->writeFileFromTemplate($vhostPath)
             ->outputWarning("$vhostPath virtual host has been created. Feel free to edit it.");
+
+        return 0;
     }
 }

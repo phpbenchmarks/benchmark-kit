@@ -21,9 +21,9 @@ final class ConfigureReadmeCommand extends AbstractCommand
         $this->setDescription('Create README.md');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->outputTitle('Creation of README.md')
             ->writeFileFromTemplate(
                 'README.md',
@@ -34,5 +34,7 @@ final class ConfigureReadmeCommand extends AbstractCommand
                     'coreDependencyMinorVersion' => (string) Benchmark::getCoreDependencyMinorVersion()
                 ]
             );
+
+        return 0;
     }
 }

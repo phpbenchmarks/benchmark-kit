@@ -7,9 +7,9 @@ namespace App\Command\Nginx\Vhost;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\OutputBlockTrait,
-    Command\PhpVersionArgumentTrait,
-    Command\ReloadNginxTrait,
+    Command\Behavior\OutputBlockTrait,
+    Command\Behavior\PhpVersionArgumentTrait,
+    Command\Behavior\ReloadNginxTrait,
     Utils\Path
 };
 
@@ -33,7 +33,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
             ->addOption('no-nginx-reload');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this
             ->outputTitle('Create ' . BenchmarkUrlService::PHPINFO_HOST . ' virtual host')
@@ -43,7 +43,9 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
             $this->reloadNginx($this);
         }
 
-        return $this->outputUrl();
+        $this->outputUrl();
+
+        return 0;
     }
 
     private function createVhostFile(): self

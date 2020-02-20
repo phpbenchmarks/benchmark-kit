@@ -22,17 +22,19 @@ final class ValidateEntryPointCommand extends AbstractCommand
         $this->setDescription('Validate entrypoint');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->outputTitle('Validate entrypoint');
 
-        $entryPointFilePath = Path::getBenchmarkPath() . '/' . Benchmark::getSourceCodeEntryPoint();
+        $entryPointFilePath = Path::getSourceCodePath() . '/' . Benchmark::getSourceCodeEntryPoint();
         if (is_readable($entryPointFilePath) === false) {
             throw new \Exception(
                 'Entry point ' . Benchmark::getSourceCodeEntryPoint() . 'does not exists or is not readable.'
             );
         }
 
-        return $this->outputSuccess(Path::rmPrefix($entryPointFilePath) . ' is readable.');
+        $this->outputSuccess(Path::rmPrefix($entryPointFilePath) . ' is readable.');
+
+        return 0;
     }
 }

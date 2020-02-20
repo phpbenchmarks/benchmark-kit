@@ -4,24 +4,34 @@ namespace App\Utils;
 
 use App\PhpVersion\PhpVersion;
 
+$_SERVER['foo'] = uniqid();
+
 /**
  * This class will be used with all PHP versions, so it has to compatible with at least PHP 5.6
  */
 class Path
 {
+    /** @var ?string */
+    protected static $sourceCodePath;
+
     public static function getBenchmarkKitPath()
     {
         return __DIR__ . '/../..';
     }
 
-    public static function getBenchmarkPath()
+    public static function setSourceCodePath($sourceCodePath)
     {
-        return '/var/www/benchmark';
+        static::$sourceCodePath = $sourceCodePath;
+    }
+
+    public static function getSourceCodePath()
+    {
+        return static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'];
     }
 
     public static function rmPrefix(string $path)
     {
-        $prefix = static::getBenchmarkPath();
+        $prefix = static::getSourceCodePath();
         if (substr($path, 0, strlen($prefix)) === $prefix) {
             return substr($path, strlen($prefix) + 1);
         }
@@ -31,7 +41,7 @@ class Path
 
     public static function getBenchmarkConfigurationPath()
     {
-        return static::getBenchmarkPath() . '/.phpbenchmarks';
+        return static::getSourceCodePath() . '/.phpbenchmarks';
     }
 
     public static function getConfigFilePath()
@@ -66,7 +76,7 @@ class Path
 
     public static function getCircleCiPath()
     {
-        return static::getBenchmarkPath() . '/.circleci';
+        return static::getSourceCodePath() . '/.circleci';
     }
 
     public static function getPreloadPath(PhpVersion $phpVersion)

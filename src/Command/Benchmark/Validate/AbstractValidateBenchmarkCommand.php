@@ -8,7 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\CallBenchmarkUrlTrait,
+    Command\Behavior\CallBenchmarkUrlTrait,
     Command\Validate\ValidateAllCommand,
     Benchmark\Benchmark,
     PhpVersion\PhpVersion,
@@ -37,7 +37,7 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
             );
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         if ($this->getInput()->getOption('no-validate-configuration') === false) {
             $this->runCommand(ValidateAllCommand::getDefaultName());
@@ -47,7 +47,7 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
             $this->validateForPhpVersion($phpVersion);
         }
 
-        return $this;
+        return 0;
     }
 
     protected function validateForPhpVersion(PhpVersion $phpVersion): self

@@ -39,9 +39,9 @@ final class ConfigureAllCommand extends AbstractCommand
         }
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->runConfigurePhpBenchmarksConfigCommand()
             ->runCommand(ConfigurePhpBenchmarksPhpVersionCompatibleCommand::getDefaultName())
             ->runCommand(ConfigurePhpBenchmarksInitBenchmarkCommand::getDefaultName())
@@ -52,6 +52,8 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ConfigureComposerJsonCommand::getDefaultName())
             ->runCommand(ComposerUpdateCommand::getDefaultName());
+
+        return 0;
     }
 
     protected function runConfigurePhpBenchmarksConfigCommand(): self

@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Behavior;
 
-use App\{
-    Utils\Path
-};
+use App\Utils\Path;
 
 trait GetComposerConfigurationTrait
 {
     protected function getComposerConfiguration(): array
     {
-        $composerJsonFile = Path::getBenchmarkPath() . '/composer.json';
+        $composerJsonFile = Path::getSourceCodePath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
             throw new \Exception('File composer.json does not exist.');
         }

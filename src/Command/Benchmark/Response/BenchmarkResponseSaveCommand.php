@@ -7,7 +7,7 @@ namespace App\Command\Benchmark\Response;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\CallBenchmarkUrlTrait,
+    Command\Behavior\CallBenchmarkUrlTrait,
     Utils\Path
 };
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,19 +28,21 @@ final class BenchmarkResponseSaveCommand extends AbstractCommand
             ->addArgument('file', InputArgument::OPTIONAL, 'Benchmark response file name', 'benchmarkResponse.txt');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $fileName = $this->getBenchmarkFileName();
         $this->outputTitle("Save benchmark response to $fileName");
 
-        return $this->filePutContent($fileName, $this->getBenchmarkResponse());
+        $this->filePutContent($fileName, $this->getBenchmarkResponse());
+
+        return 0;
     }
 
     private function getBenchmarkFileName(): string
     {
         $fileName = $this->getInput()->getArgument('file');
         if (substr($fileName, 0, 1) !== '/') {
-            $fileName = Path::getBenchmarkPath() . '/' . $fileName;
+            $fileName = Path::getSourceCodePath() . '/' . $fileName;
         }
 
         return $fileName;

@@ -22,7 +22,7 @@ final class ValidatePhpBenchmarksPhpIniCommand extends AbstractCommand
         $this->setDescription('Validate php.ini files');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->outputTitle('Validation of php.ini');
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
@@ -34,6 +34,6 @@ final class ValidatePhpBenchmarksPhpIniCommand extends AbstractCommand
             }
         }
 
-        return $this;
+        return 0;
     }
 }

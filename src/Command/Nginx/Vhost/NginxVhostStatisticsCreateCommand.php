@@ -8,9 +8,9 @@ use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\OutputBlockTrait,
-    Command\PhpVersionArgumentTrait,
-    Command\ReloadNginxTrait,
+    Command\Behavior\OutputBlockTrait,
+    Command\Behavior\PhpVersionArgumentTrait,
+    Command\Behavior\ReloadNginxTrait,
     Utils\Path
 };
 
@@ -34,7 +34,7 @@ final class NginxVhostStatisticsCreateCommand extends AbstractCommand
             ->addOption('no-nginx-reload');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this
             ->outputTitle('Create ' . BenchmarkUrlService::STATISTICS_HOST . ' virtual host')
@@ -45,7 +45,9 @@ final class NginxVhostStatisticsCreateCommand extends AbstractCommand
             $this->reloadNginx($this);
         }
 
-        return $this->outputUrl();
+        $this->outputUrl();
+
+        return 0;
     }
 
     private function createVhostFile(): self
@@ -72,7 +74,7 @@ final class NginxVhostStatisticsCreateCommand extends AbstractCommand
             Path::getBenchmarkKitPath() . '/public/statistics.php',
             $this->renderVhostTemplate(
                 'statistics/statistics.php.twig',
-                ['entryPoint' => realpath(Path::getBenchmarkPath()) . '/' . Benchmark::getSourceCodeEntryPoint()]
+                ['entryPoint' => realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint()]
             ),
             false
         );

@@ -24,7 +24,7 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
         $this->setDescription('Validate responseBody files');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $responseBodyPath = Path::getResponseBodyPath($phpVersion);
@@ -35,7 +35,7 @@ final class ValidatePhpBenchmarksResponseBodyCommand extends AbstractCommand
             }
         }
 
-        return $this;
+        return 0;
     }
 
     private function validateResponseBodyFile(string $filePath): self

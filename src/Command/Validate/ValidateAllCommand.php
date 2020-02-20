@@ -29,7 +29,7 @@ final class ValidateAllCommand extends AbstractCommand
         $this->setDescription('Call all validate commands');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this
             ->runCommand(ValidateCircleciCommand::getDefaultName())
@@ -49,6 +49,6 @@ final class ValidateAllCommand extends AbstractCommand
             $this->runCommand(ValidatePhpBenchmarksConfigSourceCodeUrlsCommand::getDefaultName());
         }
 
-        return $this;
+        return 0;
     }
 }

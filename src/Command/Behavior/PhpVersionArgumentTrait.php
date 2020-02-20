@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Behavior;
 
 use App\{
     Benchmark\Benchmark,
+    Command\AbstractCommand,
     PhpVersion\PhpVersion
 };
 use Symfony\Component\Console\{

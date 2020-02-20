@@ -37,9 +37,9 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
             );
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
-        $composerJsonFile = Path::getBenchmarkPath() . '/composer.json';
+        $composerJsonFile = Path::getSourceCodePath() . '/composer.json';
         if (is_readable($composerJsonFile) === false) {
             throw new \Exception('File does not exist.');
         }
@@ -50,7 +50,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
             throw new \Exception('Error while parsing: ' . $e->getMessage());
         }
 
-        return $this
+        $this
             ->outputTitle('Configure composer.json')
             ->configureName($data)
             ->configureLicense($data)
@@ -59,6 +59,8 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
                 $composerJsonFile,
                 json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
             );
+
+        return 0;
     }
 
     private function configureName(object $data): self

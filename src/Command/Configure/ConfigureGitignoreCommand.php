@@ -23,17 +23,17 @@ final class ConfigureGitignoreCommand extends AbstractCommand
         $this->setDescription('Configure .gitignore');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Configure .gitignore');
 
-        $gitIgnoreFileName = Path::getBenchmarkPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getSourceCodePath() . '/.gitignore';
         $ignores = (is_readable($gitIgnoreFileName)) ? file_get_contents($gitIgnoreFileName) : '';
 
         if (strpos($ignores, static::IGNORE_COMPOSER_LOCK) === false) {
             $this->filePutContent($gitIgnoreFileName, static::IGNORE_COMPOSER_LOCK . "\n" . $ignores);
         }
 
-        return $this;
+        return 0;
     }
 }

@@ -22,7 +22,7 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
         $this->setDescription('Create initBenchmark.sh');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $initBenchmarkPath = Path::getInitBenchmarkPath($phpVersion);
@@ -39,6 +39,6 @@ final class ConfigurePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
                 );
         }
 
-        return $this;
+        return 0;
     }
 }

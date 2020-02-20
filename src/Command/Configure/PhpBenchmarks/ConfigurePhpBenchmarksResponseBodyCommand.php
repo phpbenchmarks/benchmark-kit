@@ -23,7 +23,7 @@ final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
         $this->setDescription('Create responseBody files');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Creation of responseBody files');
 
@@ -41,6 +41,6 @@ final class ConfigurePhpBenchmarksResponseBodyCommand extends AbstractCommand
             }
         }
 
-        return $this;
+        return 0;
     }
 }

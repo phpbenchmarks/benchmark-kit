@@ -31,14 +31,16 @@ final class ValidateComposerLockCommand extends AbstractCommand
         );
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Validation of composer.lock');
 
-        if (file_exists(Path::getBenchmarkPath() . '/composer.lock')) {
+        if (file_exists(Path::getSourceCodePath() . '/composer.lock')) {
             throw new \Exception('composer.lock shoud not exists.');
         }
 
-        return $this->outputSuccess('composer.lock does not exists.');
+        $this->outputSuccess('composer.lock does not exists.');
+
+        return 0;
     }
 }

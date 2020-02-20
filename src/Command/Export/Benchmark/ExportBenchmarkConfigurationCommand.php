@@ -8,16 +8,12 @@ use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkType,
     Benchmark\BenchmarkUrlService,
+    Command\AbstractCommand,
     Component\ComponentType,
     Utils\Path
 };
-use Symfony\Component\Console\{
-    Command\Command,
-    Input\InputInterface,
-    Output\OutputInterface
-};
 
-final class ExportBenchmarkConfigurationCommand extends Command
+final class ExportBenchmarkConfigurationCommand extends AbstractCommand
 {
     /** @var string */
     protected static $defaultName = 'export:benchmark:configuration';
@@ -31,14 +27,14 @@ final class ExportBenchmarkConfigurationCommand extends Command
             ->addOption('pretty');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function doExecute(): int
     {
         $options = JSON_UNESCAPED_SLASHES;
-        if ($input->getOption('pretty')) {
+        if ($this->getInput()->getOption('pretty')) {
             $options = $options | JSON_PRETTY_PRINT;
         }
 
-        $output->writeln(
+        $this->getOutput()->writeln(
             json_encode(
                 [
                     'component' => [

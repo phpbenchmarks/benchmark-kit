@@ -22,7 +22,7 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
         $this->setDescription('Export benchmark statistics (memory, declared classes etc) in JSON');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->runCommand(
             BenchmarkValidateStatisticsCommand::getDefaultName(),
@@ -38,6 +38,6 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
 
         $this->getOutput()->writeln($statistics);
 
-        return $this;
+        return 0;
     }
 }
