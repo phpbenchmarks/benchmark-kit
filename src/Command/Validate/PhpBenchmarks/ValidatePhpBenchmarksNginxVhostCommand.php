@@ -23,9 +23,9 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
         $this->setDescription('Validate ' . Path::rmPrefix(Path::getVhostPath()));
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->outputTitle('Validation of ' . Path::rmPrefix(Path::getVhostPath()))
             ->assertFileExist(Path::getVhostPath(), ConfigurePhpBenchmarksNginxVhostCommand::getDefaultName())
             ->assertContainsVariables(
@@ -38,6 +38,8 @@ final class ValidatePhpBenchmarksNginxVhostCommand extends AbstractCommand
                     ]
                 )
             );
+
+        return 0;
     }
 
     private function assertContainsVariables(StringArray $variables): self

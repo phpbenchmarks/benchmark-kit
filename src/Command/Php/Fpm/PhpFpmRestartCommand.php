@@ -6,7 +6,7 @@ namespace App\Command\Php\Fpm;
 
 use App\{
     Command\AbstractCommand,
-    Command\PhpVersionArgumentTrait
+    Command\Behavior\PhpVersionArgumentTrait
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,11 +26,11 @@ final class PhpFpmRestartCommand extends AbstractCommand
             ->addPhpVersionArgument($this);
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
 
-        return $this
+        $this
             ->outputTitle('Restart PHP-FPM ' . $phpVersion->toString())
             ->assertPhpVersionArgument($this)
             ->runProcess(
@@ -45,5 +45,7 @@ final class PhpFpmRestartCommand extends AbstractCommand
                 'php' . $phpVersion->toString() . '-fpm is not started. Check your PHP configuration.'
             )
             ->outputSuccess('PHP-FPM ' . $phpVersion->toString() . ' restarted.');
+
+        return 0;
     }
 }

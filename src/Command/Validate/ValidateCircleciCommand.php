@@ -27,7 +27,7 @@ final class ValidateCircleciCommand extends AbstractCommand
         return $this->outputCallPhpbenchkitWarning(ConfigureCircleCiCommand::getDefaultName());
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->outputTitle('Validation of ' . Path::rmPrefix(Path::getCircleCiPath()));
 
@@ -44,6 +44,8 @@ final class ValidateCircleciCommand extends AbstractCommand
             throw new \Exception("$relativeConfigFilePath content is not valid.");
         }
 
-        return $this->outputSuccess("$relativeConfigFilePath content is valid.");
+        $this->outputSuccess("$relativeConfigFilePath content is valid.");
+
+        return 0;
     }
 }

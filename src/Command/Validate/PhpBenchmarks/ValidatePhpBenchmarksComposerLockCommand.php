@@ -24,7 +24,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
         $this->setDescription('Validate dependencies in composer.lock');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
@@ -59,7 +59,7 @@ final class ValidatePhpBenchmarksComposerLockCommand extends AbstractCommand
             $this->validateComponentVersion($data);
         }
 
-        return $this;
+        return 0;
     }
 
     private function validateComponentVersion(array $data): self

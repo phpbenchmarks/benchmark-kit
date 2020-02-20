@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Behavior;
 
+use App\Command\AbstractCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
 trait ReloadNginxTrait

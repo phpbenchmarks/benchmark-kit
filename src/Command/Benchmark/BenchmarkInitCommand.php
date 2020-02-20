@@ -7,14 +7,14 @@ namespace App\Command\Benchmark;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
+    Command\Behavior\PhpVersionArgumentTrait,
+    Command\Behavior\ReloadNginxTrait,
     Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
     Command\Nginx\Vhost\NginxVhostStatisticsCreateCommand,
-    Command\OutputBlockTrait,
+    Command\Behavior\OutputBlockTrait,
     Command\Php\Cli\PhpCliChangeVersionCommand,
     Command\Php\Fpm\PhpFpmRestartCommand,
-    Command\PhpVersionArgumentTrait,
-    Command\ReloadNginxTrait,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -53,7 +53,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->addOption('preload-enabled', null, InputOption::VALUE_OPTIONAL);
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
         $this->assertPhpVersionArgument($this);
@@ -63,7 +63,7 @@ final class BenchmarkInitCommand extends AbstractCommand
 
         $opcacheEnabled = $this->configureOpcache($phpVersion);
 
-        return $this
+        $this
             ->configurePreload($phpVersion, $opcacheEnabled)
             ->configurePhpIni($phpVersion)
             ->runCommand(
@@ -87,9 +87,11 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->runProcess([$initBenchmarkPath], OutputInterface::VERBOSITY_VERBOSE)
             ->outputSuccess(Path::rmPrefix($initBenchmarkPath) . ' called.')
             ->outputTitle('Remove composer.lock')
-            ->removeFile(Path::getBenchmarkPath() . '/composer.lock')
+            ->removeFile(Path::getSourceCodePath() . '/composer.lock')
             ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputUrls();
+
+        return 0;
     }
 
     private function configurePhpIni(PhpVersion $phpVersion): self

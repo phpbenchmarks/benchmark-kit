@@ -25,7 +25,7 @@ final class ComposerUpdateCommand extends AbstractCommand
         $this->setDescription('Execute composer update for all enabled PHP versions');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
 
@@ -43,6 +43,6 @@ final class ComposerUpdateCommand extends AbstractCommand
                 );
         }
 
-        return $this;
+        return 0;
     }
 }

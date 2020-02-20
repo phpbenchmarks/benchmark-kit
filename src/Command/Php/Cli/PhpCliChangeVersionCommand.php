@@ -6,7 +6,7 @@ namespace App\Command\Php\Cli;
 
 use App\{
     Command\AbstractCommand,
-    Command\PhpVersionArgumentTrait
+    Command\Behavior\PhpVersionArgumentTrait
 };
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,11 +26,11 @@ final class PhpCliChangeVersionCommand extends AbstractCommand
             ->addPhpVersionArgument($this);
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $phpVersion = $this->getPhpVersionFromArgument($this);
 
-        return $this
+        $this
             ->outputTitle('Change PHP CLI version to ' . $phpVersion->toString())
             ->assertPhpVersionArgument($this)
             ->runProcess(
@@ -38,5 +38,7 @@ final class PhpCliChangeVersionCommand extends AbstractCommand
                 OutputInterface::VERBOSITY_VERBOSE
             )
             ->outputSuccess('PHP CLI version changed to ' . $phpVersion->toString() . '.');
+
+        return 0;
     }
 }

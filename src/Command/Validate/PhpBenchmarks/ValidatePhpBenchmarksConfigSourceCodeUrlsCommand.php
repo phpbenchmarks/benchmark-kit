@@ -43,15 +43,17 @@ final class ValidatePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCom
         $this->setDescription('Validate ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         if ($this->skipSourceCodeUrls()) {
             return $this;
         }
 
-        return $this
+        $this
             ->outputTitle('Validation of ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls')
             ->assertCodeSourceUrls();
+
+        return 0;
     }
 
     protected function onError(): parent

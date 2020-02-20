@@ -6,8 +6,8 @@ namespace App\Command\Validate\Composer;
 
 use App\{
     Command\AbstractCommand,
+    Command\Behavior\GetComposerConfigurationTrait,
     Command\Configure\Composer\ConfigureComposerJsonCommand,
-    Command\GetComposerConfigurationTrait,
     Benchmark\Benchmark
 };
 
@@ -25,16 +25,18 @@ final class ValidateComposerJsonCommand extends AbstractCommand
         $this->setDescription('Validate dependencies in composer.json');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Validation of composer.json');
 
         $composerConfiguration = $this->getComposerConfiguration();
 
-        return $this
+        $this
             ->validateName($composerConfiguration)
             ->validateLicense($composerConfiguration)
             ->validateRequireComponent($composerConfiguration);
+
+        return 0;
     }
 
     private function validateName(array $composerConfiguration): self

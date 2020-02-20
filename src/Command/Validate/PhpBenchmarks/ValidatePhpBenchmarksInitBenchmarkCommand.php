@@ -21,7 +21,7 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
         $this->setDescription('Validate initBenchmark.sh');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $this
@@ -32,6 +32,6 @@ final class ValidatePhpBenchmarksInitBenchmarkCommand extends AbstractCommand
                 );
         }
 
-        return $this;
+        return 0;
     }
 }

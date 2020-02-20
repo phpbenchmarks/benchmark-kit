@@ -42,7 +42,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
             );
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Creation of ' . Path::rmPrefix(Path::getConfigFilePath()));
 
@@ -67,7 +67,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
         $sourceCode = $currentConfig['sourceCode'] ?? [];
         $sourceCode['entryPoint'] = $sourceCodeEntryPoint;
 
-        return $this->filePutContent(
+        $this->filePutContent(
             Path::getConfigFilePath(),
             Yaml::dump(
                 [
@@ -85,6 +85,8 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
                 100
             )
         );
+
+        return 0;
     }
 
     private function getSourceCodeEntryPoint(): string
@@ -156,7 +158,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
 
     private function getCoreDependency(int $componentId): array
     {
-        $composerPath = Path::getBenchmarkPath() . '/composer.json';
+        $composerPath = Path::getSourceCodePath() . '/composer.json';
         $composerData = null;
         if (is_file($composerPath)) {
             try {

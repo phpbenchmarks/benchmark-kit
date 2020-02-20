@@ -14,6 +14,7 @@ use Symfony\Component\Console\{
     Command\Command,
     Input\ArrayInput,
     Input\InputInterface,
+    Input\InputOption,
     Output\NullOutput,
     Output\OutputInterface,
     Question\ChoiceQuestion,
@@ -32,7 +33,7 @@ use Twig\{
 
 abstract class AbstractCommand extends Command
 {
-    abstract protected function doExecute(): self;
+    abstract protected function doExecute(): int;
 
     private ?InputInterface $input;
 
@@ -47,7 +48,9 @@ abstract class AbstractCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('skip-source-code-urls', null, null, 'Do not validate source code urls');
+        $this
+            ->addOption('source-code-path', null, InputOption::VALUE_REQUIRED, 'Source code path')
+            ->addOption('skip-source-code-urls', null, null, 'Do not validate source code urls');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,10 +58,10 @@ abstract class AbstractCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $this->skipSourceCodeUrls = $input->getOption('skip-source-code-urls');
+        Path::setSourceCodePath($input->getOption('source-code-path'));
 
-        $return = 0;
         try {
-            $this->doExecute();
+            $return = $this->doExecute();
         } catch (HiddenException $exception) {
             $return = 1;
         } catch (\Throwable $e) {
@@ -178,7 +181,7 @@ abstract class AbstractCommand extends Command
         int $componentType = null,
         int $benchmarkType = null
     ): self {
-        $file = Path::getBenchmarkPath() . '/' . $templatePath;
+        $file = Path::getSourceCodePath() . '/' . $templatePath;
 
         return $this
             ->createDirectory(dirname($file))
@@ -241,7 +244,7 @@ abstract class AbstractCommand extends Command
         ?int $timeout = 60
     ): self {
         return $this->processMustRun(
-            new Process($commands, $cwd ?? Path::getBenchmarkPath(), null, null, $timeout),
+            new Process($commands, $cwd ?? Path::getSourceCodePath(), null, null, $timeout),
             $outputVerbosity
         );
     }
@@ -289,9 +292,10 @@ abstract class AbstractCommand extends Command
     /** @return $this */
     protected function runCommand(string $name, array $arguments = [], bool $showOutput = true): self
     {
-        if ($this->skipSourceCodeUrls()) {
+        if ($this->skipSourceCodeUrls() === true) {
             $arguments['--skip-source-code-urls'] = true;
         }
+        $arguments['--source-code-path'] = Path::getSourceCodePath();
 
         $returnCode = $this
             ->getApplication()

@@ -17,9 +17,9 @@ abstract class AbstractLogCommand extends AbstractCommand
         $this->setDescription('Output ' . $this->getLogPath() . ' log');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->outputWarning('Output logs contained in ' . $this->getLogPath() . '.', false)
             ->outputWarning('CTRL+C to exit.', false)
             ->runProcess(
@@ -28,5 +28,7 @@ abstract class AbstractLogCommand extends AbstractCommand
                 null,
                 null
             );
+
+        return 0;
     }
 }

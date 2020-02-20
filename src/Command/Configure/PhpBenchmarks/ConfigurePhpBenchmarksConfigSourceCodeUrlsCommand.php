@@ -26,11 +26,13 @@ final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCo
         $this->setDescription('Configure ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->outputTitle('Configuration of ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls')
             ->defineSourceCodeUrls();
+
+        return 0;
     }
 
     private function defineSourceCodeUrls(): self

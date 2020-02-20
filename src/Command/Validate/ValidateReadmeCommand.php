@@ -28,11 +28,11 @@ final class ValidateReadmeCommand extends AbstractCommand
         return $this->outputCallPhpbenchkitWarning(ConfigureReadmeCommand::getDefaultName());
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
         $this->outputTitle('Validation of README.md');
 
-        $readmeFileName = Path::getBenchmarkPath() . '/README.md';
+        $readmeFileName = Path::getSourceCodePath() . '/README.md';
         if (is_readable($readmeFileName) === false) {
             throw new \Exception('README.md does not exists or is not readable.');
         }
@@ -52,6 +52,8 @@ final class ValidateReadmeCommand extends AbstractCommand
             throw new \Exception('README.md content is not valid.');
         }
 
-        return $this->outputSuccess('README.md content is valid.');
+        $this->outputSuccess('README.md content is valid.');
+
+        return 0;
     }
 }

@@ -27,11 +27,11 @@ final class ValidateGitignoreCommand extends AbstractCommand
         return $this->outputCallPhpbenchkitWarning(ConfigureGitignoreCommand::getDefaultName());
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Validate .gitignore');
 
-        $gitIgnoreFileName = Path::getBenchmarkPath() . '/.gitignore';
+        $gitIgnoreFileName = Path::getSourceCodePath() . '/.gitignore';
 
         if (is_readable($gitIgnoreFileName) === false) {
             throw new \Exception('.gitignore file not found.');
@@ -41,6 +41,8 @@ final class ValidateGitignoreCommand extends AbstractCommand
             throw new \Exception('.gitignore should contains ' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '.');
         }
 
-        return $this->outputSuccess('.gitignore contains "' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '".');
+        $this->outputSuccess('.gitignore contains "' . ConfigureGitignoreCommand::IGNORE_COMPOSER_LOCK . '".');
+
+        return 0;
     }
 }

@@ -6,15 +6,18 @@ namespace App\Command;
 
 use App\{
     Benchmark\BenchmarkUrlService,
+    Command\Behavior\OutputBlockTrait,
     Command\Benchmark\BenchmarkInitCommand,
     Command\Validate\ValidateAllCommand,
     Server\Server,
+    Utils\Path,
     Version
 };
 use Symfony\Component\Console\{
     Command\ListCommand,
     Input\ArrayInput,
     Input\InputInterface,
+    Input\InputOption,
     Output\NullOutput,
     Output\OutputInterface
 };
@@ -23,8 +26,17 @@ final class DefaultCommand extends ListCommand
 {
     use OutputBlockTrait;
 
+    protected function configure()
+    {
+        parent::configure();
+
+        $this->addOption('source-code-path', null, InputOption::VALUE_REQUIRED, 'Source code path');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        Path::setSourceCodePath($input->getOption('source-code-path'));
+
         $isConfigurationValid = $this->isConfigurationValid();
         $backgroundColor = $isConfigurationValid ? 'cyan' : 'yellow';
 
@@ -78,6 +90,14 @@ final class DefaultCommand extends ListCommand
         return $this
             ->getApplication()
             ->find(ValidateAllCommand::getDefaultName())
-            ->run(new ArrayInput(['--skip-source-code-urls' => true]), new NullOutput()) === 0;
+            ->run(
+                new ArrayInput(
+                    [
+                        '--skip-source-code-urls' => true,
+                        '--source-code-path' => Path::getSourceCodePath()
+                    ]
+                ),
+                new NullOutput()
+            ) === 0;
     }
 }

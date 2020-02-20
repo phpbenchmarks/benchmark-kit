@@ -6,7 +6,7 @@ namespace App\Command\Configure\PhpBenchmarks;
 
 use App\{
     Command\AbstractCommand,
-    Command\GetComposerConfigurationTrait,
+    Command\Behavior\GetComposerConfigurationTrait,
     PhpVersion\PhpVersion,
     PhpVersion\PhpVersionArray,
     Utils\Path
@@ -26,7 +26,7 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
         $this->setDescription('Create configurations for each compatible PHP version');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this->outputTitle('Configuration of PHP compatibles versions');
 
@@ -50,7 +50,7 @@ final class ConfigurePhpBenchmarksPhpVersionCompatibleCommand extends AbstractCo
             }
         }
 
-        return $this;
+        return 0;
     }
 
     private function getCompatiblesPhpVersions(): ?PhpVersionArray

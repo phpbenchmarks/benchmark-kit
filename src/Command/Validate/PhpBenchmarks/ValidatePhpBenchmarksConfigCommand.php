@@ -24,9 +24,9 @@ final class ValidatePhpBenchmarksConfigCommand extends AbstractCommand
         $this->setDescription('Validate ' . Path::rmPrefix(Path::getConfigFilePath()));
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->outputTitle(
                 'Validation of ' . Path::rmPrefix(Path::getConfigFilePath())
             )
@@ -40,6 +40,8 @@ final class ValidatePhpBenchmarksConfigCommand extends AbstractCommand
             ->assertCallMethod('getCoreDependencyMajorVersion', 'coreDependency.version')
             ->assertCallMethod('getCoreDependencyMinorVersion', 'coreDependency.version')
             ->assertCallMethod('getCoreDependencyPatchVersion', 'coreDependency.version');
+
+        return 0;
     }
 
     protected function onError(): parent

@@ -7,9 +7,9 @@ namespace App\Command\Nginx\Vhost;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\OutputBlockTrait,
-    Command\PhpVersionArgumentTrait,
-    Command\ReloadNginxTrait,
+    Command\Behavior\OutputBlockTrait,
+    Command\Behavior\PhpVersionArgumentTrait,
+    Command\Behavior\ReloadNginxTrait,
     Utils\Path
 };
 
@@ -33,7 +33,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
             ->addOption('no-nginx-reload');
     }
 
-    protected function doExecute(): AbstractCommand
+    protected function doExecute(): int
     {
         $this
             ->outputTitle('Create ' . BenchmarkUrlService::HOST . ' virtual host')
@@ -44,7 +44,9 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
             $this->reloadNginx($this);
         }
 
-        return $this->outputUrl();
+        $this->outputUrl();
+
+        return 0;
     }
 
     private function getContainerVhostFilePath(): string
@@ -71,7 +73,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 
         $content = str_replace('____PORT____', BenchmarkUrlService::getNginxPort(), $content);
         $content = str_replace('____HOST____', BenchmarkUrlService::HOST, $content);
-        $content = str_replace('____INSTALLATION_PATH____', Path::getBenchmarkPath(), $content);
+        $content = str_replace('____INSTALLATION_PATH____', Path::getSourceCodePath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
@@ -80,7 +82,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
         return $this
             ->outputSuccess('____PORT____ replaced by ' . BenchmarkUrlService::getNginxPort() . '.')
             ->outputSuccess('____HOST____ replaced by ' . BenchmarkUrlService::HOST . '.')
-            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getBenchmarkPath() . '.')
+            ->outputSuccess('____INSTALLATION_PATH____ replaced by ' . Path::getSourceCodePath() . '.')
             ->outputSuccess('____PHP_FPM_SOCK____ replaced by ' . $phpFpm . '.');
     }
 

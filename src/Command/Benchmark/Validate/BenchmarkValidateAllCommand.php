@@ -21,9 +21,9 @@ final class BenchmarkValidateAllCommand extends AbstractCommand
         $this->setDescription('Call all benchmark:validate commands');
     }
 
-    protected function doExecute(): parent
+    protected function doExecute(): int
     {
-        return $this
+        $this
             ->runCommand(ValidateAllCommand::getDefaultName())
             ->runCommand(
                 BenchmarkValidateBenchmarkCommand::getDefaultName(),
@@ -40,5 +40,7 @@ final class BenchmarkValidateAllCommand extends AbstractCommand
                 BenchmarkValidateStatisticsCommand::getDefaultName(),
                 ['--no-validate-configuration' => true]
             );
+
+        return 0;
     }
 }

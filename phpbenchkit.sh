@@ -32,23 +32,23 @@ function addHost() {
 }
 
 function startContainer() {
-    defaultSourceCodePath=$(pwd)
-    defaultNginxPort="8080"
+    local defaultHostSourceCodePath=$(pwd)
+    local defaultNginxPort="8080"
     if [ -f "$DEFAULT_CONFIG_PATH" ]; then
         source $DEFAULT_CONFIG_PATH
     fi
 
-    if [ "$sourceCodePath" == "" ]; then
-        echo -en "\e[44m Benchmark source code path [$defaultSourceCodePath]? \e[0m "
-        read sourceCodePath
-        if [ "$sourceCodePath" == "" ]; then
-            sourceCodePath=$defaultSourceCodePath
+    if [ "$hostSourceCodePath" == "" ]; then
+        echo -en "\e[44m Benchmark source code path [$defaultHostSourceCodePath]? \e[0m "
+        read hostSourceCodePath
+        if [ "$hostSourceCodePath" == "" ]; then
+            hostSourceCodePath=$defaultHostSourceCodePath
         fi
     else
-        echo -e "Source code: \e[32m$sourceCodePath\e[0m."
+        echo -e "Source code: \e[32m$hostSourceCodePath\e[0m."
     fi
-    if [ ! -d "$sourceCodePath" ]; then
-        echo -e "\e[41m Benchmark source code path $sourceCodePath is not a redirectory. \e[0m"
+    if [ ! -d "$hostSourceCodePath" ]; then
+        echo -e "\e[41m Benchmark source code path $hostSourceCodePath is not a redirectory. \e[0m"
         exit 1
     fi
 
@@ -63,7 +63,7 @@ function startContainer() {
     fi
 
     echo "#!/usr/bin/env bash" > $DEFAULT_CONFIG_PATH
-    echo "defaultSourceCodePath=$sourceCodePath" >> $DEFAULT_CONFIG_PATH
+    echo "defaultHostSourceCodePath=$hostSourceCodePath" >> $DEFAULT_CONFIG_PATH
     echo "defaultNginxPort=$nginxPort" >> $DEFAULT_CONFIG_PATH
 
     if [ $kitAsVolume == true ]; then
@@ -79,13 +79,13 @@ function startContainer() {
         --name=$CONTAINER_NAME \
         --rm \
         -p 127.0.0.1:$nginxPort:$nginxPort \
-        -v $sourceCodePath:/var/www/benchmark \
+        -v $hostSourceCodePath:/var/www/benchmark \
         $kitAsVolumeDockerRunParameter \
         $DOCKER_IMAGE_NAME \
         > /dev/null
 
     docker exec -it $CONTAINER_NAME /bin/bash -c "echo NGINX_PORT=$nginxPort > $BENCHMARK_KIT_PATH/.env.local"
-    docker exec -it $CONTAINER_NAME /bin/bash -c "echo HOST_SOURCE_CODE_PATH=$sourceCodePath >> $BENCHMARK_KIT_PATH/.env.local"
+    docker exec -it $CONTAINER_NAME /bin/bash -c "echo HOST_SOURCE_CODE_PATH=$hostSourceCodePath >> $BENCHMARK_KIT_PATH/.env.local"
 
     containerStarted=true
 }
@@ -114,7 +114,7 @@ restartContainer=false
 kitAsVolume=false
 consoleParams=""
 selfUpdate=false
-sourceCodePath=""
+hostSourceCodePath=""
 nginxPort=""
 tty=true
 for param in "$@"; do
@@ -127,7 +127,7 @@ for param in "$@"; do
     elif [ "$param" == "--selfupdate" ]; then
         selfUpdate=true
     elif [ "${param:0:9}" == "--source=" ]; then
-        sourceCodePath=${param:9}
+        hostSourceCodePath=${param:9}
         restartContainer=true
     elif [ "${param:0:13}" == "--nginx-port=" ]; then
         nginxPort=${param:13}
