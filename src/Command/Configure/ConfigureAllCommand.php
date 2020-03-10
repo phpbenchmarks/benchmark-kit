@@ -23,10 +23,10 @@ final class ConfigureAllCommand extends AbstractCommand
 
     private $configurePhpBenchmarksConfigParameters = [
         'component' => 'Component id',
-        'benchmarkType' => 'Benchmark type id',
-        'entryPoint' => 'Entry point file name',
-        'benchmarkRelativeUrl' => 'Benchmark relative url (example: /benchmark/helloworld)',
-        'coreDependencyName' => 'Core dependency name (example: foo/bar)'
+        'benchmark-type' => 'Benchmark type id',
+        'entry-point' => 'Entry point file name',
+        'benchmark-relative-url' => 'Benchmark relative url (example: /benchmark/helloworld)',
+        'core-dependency-name' => 'Core dependency name (example: foo/bar)'
     ];
 
     protected function configure(): void

@@ -74,7 +74,10 @@ final class NginxVhostStatisticsCreateCommand extends AbstractCommand
             Path::getBenchmarkKitPath() . '/public/statistics.php',
             $this->renderVhostTemplate(
                 'statistics/statistics.php.twig',
-                ['entryPoint' => realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint()]
+                [
+                    'entryPoint' => realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
+                    'statisticsPath' => Path::getStatisticsPath()
+                ]
             ),
             false
         );

@@ -38,9 +38,7 @@ final class ComposerUpdateCommand extends AbstractCommand
                 ->runProcess(['composer', 'update', '--ansi'], OutputInterface::VERBOSITY_VERBOSE)
                 ->outputSuccess('Composer update done.')
                 ->runProcess(['mv', 'composer.lock', $composerLockFilePath])
-                ->outputSuccess(
-                    'Move composer.lock to ' . Path::rmPrefix($composerLockFilePath) . '.'
-                );
+                ->outputSuccess('Move composer.lock to ' . Path::rmPrefix($composerLockFilePath) . '.');
         }
 
         return 0;

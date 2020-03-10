@@ -12,6 +12,7 @@ use App\{
     Utils\Path
 };
 use steevanb\PhpTypedArray\ScalarArray\StringArray;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
 final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCommand
@@ -24,6 +25,9 @@ final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCo
         parent::configure();
 
         $this->setDescription('Configure ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls');
+        foreach (SourceCodeUrl::QUESTIONS as $id => $question) {
+            $this->addOption("url-$id", null, InputOption::VALUE_REQUIRED, $question);
+        }
     }
 
     protected function doExecute(): int
@@ -64,15 +68,16 @@ final class ConfigurePhpBenchmarksConfigSourceCodeUrlsCommand extends AbstractCo
     {
         $urls = new StringArray();
         foreach (BenchmarkType::getSourceCodeUrlIds() as $urlId) {
-            $url = null;
-            $isFirst = true;
-            do {
-                if ($isFirst === false) {
-                    $this->outputError('Invalid url.');
+            $url = $this->getInput()->getOption("url-$urlId");
+            $errorsCount = 0;
+            while (ValidatePhpBenchmarksConfigSourceCodeUrlsCommand::validateUrl($url)->count() > 0) {
+                $this->outputError('Invalid url.');
+                if ($errorsCount >= 5) {
+                    throw new \Exception('Invalid url.');
                 }
-                $isFirst = false;
+                $errorsCount++;
                 $url = $this->askQuestion(SourceCodeUrl::QUESTIONS[$urlId]);
-            } while (ValidatePhpBenchmarksConfigSourceCodeUrlsCommand::validateUrl($url)->count() > 0);
+            }
 
             $urls[$urlId] = $url;
         }
