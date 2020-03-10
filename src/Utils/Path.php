@@ -91,6 +91,6 @@ class Path
 
     public static function getStatisticsPath()
     {
-        return '/tmp/phpbenchmarks-statistics.json';
+        return __DIR__ . '/../../var/statistics.json';
     }
 }

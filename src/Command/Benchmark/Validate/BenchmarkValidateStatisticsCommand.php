@@ -11,6 +11,8 @@ use App\{
     Utils\Path
 };
 use steevanb\SymfonyOptionsResolver\OptionsResolver;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmarkCommand
 {
@@ -53,6 +55,9 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
 
     protected function afterBodyValidated(PhpVersion $phpVersion): self
     {
+        // Wait for statistics.json file to be written, sometimes it's not the case at this stage
+        sleep(1);
+
         if (is_readable(Path::getStatisticsPath()) === false) {
             throw new \Exception(Path::getStatisticsPath() . ' does not exists or is not readable.');
         }
@@ -69,6 +74,8 @@ final class BenchmarkValidateStatisticsCommand extends AbstractValidateBenchmark
             throw new \Exception('Unable to parse statistics JSON file.', 0, $exception);
         }
         $this->outputSuccess('Statistics JSON file is a valid JSON file.');
+
+        $this->removeFile(Path::getStatisticsPath());
 
         try {
             (new OptionsResolver())

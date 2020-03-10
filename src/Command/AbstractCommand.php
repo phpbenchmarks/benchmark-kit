@@ -64,8 +64,11 @@ abstract class AbstractCommand extends Command
             $return = $this->doExecute();
         } catch (HiddenException $exception) {
             $return = 1;
-        } catch (\Throwable $e) {
-            $this->outputError($e->getMessage());
+        } catch (\Throwable $exception) {
+            $this->outputError(
+                $exception->getMessage() . ' File: ' . $exception->getFile() . '. Line: ' . $exception->getLine() . '.',
+                'EXCEPTION'
+            );
             $this->onError();
 
             $return = 1;
@@ -121,9 +124,9 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function outputError(string $error): self
+    protected function outputError(string $error, string $title = 'ERROR'): self
     {
-        $this->getOutput()->writeln("  \e[41m > \e[00m \e[41m ERROR \e[00m \e[31m" . $error . "\e[00m");
+        $this->getOutput()->writeln("  \e[41m > \e[00m \e[41m $title \e[00m \e[31m" . $error . "\e[00m");
 
         return $this;
     }

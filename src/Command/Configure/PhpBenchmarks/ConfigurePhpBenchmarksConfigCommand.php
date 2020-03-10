@@ -26,16 +26,16 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
         $this
             ->setDescription('Create ' . Path::rmPrefix(Path::getConfigFilePath()))
             ->addOption('component', null, InputOption::VALUE_REQUIRED, 'Component id')
-            ->addOption('benchmarkType', null, InputOption::VALUE_REQUIRED, 'Benchmark type id')
-            ->addOption('entryPoint', null, InputOption::VALUE_REQUIRED, 'Entry point file name')
+            ->addOption('benchmark-type', null, InputOption::VALUE_REQUIRED, 'Benchmark type id')
+            ->addOption('entry-point', null, InputOption::VALUE_REQUIRED, 'Entry point file name')
             ->addOption(
-                'benchmarkRelativeUrl',
+                'benchmark-relative-url',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Benchmark relative url (example: /benchmark/helloworld)'
             )
             ->addOption(
-                'coreDependencyName',
+                'core-dependency-name',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Core dependency name (example: foo/bar)'
@@ -91,7 +91,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
 
     private function getSourceCodeEntryPoint(): string
     {
-        $entryPoint = $this->getInput()->getOption('entryPoint');
+        $entryPoint = $this->getInput()->getOption('entry-point');
         if (is_string($entryPoint) === true) {
             return $entryPoint;
         }
@@ -101,7 +101,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
 
     private function getBenchmarkRelativeUrl(int $benchmarkType): string
     {
-        $benchmarkRelativeUrl = $this->getInput()->getOption('benchmarkRelativeUrl');
+        $benchmarkRelativeUrl = $this->getInput()->getOption('benchmark-relative-url');
         if (is_string($benchmarkRelativeUrl) === true) {
             return $benchmarkRelativeUrl;
         }
@@ -141,7 +141,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
             Component::getType($componentId)
         );
 
-        $benchmarkType = $this->getInput()->getOption('benchmarkType');
+        $benchmarkType = $this->getInput()->getOption('benchmark-type');
         if (is_string($benchmarkType) === true) {
             if (array_key_exists($benchmarkType, $benchmarkTypes) === false) {
                 throw new \Exception("Benchmark type $benchmarkType does not exists.");
@@ -191,7 +191,7 @@ final class ConfigurePhpBenchmarksConfigCommand extends AbstractCommand
                     throw new \Exception('No dependency found in composer.json.');
                 }
 
-                $name = $this->getInput()->getOption('coreDependencyName');
+                $name = $this->getInput()->getOption('core-dependency-name');
                 if (is_string($name) === true) {
                     if (in_array($name, $choices) === false) {
                         throw new \Exception("Core dependency name $name not found in composer.json.");
