@@ -32,9 +32,10 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
             ->addOption(
                 'minor-dependencies',
                 null,
-                InputOption::VALUE_OPTIONAL,
-                'Dependency whose version is to change, separated by ","'
-            );
+                InputOption::VALUE_REQUIRED,
+                'Dependencies whose version is to change, separated by ","'
+            )
+            ->addOption('no-dependency-version', null, InputOption::VALUE_NONE, 'Do not configure dependency version');
     }
 
     protected function doExecute(): int
@@ -45,16 +46,16 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
         }
 
         try {
-            $data = json_decode(file_get_contents($composerJsonFile), false, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode(file_get_contents($composerJsonFile), true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
             throw new \Exception('Error while parsing: ' . $e->getMessage());
         }
 
         $this
             ->outputTitle('Configure composer.json')
-            ->configureName($data)
-            ->configureLicense($data)
-            ->configureVersions($data)
+            ->defineLicense($data)
+            ->defineVersions($data)
+            ->defineName($data)
             ->filePutContent(
                 $composerJsonFile,
                 json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
@@ -63,35 +64,40 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
         return 0;
     }
 
-    private function configureName(object $data): self
+    private function defineName(array &$data): self
     {
-        $data->name = static::getComposerName();
+        $name = static::getComposerName();
+        $data = array_merge(['name' => $name], $data);
 
-        return $this->outputSuccess('Name defined to ' . static::getComposerName() . '.');
+        return $this->outputSuccess("Name defined to $name.");
     }
 
-    private function configureLicense(object $data): self
+    private function defineLicense(array &$data): self
     {
-        $data->license = static::LICENSE;
+        $data = array_merge(['license' => static::LICENSE], $data);
 
         return $this->outputSuccess('License defined to ' . static::LICENSE . '.');
     }
 
-    private function configureVersions(object $data): self
+    private function defineVersions(array &$data): self
     {
+        if ($this->getInput()->getOption('no-dependency-version') === true) {
+            return $this;
+        }
+
         $dependencyVersion = Benchmark::getCoreDependencyMajorVersion()
             . '.'
             . Benchmark::getCoreDependencyMinorVersion()
             . '.'
             . Benchmark::getCoreDependencyPatchVersion();
 
-        $data->require->{Benchmark::getCoreDependencyName()} = $dependencyVersion;
+        $data['require'][Benchmark::getCoreDependencyName()] = $dependencyVersion;
 
         $minorDependencies = $this->getInput()->getOption('minor-dependencies');
         if (is_string($minorDependencies)) {
             foreach (explode(',', $minorDependencies) as $minorDependency) {
                 $minorDependencyVersionModified = false;
-                foreach ($data->require as $dependency => &$version) {
+                foreach ($data['require'] as $dependency => &$version) {
                     if ($minorDependency === $dependency) {
                         $version = $dependencyVersion;
                         $minorDependencyVersionModified = true;

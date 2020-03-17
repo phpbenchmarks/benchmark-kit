@@ -4,8 +4,6 @@ namespace App\Utils;
 
 use App\PhpVersion\PhpVersion;
 
-$_SERVER['foo'] = uniqid();
-
 /**
  * This class will be used with all PHP versions, so it has to compatible with at least PHP 5.6
  */

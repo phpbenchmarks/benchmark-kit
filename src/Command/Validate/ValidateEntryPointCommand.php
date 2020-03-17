@@ -29,7 +29,7 @@ final class ValidateEntryPointCommand extends AbstractCommand
         $entryPointFilePath = Path::getSourceCodePath() . '/' . Benchmark::getSourceCodeEntryPoint();
         if (is_readable($entryPointFilePath) === false) {
             throw new \Exception(
-                'Entry point ' . Benchmark::getSourceCodeEntryPoint() . 'does not exists or is not readable.'
+                'Entry point "' . Benchmark::getSourceCodeEntryPoint() . '" does not exists or is not readable.'
             );
         }
 

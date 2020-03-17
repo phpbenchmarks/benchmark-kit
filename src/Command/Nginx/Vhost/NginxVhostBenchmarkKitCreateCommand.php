@@ -73,7 +73,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
 
         $content = str_replace('____PORT____', BenchmarkUrlService::getNginxPort(), $content);
         $content = str_replace('____HOST____', BenchmarkUrlService::HOST, $content);
-        $content = str_replace('____INSTALLATION_PATH____', Path::getSourceCodePath(), $content);
+        $content = str_replace('____INSTALLATION_PATH____', $this->getRealSourceCodePath(), $content);
         $phpFpm = 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock';
         $content = str_replace('____PHP_FPM_SOCK____', $phpFpm, $content);
 
@@ -103,5 +103,15 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
             'green',
             $this->getOutput()
         );
+    }
+
+    private function getRealSourceCodePath(): string
+    {
+        $return = realpath(Path::getSourceCodePath());
+        if ($return === false) {
+            throw new \Exception('Source code path "' . Path::getSourceCodePath() . '" not found.');
+        }
+
+        return $return;
     }
 }
