@@ -5,7 +5,7 @@ server {
     location / {
         try_files $uri /index.php$is_args$args;
     }
-    location ~ ^/(index).php(/|$) {
+    location ~ index.php(/|$) {
         fastcgi_pass unix:/run/php/____PHP_FPM_SOCK____;
         fastcgi_split_path_info ^(.+.php)(/.*)$;
         include fastcgi_params;
