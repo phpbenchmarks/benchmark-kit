@@ -1,21 +1,22 @@
 #!/usr/bin/env sh
 
-set -e
+set -eu
+
+readonly PROJECT_DIRECTORY=$(realpath $(dirname $(realpath $0))/..)
 
 if [ $(which docker || false) ]; then
-    readonly PROJECT_DIRECTORY=$(realpath $(dirname $(realpath $0))/..)
-    docker run \
+    docker \
+        run \
+        -it \
         --rm \
-        -e PHPCS_BOOTSTRAP=/var/phpcs.bootstrap.php \
-        -v ${PROJECT_DIRECTORY}:/var/phpcs:ro \
-        --entrypoint=/var/phpcs/bin/phpcs \
-        steevanb/php-code-sniffs:3.0.1
+        -v ${PROJECT_DIRECTORY}:/app:ro \
+        --entrypoint /app/bin/phpcs \
+        steevanb/php-code-sniffs:4.0.1
 else
-    php -d memory_limit=512M /var/steevanb/php-code-sniffs/vendor/bin/phpcs \
-        --warning-severity=0 \
-        --ignore=/var/phpcs/vendor/,/var/phpcs/var,/var/phpcs/config/bootstrap.php,/var/phpcs/config/bundles.php,/var/phpcs/public/phpinfo.php,/var/phpcs/public/statistics.php,/var/phpcs/src/Utils/Path.php \
-        --standard=/var/steevanb/php-code-sniffs/vendor/steevanb/php-code-sniffs/Steevanb/ruleset.xml \
-        --bootstrap=/var/phpcs/phpcs.bootstrap.php \
-        --report=steevanb\\PhpCodeSniffs\\Reports\\Steevanb \
-        /var/phpcs/
+    readonly PHPCS_IGNORE="--ignore=/app/vendor/,/app/var,/app/config/bootstrap.php,/app/config/bundles.php,/app/public/phpinfo.php,/app/public/statistics.php,/app/src/Utils/Path.php"
+    PHPCS_PARAMETERS="-p --warning-severity=0 ${PHPCS_IGNORE}"
+    if [ -f "${PROJECT_DIRECTORY}/phpcs.bootstrap.local.php" ]; then
+        PHPCS_BOOTSTRAP="/app/phpcs.bootstrap.local.php"
+    fi
+    /var/php-code-sniffs/docker/entrypoint.sh
 fi

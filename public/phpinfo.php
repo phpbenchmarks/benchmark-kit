@@ -59,7 +59,7 @@ $opcacheStatus = opcache_get_status();
                     <h1 class="p">opcache_get_status()</h1>
                 </td>
             </tr>
-            <?php $currentStatusKey = null ?>
+            <?php $currentStatusKey = null; ?>
             <?php foreach (['memory_usage', 'interned_strings_usage', 'opcache_statistics'] as $statusKey) { ?>
                 <?php foreach ($opcacheStatus[$statusKey] as $key => $value) { ?>
                     <tr class="<?php if ($currentStatusKey === $statusKey) echo 'foo' ?>">

@@ -3,8 +3,8 @@ version: '2.1'
 jobs:
     phpcs:
         docker:
-            - image: steevanb/php-code-sniffs:3.0.1
-        working_directory: /var/phpcs
+            - image: steevanb/php-code-sniffs:4.0.1
+        working_directory: /app
         steps:
             - checkout
             - run:
@@ -13,8 +13,8 @@ jobs:
 
     phpcf:
         docker:
-            - image: steevanb/php-code-fixer:2.0.19
-        working_directory: /var/php-code-fixer
+            - image: steevanb/php-code-fixer:2.0.23
+        working_directory: /app
         steps:
             - checkout
             - run:
