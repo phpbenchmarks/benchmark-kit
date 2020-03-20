@@ -6,12 +6,11 @@ if [ $(which docker || false) ]; then
     readonly PROJECT_DIRECTORY="$(realpath $(dirname $(realpath $0))/..)"
     docker \
         run \
-        --rm \
         -it \
-        -v ${PROJECT_DIRECTORY}:/app:ro \
-        -w /app \
-        steevanb/php-code-fixer:2.0.23 \
-        bin/phpcf
+        --rm \
+        -v $(pwd):/app:ro \
+        --entrypoint /app/bin/composerRequireChecker \
+        steevanb/composer-require-checker:2.1.0
 else
-    phpcf --exclude=/vendor/ .
+    composer-require-checker
 fi

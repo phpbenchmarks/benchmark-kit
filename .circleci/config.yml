@@ -1,6 +1,37 @@
 version: '2.1'
 
 jobs:
+    composer:
+        docker:
+            - image: composer
+        working_directory: /app
+        steps:
+            - checkout
+            - restore_cache:
+                key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+            - run:
+                composer install --ignore-platform-reqs --no-interaction
+            - save_cache:
+                key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+                paths:
+                    - ./vendor
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - vendor
+
+    composerRequireChecker:
+        docker:
+            - image: steevanb/composer-require-checker:2.1.0
+        working_directory: /app
+        steps:
+            - checkout
+            - restore_cache:
+                  key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+            - run:
+                  name: composer-require-checker
+                  command: bin/composerRequireChecker
+
     phpcs:
         docker:
             - image: steevanb/php-code-sniffs:4.0.1
@@ -27,3 +58,7 @@ workflows:
         jobs:
             - phpcs
             - phpcf
+            - composer
+            - composerRequireChecker:
+                  requires:
+                      - composer
