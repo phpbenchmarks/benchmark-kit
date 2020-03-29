@@ -37,13 +37,16 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     {
         $this
             ->outputTitle('Create ' . BenchmarkUrlService::PHPINFO_HOST . ' virtual host')
-            ->assertPhpVersionArgument($this)
+            ->assertPhpVersionArgument($this->getInput())
             ->createVhostFile();
+
         if ($this->getInput()->getOption('no-nginx-reload') === false) {
             $this->reloadNginx($this);
         }
 
-        $this->outputUrl();
+        if ($this->getInput()->getOption('no-url-output') === false) {
+            $this->outputUrl();
+        }
 
         return 0;
     }
@@ -51,7 +54,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     private function createVhostFile(): self
     {
         return $this->filePutContent(
-            '/etc/nginx/sites-enabled/phpinfo.benchmark-kit.loc.conf',
+            Path::getNginxVhostPath() . '/phpinfo.benchmark-kit.loc.conf',
             $this->renderVhostTemplate(
                 'vhost.conf.twig',
                 [
@@ -59,7 +62,8 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
                     'serverName' => BenchmarkUrlService::PHPINFO_HOST,
                     'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
                     'entryPoint' => 'phpinfo.php',
-                    'phpFpmSock' => 'php' . $this->getPhpVersionFromArgument($this)->toString() . '-fpm.sock'
+                    'phpFpmSock' =>
+                        'php' . $this->getPhpVersionFromArgument($this->getInput())->toString() . '-fpm.sock'
                 ]
             ),
             false
@@ -68,10 +72,6 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
 
     private function outputUrl(): self
     {
-        if ($this->getInput()->getOption('no-url-output') === true) {
-            return $this;
-        }
-
         $this->getOutput()->writeln('');
 
         return $this->outputBlock(

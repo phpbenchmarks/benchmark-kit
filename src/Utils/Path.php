@@ -24,7 +24,12 @@ class Path
 
     public static function getSourceCodePath()
     {
-        return static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'];
+        $return = static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'] ?? null;
+        if (is_string($return) === false) {
+            throw new \Exception('Unable to find source code path.');
+        }
+
+        return $return;
     }
 
     public static function rmPrefix(string $path)
@@ -90,5 +95,15 @@ class Path
     public static function getStatisticsPath()
     {
         return __DIR__ . '/../../var/statistics.json';
+    }
+
+    public static function getPreloadEntryPointName()
+    {
+        return 'phpbenchmarks_preloader_generator.php';
+    }
+
+    public static function getNginxVhostPath()
+    {
+        return '/etc/nginx/sites-enabled';
     }
 }

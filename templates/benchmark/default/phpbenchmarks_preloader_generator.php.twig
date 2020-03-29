@@ -1,0 +1,47 @@
+<?php
+
+require('{{ entryPointPath }}');
+
+$sourceCodePath = realpath('{{ sourceCodePath }}');
+if (is_string($sourceCodePath) === false) {
+    throw new \Exception('Source code path not found.');
+}
+$sourceCodePathLength = strlen($sourceCodePath);
+
+// I don't use template engine or any library to not load files in opcache who are not part of benchmark code
+$excludedFiles = [];
+// Value added by opcache
+$excludedFiles[] = '$PRELOAD$';
+// Do not compile this file
+$excludedFiles[] = __FILE__;
+// PHP 7.4.3 preload will fail if a class contains a static property
+$excludedFiles[] = "$sourceCodePath/vendor/composer/autoload_real.php";
+$excludedFiles[] = "$sourceCodePath/vendor/composer/autoload_static.php";
+
+$phpCode = '<?php' . PHP_EOL. PHP_EOL;
+$phpCode .= '$sourceCodePath = \'' . $sourceCodePath . '\';' . PHP_EOL;
+$phpCode .= '$files = [' . PHP_EOL;
+foreach (opcache_get_status()['scripts'] as $file) {
+    if (
+        array_key_exists('full_path', $file) === false
+        || in_array($file['full_path'], $excludedFiles)
+    ) {
+        continue;
+    }
+
+    $files[] = substr($file['full_path'], 0, $sourceCodePathLength) === $sourceCodePath
+        ? '$sourceCodePath/' . substr($file['full_path'], $sourceCodePathLength + 1)
+        : $file['full_path'];
+}
+
+sort($files);
+foreach ($files as $file) {
+    $phpCode .= '    "' . $file . '",' . PHP_EOL;
+}
+$phpCode .= '];' . PHP_EOL . PHP_EOL;
+
+$phpCode .= 'foreach ($files as $file) {' . PHP_EOL;
+$phpCode .= '    opcache_compile_file($file);' . PHP_EOL;
+$phpCode .= '}' . PHP_EOL;
+
+file_put_contents("$sourceCodePath/.phpbenchmarks/php/7.4/preload.php", $phpCode);

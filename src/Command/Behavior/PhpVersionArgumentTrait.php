@@ -6,12 +6,12 @@ namespace App\Command\Behavior;
 
 use App\{
     Benchmark\Benchmark,
-    Command\AbstractCommand,
     PhpVersion\PhpVersion
 };
 use Symfony\Component\Console\{
     Command\Command,
-    Input\InputArgument
+    Input\InputArgument,
+    Input\InputInterface
 };
 
 trait PhpVersionArgumentTrait
@@ -23,16 +23,16 @@ trait PhpVersionArgumentTrait
         return $this;
     }
 
-    private function getPhpVersionFromArgument(AbstractCommand $command): ?PhpVersion
+    private function getPhpVersionFromArgument(InputInterface $input): ?PhpVersion
     {
-        $phpVersionString = $command->getInput()->getArgument('phpVersion');
+        $phpVersionString = $input->getArgument('phpVersion');
 
         return is_string($phpVersionString) ? PhpVersion::createFromString($phpVersionString) : null;
     }
 
-    private function assertPhpVersionArgument(AbstractCommand $command, bool $allowNull = false): self
+    private function assertPhpVersionArgument(InputInterface $input, bool $allowNull = false): self
     {
-        $phpVersion = $this->getPhpVersionFromArgument($command);
+        $phpVersion = $this->getPhpVersionFromArgument($input);
 
         if ($allowNull === true && $phpVersion === null) {
             return $this;

@@ -172,6 +172,15 @@ class Benchmark
                     );
     }
 
+    public static function getPublicPath(): string
+    {
+        if (strlen(static::getSourceCodeEntryPoint()) === 0) {
+            throw new \Exception('Unable to find source code entry point path.');
+        }
+
+        return dirname(static::getSourceCodeEntryPoint());
+    }
+
     protected static function isCompatibleWithPhp(PhpVersion $phpVersion): bool
     {
         return is_dir(Path::getPhpConfigurationPath($phpVersion));

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Behavior;
 
-trait CallBenchmarkUrlTrait
+trait CallUrlTrait
 {
-    protected function callBenchmarkUrl(string $url, bool $assertIs200 = true): ?string
+    /** @return $this */
+    protected function callUrl(string $url, bool $assertIs200 = true): ?string
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

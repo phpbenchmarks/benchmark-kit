@@ -65,10 +65,7 @@ abstract class AbstractCommand extends Command
         } catch (HiddenException $exception) {
             $return = 1;
         } catch (\Throwable $exception) {
-            $this->outputError(
-                $exception->getMessage() . ' File: ' . $exception->getFile() . '. Line: ' . $exception->getLine() . '.',
-                'EXCEPTION'
-            );
+            $this->outputError($exception->getMessage(), 'EXCEPTION');
             $this->onError();
 
             $return = 1;
@@ -244,11 +241,15 @@ abstract class AbstractCommand extends Command
         array $commands,
         int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
         string $cwd = null,
-        ?int $timeout = 60
+        ?int $timeout = 60,
+        string $error = null,
+        string $silencedError = null
     ): self {
-        return $this->processMustRun(
+        return $this->doRunProcess(
             new Process($commands, $cwd ?? Path::getSourceCodePath(), null, null, $timeout),
-            $outputVerbosity
+            $outputVerbosity,
+            $error,
+            $silencedError
         );
     }
 
@@ -260,7 +261,7 @@ abstract class AbstractCommand extends Command
         ?int $timeout = 60,
         string $error = null
     ): self {
-        return $this->processMustRun(
+        return $this->doRunProcess(
             Process::fromShellCommandline($shellCommandLine, $cwd, null, null, $timeout),
             $outputVerbosity,
             $error
@@ -268,10 +269,11 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function processMustRun(
+    protected function doRunProcess(
         Process $process,
         int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
-        string $error = null
+        string $error = null,
+        string $silencedError = null
     ): self {
         $processResult = $process->run(
             function (string $type, string $line) use ($outputVerbosity) {
@@ -281,7 +283,12 @@ abstract class AbstractCommand extends Command
             }
         );
 
-        if ($processResult !== 0) {
+        $isSilencedError = is_int(strpos($process->getOutput(), $silencedError));
+        if ($processResult !== 0 || $isSilencedError === true) {
+            if ($isSilencedError === true && $this->getOutput()->getVerbosity() <= OutputInterface::VERBOSITY_NORMAL) {
+                $this->getOutput()->writeln($process->getOutput());
+            }
+
             if (is_string($error)) {
                 throw new \Exception($error);
             } else {
@@ -293,8 +300,12 @@ abstract class AbstractCommand extends Command
     }
 
     /** @return $this */
-    protected function runCommand(string $name, array $arguments = [], bool $showOutput = true): self
-    {
+    protected function runCommand(
+        string $name,
+        array $arguments = [],
+        bool $showOutput = true,
+        bool $hideException = true
+    ): self {
         if ($this->skipSourceCodeUrls() === true) {
             $arguments['--skip-source-code-urls'] = true;
         }
@@ -304,8 +315,9 @@ abstract class AbstractCommand extends Command
             ->getApplication()
             ->find($name)
             ->run(new ArrayInput($arguments), $showOutput ? $this->output : new NullOutput());
+
         if ($returnCode > 0) {
-            throw new HiddenException();
+            throw ($hideException ? new HiddenException() : new \Exception("Error while running $name."));
         }
 
         return $this;

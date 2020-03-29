@@ -8,7 +8,7 @@ use App\{
     Benchmark\BenchmarkType,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\CallBenchmarkUrlTrait,
+    Command\Behavior\CallUrlTrait,
     Command\Validate\ValidateAllCommand,
     Benchmark\Benchmark,
     PhpVersion\PhpVersion,
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
 {
-    use CallBenchmarkUrlTrait;
+    use CallUrlTrait;
 
     abstract protected function initBenchmark(PhpVersion $phpVersion): self;
 
@@ -58,14 +58,14 @@ abstract class AbstractValidateBenchmarkCommand extends AbstractCommand
         $initCalls = $this->getInput()->getOption('init-calls');
         if (is_numeric($initCalls) && $initCalls > 0) {
             for ($i = 0; $i < $this->getInput()->getOption('init-calls'); $i++) {
-                $this->callBenchmarkUrl($benchmarkUrl);
+                $this->callUrl($benchmarkUrl);
             }
             $this->outputSuccess(
                 "Init caches with $initCalls call" . ($initCalls > 1 ? 's' : null) . ' to benchmark url.'
             );
         }
 
-        $body = $this->callBenchmarkUrl($benchmarkUrl);
+        $body = $this->callUrl($benchmarkUrl);
 
         return $this
             ->outputSuccess('Http code is 200.')

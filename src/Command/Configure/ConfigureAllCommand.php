@@ -11,6 +11,7 @@ use App\{
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksInitBenchmarkCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksPhpVersionCompatibleCommand,
+    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksPreloadCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksResponseBodyCommand,
     Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksNginxVhostCommand
 };
@@ -51,7 +52,8 @@ final class ConfigureAllCommand extends AbstractCommand
             ->runCommand(ConfigureReadmeCommand::getDefaultName())
             ->runCommand(ConfigureCircleCiCommand::getDefaultName())
             ->runCommand(ConfigureComposerJsonCommand::getDefaultName())
-            ->runCommand(ComposerUpdateCommand::getDefaultName());
+            ->runCommand(ComposerUpdateCommand::getDefaultName())
+            ->runCommand(ConfigurePhpBenchmarksPreloadCommand::getDefaultName());
 
         return 0;
     }
