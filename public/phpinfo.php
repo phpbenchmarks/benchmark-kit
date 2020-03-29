@@ -123,9 +123,10 @@ $opcacheStatus = opcache_get_status();
                     <td class="v"><?= number_format($opcacheStatus['preload_statistics']['memory_consumption']) ?></td>
                 </tr>
                 <tr>
-                    <td class="e" rowspan="<?= max(1, count($opcacheStatus['preload_statistics']['scripts'])) ?>">scripts</td>
+                    <?php $countPreloadedScripts = count($opcacheStatus['preload_statistics']['scripts']) ?>
+                    <td class="e" rowspan="<?= max(1, $countPreloadedScripts) ?>">scripts [<?= $countPreloadedScripts ?>]</td>
                     <td class="v">
-                        <?= count($opcacheStatus['preload_statistics']['scripts']) > 0 ? App\Utils\Path::rmPrefix($opcacheStatus['preload_statistics']['scripts'][0]) : null ?>
+                        <?= $countPreloadedScripts > 0 ? App\Utils\Path::rmPrefix($opcacheStatus['preload_statistics']['scripts'][0]) : null ?>
                     </td>
                 </tr>
                 <?php foreach ($opcacheStatus['preload_statistics']['scripts'] as $index => $script) { ?>

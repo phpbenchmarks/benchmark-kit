@@ -28,11 +28,11 @@ final class PhpCliChangeVersionCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
-        $phpVersion = $this->getPhpVersionFromArgument($this);
+        $phpVersion = $this->getPhpVersionFromArgument($this->getInput());
 
         $this
             ->outputTitle('Change PHP CLI version to ' . $phpVersion->toString())
-            ->assertPhpVersionArgument($this)
+            ->assertPhpVersionArgument($this->getInput())
             ->runProcess(
                 ['sudo', '/usr/bin/update-alternatives', '--set', 'php', '/usr/bin/php' . $phpVersion->toString()],
                 OutputInterface::VERBOSITY_VERBOSE

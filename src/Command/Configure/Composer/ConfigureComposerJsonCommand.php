@@ -18,9 +18,9 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
     /** @var string */
     protected static $defaultName = 'configure:composer:json';
 
-    public static function getComposerName(): string
+    public static function getComposerName(string $componentSlug = null): string
     {
-        return 'phpbenchmarks/' . Benchmark::getComponentSlug();
+        return 'phpbenchmarks/' . ($componentSlug ?? Benchmark::getComponentSlug());
     }
 
     protected function configure(): void
@@ -35,7 +35,14 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
                 InputOption::VALUE_REQUIRED,
                 'Dependencies whose version is to change, separated by ","'
             )
-            ->addOption('no-dependency-version', null, InputOption::VALUE_NONE, 'Do not configure dependency version');
+            ->addOption('no-dependency-version', null, InputOption::VALUE_NONE, 'Do not configure dependency version')
+            ->addOption(
+                'component-slug',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Slug of the component, if not specified it will be taken in '
+                    . Path::rmPrefix(Path::getConfigFilePath())
+            );
     }
 
     protected function doExecute(): int
@@ -66,7 +73,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
 
     private function defineName(array &$data): self
     {
-        $name = static::getComposerName();
+        $name = static::getComposerName($this->getInput()->getOption('component-slug'));
         $data = array_merge(['name' => $name], $data);
 
         return $this->outputSuccess("Name defined to $name.");

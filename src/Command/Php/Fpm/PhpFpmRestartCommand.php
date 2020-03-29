@@ -28,14 +28,18 @@ final class PhpFpmRestartCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
-        $phpVersion = $this->getPhpVersionFromArgument($this);
+        $phpVersion = $this->getPhpVersionFromArgument($this->getInput());
 
         $this
             ->outputTitle('Restart PHP-FPM ' . $phpVersion->toString())
-            ->assertPhpVersionArgument($this)
+            ->assertPhpVersionArgument($this->getInput())
             ->runProcess(
                 ['sudo', '/usr/sbin/service', 'php' . $phpVersion->toString() . '-fpm', 'restart'],
-                OutputInterface::VERBOSITY_VERBOSE
+                OutputInterface::VERBOSITY_VERBOSE,
+                null,
+                60,
+                'Error while restarting PHP-FPM ' . $phpVersion->toString() . '.',
+                '...fail!'
             )
             ->runProcessFromShellCommmandLine(
                 'ps -ax | grep -v grep | grep /etc/php/' . $phpVersion->toString() . '/fpm/php-fpm.conf',

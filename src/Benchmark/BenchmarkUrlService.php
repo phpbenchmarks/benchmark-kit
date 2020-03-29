@@ -9,6 +9,7 @@ class BenchmarkUrlService
     public const HOST = 'benchmark-kit.loc';
     public const STATISTICS_HOST = 'statistics.benchmark-kit.loc';
     public const PHPINFO_HOST = 'phpinfo.benchmark-kit.loc';
+    public const PRELOAD_GENERATOR_HOST = 'preload-generator.benchmark-kit.loc';
 
     public static function getUrl(bool $showResult): string
     {
@@ -41,6 +42,11 @@ class BenchmarkUrlService
     public static function getPhpinfoUrl(): string
     {
         return 'http://' . static::PHPINFO_HOST . ':' . static::getNginxPort();
+    }
+
+    public static function getPreloadGeneratorUrl(): string
+    {
+        return 'http://' . static::PRELOAD_GENERATOR_HOST . ':' . static::getNginxPort();
     }
 
     public static function getNginxPort(): int
