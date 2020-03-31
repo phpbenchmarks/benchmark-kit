@@ -22,20 +22,25 @@ class Path
         static::$sourceCodePath = $sourceCodePath;
     }
 
-    public static function getSourceCodePath()
+    public static function getSourceCodePath(bool $exceptionOnNotFound = true)
     {
-        $return = static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'] ?? null;
-        if (is_string($return) === false) {
-            throw new \Exception('Unable to find source code path.');
+        $sourceCodePath = static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'] ?? null;
+        if (is_string($sourceCodePath) === false) {
+            if ($exceptionOnNotFound === true) {
+                throw new \Exception('Unable to find source code path.');
+            }
+            $return = null;
+        } else {
+            $return = realpath($sourceCodePath);
         }
 
-        return $return;
+        return is_string($return) ? $return : $sourceCodePath;
     }
 
     public static function rmPrefix(string $path)
     {
-        $prefix = static::getSourceCodePath();
-        if (substr($path, 0, strlen($prefix)) === $prefix) {
+        $prefix = static::getSourceCodePath(false);
+        if (is_string($prefix) && substr($path, 0, strlen($prefix)) === $prefix) {
             return substr($path, strlen($prefix) + 1);
         }
 

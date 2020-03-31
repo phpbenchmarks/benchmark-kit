@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb9aa0a96672d5ae31b38f2f1bd129a6",
+    "content-hash": "6bf1b9fedb3704894786cdffa0fa18e2",
     "packages": [
         {
             "name": "huttopia/console-bundle",
