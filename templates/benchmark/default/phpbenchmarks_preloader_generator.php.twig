@@ -14,9 +14,6 @@ $excludedFiles = [];
 $excludedFiles[] = '$PRELOAD$';
 // Do not compile this file
 $excludedFiles[] = __FILE__;
-// PHP 7.4.3 preload will fail if a class contains a static property
-$excludedFiles[] = "$sourceCodePath/vendor/composer/autoload_real.php";
-$excludedFiles[] = "$sourceCodePath/vendor/composer/autoload_static.php";
 
 $phpCode = '<?php' . PHP_EOL. PHP_EOL;
 $phpCode .= '$sourceCodePath = \'' . $sourceCodePath . '\';' . PHP_EOL;
