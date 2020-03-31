@@ -12,7 +12,6 @@ use App\{
     Command\Benchmark\BenchmarkInitCommand,
     Command\Nginx\Vhost\NginxVhostPreloadGeneratorCreateCommand,
     Command\Nginx\Vhost\NginxVhostPreloadGeneratorDeleteCommand,
-    Command\Php\Fpm\PhpFpmRestartCommand,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -37,11 +36,6 @@ final class ConfigurePhpBenchmarksPreloadCommand extends AbstractCommand
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             if ($phpVersion->isPreloadAvailable() === true) {
                 $this
-                    ->runCommand(
-                        PhpFpmRestartCommand::getDefaultName(),
-                        ['phpVersion' => $phpVersion->toString()]
-                    )
-                    ->resetPreloadFile($phpVersion)
                     ->initBenchmark($phpVersion)
                     ->removePreloadFile($phpVersion)
                     ->createPreloadVhost($phpVersion)
@@ -58,13 +52,6 @@ final class ConfigurePhpBenchmarksPreloadCommand extends AbstractCommand
         return 0;
     }
 
-    private function resetPreloadFile(PhpVersion $phpVersion): self
-    {
-        return $this
-            ->outputTitle('Reset preload file')
-            ->filePutContent(Path::getPreloadPath($phpVersion), '<?php');
-    }
-
     private function removePreloadFile(PhpVersion $phpVersion): self
     {
         (new Filesystem())->remove(Path::getPreloadPath($phpVersion));
@@ -78,7 +65,7 @@ final class ConfigurePhpBenchmarksPreloadCommand extends AbstractCommand
             BenchmarkInitCommand::getDefaultName(),
             [
                 '--opcache-enabled' => true,
-                '--preload-enabled' => true,
+                '--preload-enabled' => false,
                 '--no-url-output' => true,
                 'phpVersion' => $phpVersion->toString()
             ]

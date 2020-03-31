@@ -96,6 +96,7 @@ final class NginxVhostPreloadGeneratorCreateCommand extends AbstractCommand
                     Path::getPreloadEntryPointName(),
                     [
                         'sourceCodePath' => Path::getSourceCodePath(),
+                        'sourceCodeRelativePath' => '/../../../',
                         'entryPointPath' =>
                             realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
                         'preloadPath' => Path::getPreloadPath($phpVersion)

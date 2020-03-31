@@ -16,7 +16,7 @@ $excludedFiles[] = '$PRELOAD$';
 $excludedFiles[] = __FILE__;
 
 $phpCode = '<?php' . PHP_EOL. PHP_EOL;
-$phpCode .= '$sourceCodePath = \'' . $sourceCodePath . '\';' . PHP_EOL;
+$phpCode .= '$sourceCodePath = __DIR__ . \'{{ sourceCodeRelativePath }}\';' . PHP_EOL;
 $phpCode .= '$files = [' . PHP_EOL;
 foreach (opcache_get_status()['scripts'] as $file) {
     if (
@@ -38,6 +38,9 @@ foreach ($files as $file) {
 $phpCode .= '];' . PHP_EOL . PHP_EOL;
 
 $phpCode .= 'foreach ($files as $file) {' . PHP_EOL;
+$phpCode .= '    if (is_readable($file) === false) {' . PHP_EOL;
+$phpCode .= '        throw new \Exception(\'File "\' . $file . \'" is not readable.\');' . PHP_EOL;
+$phpCode .= '    }' . PHP_EOL . PHP_EOL;
 $phpCode .= '    opcache_compile_file($file);' . PHP_EOL;
 $phpCode .= '}' . PHP_EOL;
 
