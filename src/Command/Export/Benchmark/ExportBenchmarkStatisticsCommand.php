@@ -6,7 +6,7 @@ namespace App\Command\Export\Benchmark;
 
 use App\{
     Command\AbstractCommand,
-    Command\Benchmark\Validate\BenchmarkValidateStatisticsCommand,
+    Command\Validate\Benchmark\ValidateBenchmarkStatisticsCommand,
     Utils\Path
 };
 
@@ -25,8 +25,8 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
     protected function doExecute(): int
     {
         $this->runCommand(
-            BenchmarkValidateStatisticsCommand::getDefaultName(),
-            ['--init-calls' => 100],
+            ValidateBenchmarkStatisticsCommand::getDefaultName(),
+            ['--init-calls' => 20],
             false
         );
 

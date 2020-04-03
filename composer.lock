@@ -4,31 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6bf1b9fedb3704894786cdffa0fa18e2",
+    "content-hash": "e859535ad3caea4e718ed2bc84d7981f",
     "packages": [
         {
             "name": "huttopia/console-bundle",
-            "version": "1.1.3",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Huttopia/console-bundle.git",
-                "reference": "42191d7d6b8ce7daab0b4c3b15c3850ebf26b46b"
+                "reference": "14db1cbffcd1b5355886d99f870c4649683cea53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Huttopia/console-bundle/zipball/42191d7d6b8ce7daab0b4c3b15c3850ebf26b46b",
-                "reference": "42191d7d6b8ce7daab0b4c3b15c3850ebf26b46b",
+                "url": "https://api.github.com/repos/Huttopia/console-bundle/zipball/14db1cbffcd1b5355886d99f870c4649683cea53",
+                "reference": "14db1cbffcd1b5355886d99f870c4649683cea53",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.2",
-                "symfony/console": "^2.3|^3.0|^4.0",
-                "symfony/framework-bundle": "^2.3|^3.0|^4.0"
+                "symfony/console": "^2.3|^3.0|^4.0|^5.0",
+                "symfony/framework-bundle": "^2.3|^3.0|^4.0|^5.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Huttopia\\ConsoleBundle\\": ""
+                    "Huttopia\\ConsoleBundle\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -36,7 +36,7 @@
                 "MIT"
             ],
             "description": "Add some nice features to symfony/console",
-            "time": "2019-09-05T13:55:54+00:00"
+            "time": "2020-04-03T08:58:23+00:00"
         },
         {
             "name": "psr/cache",

@@ -5,5 +5,8 @@ services:
         bind:
             $opcachePreloadUser: '%env(OPCACHE_PRELOAD_USER)%'
 
+    Huttopia\ConsoleBundle\Command\ListCommand:
+        class: App\Command\DefaultCommand
+
     App\Command\:
         resource: '../src/Command/**/*Command.php'

@@ -8,13 +8,21 @@ use App\{
     Benchmark\BenchmarkUrlService,
     Command\Behavior\OutputBlockTrait,
     Command\Benchmark\BenchmarkInitCommand,
-    Command\Validate\ValidateAllCommand,
+    Command\Composer\ComposerUpdateCommand,
+    Command\Configure\ConfigureBenchmarkCommand,
+    Command\Configure\ConfigureSourceCodeUrlsCommand,
+    Command\Nginx\Log\NginxLogErrorCommand,
+    Command\Php\Fpm\PhpFpmLogCommand,
+    Command\Validate\Benchmark\ValidateBenchmarkCommand,
+    Command\Validate\Benchmark\ValidateBenchmarkResponseCommand,
+    Command\Validate\Configuration\ValidateConfigurationSourceCodeUrlsCommand,
+    Command\Validate\Configuration\ValidateConfigurationCommand,
     Server\Server,
     Utils\Path,
     Version
 };
+use Huttopia\ConsoleBundle\Command\ListCommand;
 use Symfony\Component\Console\{
-    Command\ListCommand,
     Input\ArrayInput,
     Input\InputInterface,
     Input\InputOption,
@@ -25,6 +33,30 @@ use Symfony\Component\Console\{
 final class DefaultCommand extends ListCommand
 {
     use OutputBlockTrait;
+
+    public function __construct()
+    {
+        parent::__construct(
+            OutputInterface::VERBOSITY_VERBOSE,
+            OutputInterface::VERBOSITY_VERBOSE,
+            OutputInterface::VERBOSITY_VERBOSE,
+            0,
+            [],
+            [],
+            [
+                BenchmarkInitCommand::getDefaultName(),
+                ValidateBenchmarkCommand::getDefaultName(),
+                ValidateBenchmarkResponseCommand::getDefaultName(),
+                ComposerUpdateCommand::getDefaultName(),
+                ConfigureBenchmarkCommand::getDefaultName(),
+                ConfigureSourceCodeUrlsCommand::getDefaultName(),
+                NginxLogErrorCommand::getDefaultName(),
+                PhpFpmLogCommand::getDefaultName(),
+                ValidateConfigurationCommand::getDefaultName(),
+                ValidateConfigurationSourceCodeUrlsCommand::getDefaultName()
+            ]
+        );
+    }
 
     protected function configure()
     {
@@ -89,7 +121,7 @@ final class DefaultCommand extends ListCommand
     {
         return $this
             ->getApplication()
-            ->find(ValidateAllCommand::getDefaultName())
+            ->find(ValidateConfigurationCommand::getDefaultName())
             ->run(
                 new ArrayInput(
                     [

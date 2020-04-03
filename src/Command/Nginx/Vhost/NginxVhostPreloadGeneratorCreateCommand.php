@@ -24,7 +24,7 @@ final class NginxVhostPreloadGeneratorCreateCommand extends AbstractCommand
     use ReloadNginxTrait;
 
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:preloadGenerator:create';
+    protected static $defaultName = 'nginx:vhost:preload-generator:create';
 
     protected function configure(): void
     {

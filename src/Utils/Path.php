@@ -87,6 +87,11 @@ class Path
         return static::getSourceCodePath() . '/.circleci';
     }
 
+    public static function getCircleCiConfigPath()
+    {
+        return static::getCircleCiPath() . '/config.yml';
+    }
+
     public static function getPreloadPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/preload.php';

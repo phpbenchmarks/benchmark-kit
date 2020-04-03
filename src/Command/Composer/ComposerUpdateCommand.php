@@ -7,8 +7,8 @@ namespace App\Command\Composer;
 use App\{
     Command\AbstractCommand,
     Command\Php\Cli\PhpCliChangeVersionCommand,
-    Command\Validate\Composer\ValidateComposerJsonCommand,
     Benchmark\Benchmark,
+    Command\Validate\Configuration\Composer\ValidateConfigurationComposerJsonCommand,
     Utils\Path
 };
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,12 +22,12 @@ final class ComposerUpdateCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Execute composer update for all enabled PHP versions');
+        $this->setDescription('Execute composer update for all configured PHP versions');
     }
 
     protected function doExecute(): int
     {
-        $this->runCommand(ValidateComposerJsonCommand::getDefaultName());
+        $this->runCommand(ValidateConfigurationComposerJsonCommand::getDefaultName());
 
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);

@@ -15,7 +15,7 @@ final class PhpCliChangeVersionCommand extends AbstractCommand
     use PhpVersionArgumentTrait;
 
     /** @var string */
-    protected static $defaultName = 'php:cli:changeVersion';
+    protected static $defaultName = 'php:cli:change-version';
 
     protected function configure(): void
     {
