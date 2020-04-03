@@ -20,7 +20,7 @@ final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
     use ReloadNginxTrait;
 
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:phpInfo:create';
+    protected static $defaultName = 'nginx:vhost:php-info:create';
 
     protected function configure(): void
     {

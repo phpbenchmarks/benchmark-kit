@@ -21,7 +21,7 @@ final class NginxVhostPreloadGeneratorDeleteCommand extends AbstractCommand
     use ReloadNginxTrait;
 
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:preloadGenerator:delete';
+    protected static $defaultName = 'nginx:vhost:preload-generator:delete';
 
     protected function configure(): void
     {

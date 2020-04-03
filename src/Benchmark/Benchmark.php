@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Benchmark;
 
 use App\{
-    Command\Configure\PhpBenchmarks\ConfigurePhpBenchmarksConfigCommand,
+    Command\Configure\ConfigurePhpBenchmarksCommand,
     Component\Component,
     PhpVersion\PhpVersion,
     PhpVersion\PhpVersionArray,
@@ -222,7 +222,7 @@ class Benchmark
             throw new \Exception(
                 'Unable to parse ' . Path::rmPrefix(Path::getConfigFilePath())
                     . '. Use "phpbenchkit '
-                    . ConfigurePhpBenchmarksConfigCommand::getDefaultName()
+                    . ConfigurePhpBenchmarksCommand::getDefaultName()
                     . '" to create it.'
             );
         }

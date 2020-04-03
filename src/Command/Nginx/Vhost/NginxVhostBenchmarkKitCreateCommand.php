@@ -23,7 +23,7 @@ final class NginxVhostBenchmarkKitCreateCommand extends AbstractCommand
     use ReloadNginxTrait;
 
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:benchmarkKit:create';
+    protected static $defaultName = 'nginx:vhost:benchmark-kit:create';
 
     protected function configure(): void
     {
