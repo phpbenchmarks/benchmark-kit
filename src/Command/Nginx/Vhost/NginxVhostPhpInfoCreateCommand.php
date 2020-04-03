@@ -5,83 +5,43 @@ declare(strict_types=1);
 namespace App\Command\Nginx\Vhost;
 
 use App\{
+    Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
-    Command\AbstractCommand,
-    Command\Behavior\OutputBlockTrait,
-    Command\Behavior\PhpVersionArgumentTrait,
-    Command\Behavior\ReloadNginxTrait,
     Utils\Path
 };
 
-final class NginxVhostPhpInfoCreateCommand extends AbstractCommand
+final class NginxVhostPhpInfoCreateCommand extends AbstractNginxVhostCreateCommand
 {
-    use OutputBlockTrait;
-    use PhpVersionArgumentTrait;
-    use ReloadNginxTrait;
-
     /** @var string */
-    protected static $defaultName = 'nginx:vhost:php-info:create';
+    protected static $defaultName = 'nginx:vhost:phpinfo:create';
 
-    protected function configure(): void
+    protected function getHost(): string
     {
-        parent::configure();
-
-        $this
-            ->setDescription('Create nginx vhost ' . BenchmarkUrlService::PHPINFO_HOST)
-            ->addPhpVersionArgument($this)
-            ->addOption('no-url-output')
-            ->addOption('no-nginx-reload');
+        return BenchmarkUrlService::PHPINFO_HOST;
     }
 
-    protected function doExecute(): int
+    protected function getContainerVhostFileName(): string
     {
-        $this
-            ->outputTitle('Create ' . BenchmarkUrlService::PHPINFO_HOST . ' virtual host')
-            ->assertPhpVersionArgument($this->getInput())
-            ->createVhostFile();
-
-        if ($this->getInput()->getOption('no-nginx-reload') === false) {
-            $this->reloadNginx($this);
-        }
-
-        if ($this->getInput()->getOption('no-url-output') === false) {
-            $this->outputUrl();
-        }
-
-        return 0;
+        return 'phpinfo.benchmark-kit.loc.conf';
     }
 
-    private function createVhostFile(): self
+    protected function getEntryPointPath(): string
     {
-        return $this->filePutContent(
-            Path::getNginxVhostPath() . '/phpinfo.benchmark-kit.loc.conf',
-            $this->renderVhostTemplate(
-                'vhost.conf.twig',
-                [
-                    'port' => BenchmarkUrlService::getNginxPort(),
-                    'serverName' => BenchmarkUrlService::PHPINFO_HOST,
-                    'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
-                    'entryPoint' => 'phpinfo.php',
-                    'phpFpmSock' =>
-                        'php' . $this->getPhpVersionFromArgument($this->getInput())->toString() . '-fpm.sock'
-                ]
-            ),
-            false
-        );
+        return 'public/phpinfo.php';
     }
 
-    private function outputUrl(): self
+    protected function getInstallationPath(): string
     {
-        $this->getOutput()->writeln('');
+        return Path::getBenchmarkKitPath();
+    }
 
-        return $this->outputBlock(
-            [
-                '',
-                'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl(),
-                ''
-            ],
-            'green',
-            $this->getOutput()
-        );
+    protected function getVhostTemplatePath(): string
+    {
+        return Path::getBenchmarkKitPath() . '/templates/vhost/phpinfo.conf';
+    }
+
+    protected function getOutputUrlMessage(): string
+    {
+        return 'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl();
     }
 }

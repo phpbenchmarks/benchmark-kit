@@ -7,98 +7,52 @@ namespace App\Command\Nginx\Vhost;
 use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
-    Command\AbstractCommand,
-    Command\Behavior\OutputBlockTrait,
-    Command\Behavior\PhpVersionArgumentTrait,
-    Command\Behavior\ReloadNginxTrait,
     Utils\Path
 };
 
-final class NginxVhostStatisticsCreateCommand extends AbstractCommand
+final class NginxVhostStatisticsCreateCommand extends AbstractNginxVhostCreateCommand
 {
-    use OutputBlockTrait;
-    use PhpVersionArgumentTrait;
-    use ReloadNginxTrait;
-
     /** @var string */
     protected static $defaultName = 'nginx:vhost:statistics:create';
 
-    protected function configure(): void
+    protected function getHost(): string
     {
-        parent::configure();
-
-        $this
-            ->setDescription('Create nginx vhost ' . BenchmarkUrlService::STATISTICS_HOST)
-            ->addPhpVersionArgument($this)
-            ->addOption('no-url-output')
-            ->addOption('no-nginx-reload');
+        return BenchmarkUrlService::STATISTICS_HOST;
     }
 
-    protected function doExecute(): int
+    protected function getContainerVhostFileName(): string
     {
-        $this
-            ->outputTitle('Create ' . BenchmarkUrlService::STATISTICS_HOST . ' virtual host')
-            ->assertPhpVersionArgument($this->getInput())
-            ->createVhostFile()
-            ->createPublicFile();
-
-        if ($this->getInput()->getOption('no-nginx-reload') === false) {
-            $this->reloadNginx($this);
-        }
-
-        if ($this->getInput()->getOption('no-url-output') === false) {
-            $this->outputUrl();
-        }
-
-        return 0;
+        return 'statistics.benchmark-kit.loc.conf';
     }
 
-    private function createVhostFile(): self
+    protected function getEntryPointPath(): string
     {
-        return $this->filePutContent(
-            Path::getNginxVhostPath() . '/statistics.benchmark-kit.loc.conf',
-            $this->renderVhostTemplate(
-                'vhost.conf.twig',
-                [
-                    'port' => BenchmarkUrlService::getNginxPort(),
-                    'serverName' => BenchmarkUrlService::STATISTICS_HOST,
-                    'root' => realpath(Path::getBenchmarkKitPath() . '/public'),
-                    'entryPoint' => 'statistics.php',
-                    'phpFpmSock' =>
-                        'php' . $this->getPhpVersionFromArgument($this->getInput())->toString() . '-fpm.sock'
-                ]
-            ),
-            false
-        );
+        return 'public/statistics.php';
     }
 
-    private function createPublicFile(): self
+    protected function getInstallationPath(): string
+    {
+        return Path::getBenchmarkKitPath();
+    }
+
+    protected function getOutputUrlMessage(): string
+    {
+        return 'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true);
+    }
+
+    protected function onVhostCreated(): self
     {
         return $this->filePutContent(
             Path::getBenchmarkKitPath() . '/public/statistics.php',
-            $this->renderVhostTemplate(
-                'statistics/statistics.php.twig',
+            $this->renderTemplate(
+                'public/statistics.php.twig',
                 [
-                    'entryPoint' => realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
+                    'entryPointPath' =>
+                        realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
                     'statisticsPath' => Path::getStatisticsPath()
                 ]
             ),
             false
-        );
-    }
-
-    private function outputUrl(): self
-    {
-        $this->getOutput()->writeln('');
-
-        return $this->outputBlock(
-            [
-                '',
-                'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true),
-                ''
-            ],
-            'green',
-            $this->getOutput()
         );
     }
 }

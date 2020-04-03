@@ -16,21 +16,21 @@ use Symfony\Component\Console\{
 
 trait PhpVersionArgumentTrait
 {
-    private function addPhpVersionArgument(Command $command, int $mode = InputArgument::REQUIRED): self
+    protected function addPhpVersionArgument(Command $command, int $mode = InputArgument::REQUIRED): self
     {
         $command->addArgument('phpVersion', $mode, 'Version of PHP (example: 5.6, 7.0)');
 
         return $this;
     }
 
-    private function getPhpVersionFromArgument(InputInterface $input): ?PhpVersion
+    protected function getPhpVersionFromArgument(InputInterface $input): ?PhpVersion
     {
         $phpVersionString = $input->getArgument('phpVersion');
 
         return is_string($phpVersionString) ? PhpVersion::createFromString($phpVersionString) : null;
     }
 
-    private function assertPhpVersionArgument(InputInterface $input, bool $allowNull = false): self
+    protected function assertPhpVersionArgument(InputInterface $input, bool $allowNull = false): self
     {
         $phpVersion = $this->getPhpVersionFromArgument($input);
 

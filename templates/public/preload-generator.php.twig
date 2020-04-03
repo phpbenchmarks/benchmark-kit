@@ -22,13 +22,12 @@ foreach (opcache_get_status()['scripts'] as $file) {
     if (
         array_key_exists('full_path', $file) === false
         || in_array($file['full_path'], $excludedFiles)
+        || substr($file['full_path'], 0, strlen($sourceCodePath)) !== $sourceCodePath
     ) {
         continue;
     }
 
-    $files[] = substr($file['full_path'], 0, $sourceCodePathLength) === $sourceCodePath
-        ? '$sourceCodePath/' . substr($file['full_path'], $sourceCodePathLength + 1)
-        : $file['full_path'];
+    $files[] = '$sourceCodePath/' . substr($file['full_path'], $sourceCodePathLength + 1);
 }
 
 sort($files);
@@ -44,4 +43,4 @@ $phpCode .= '    }' . PHP_EOL . PHP_EOL;
 $phpCode .= '    opcache_compile_file($file);' . PHP_EOL;
 $phpCode .= '}' . PHP_EOL;
 
-file_put_contents("$sourceCodePath/.phpbenchmarks/php/7.4/preload.php", $phpCode);
+file_put_contents("{{ preloadFilePath }}", $phpCode);

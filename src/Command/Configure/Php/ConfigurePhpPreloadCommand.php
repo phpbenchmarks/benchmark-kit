@@ -36,11 +36,9 @@ final class ConfigurePhpPreloadCommand extends AbstractCommand
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             if ($phpVersion->isPreloadAvailable() === true) {
                 $this
+                    ->resetPreloadFile($phpVersion)
                     ->initBenchmark($phpVersion)
-                    ->removePreloadFile($phpVersion)
-                    ->createPreloadVhost($phpVersion)
-                    ->generatePreloadFile($phpVersion)
-                    ->deletePreloadVhost();
+                    ->generatePreloadFile($phpVersion);
             }
         }
 
@@ -52,9 +50,9 @@ final class ConfigurePhpPreloadCommand extends AbstractCommand
         return 0;
     }
 
-    private function removePreloadFile(PhpVersion $phpVersion): self
+    private function resetPreloadFile(PhpVersion $phpVersion): self
     {
-        (new Filesystem())->remove(Path::getPreloadPath($phpVersion));
+        (new Filesystem())->dumpFile(Path::getPreloadPath($phpVersion), '<?php');
 
         return $this;
     }

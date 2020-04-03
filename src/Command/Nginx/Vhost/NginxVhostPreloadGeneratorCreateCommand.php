@@ -7,117 +7,56 @@ namespace App\Command\Nginx\Vhost;
 use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
-    Command\AbstractCommand,
-    Command\Behavior\DefineVhostVariablesTrait,
-    Command\Behavior\OutputBlockTrait,
-    Command\Behavior\PhpVersionArgumentTrait,
-    Command\Behavior\ReloadNginxTrait,
-    PhpVersion\PhpVersion,
     Utils\Path
 };
 
-final class NginxVhostPreloadGeneratorCreateCommand extends AbstractCommand
+final class NginxVhostPreloadGeneratorCreateCommand extends AbstractNginxVhostCreateCommand
 {
-    use DefineVhostVariablesTrait;
-    use OutputBlockTrait;
-    use PhpVersionArgumentTrait;
-    use ReloadNginxTrait;
-
     /** @var string */
     protected static $defaultName = 'nginx:vhost:preload-generator:create';
 
-    protected function configure(): void
+    protected function getHost(): string
     {
-        parent::configure();
-
-        $this
-            ->setDescription('Create nginx vhost ' . BenchmarkUrlService::PRELOAD_GENERATOR_HOST)
-            ->addPhpVersionArgument($this)
-            ->addOption('no-url-output')
-            ->addOption('no-nginx-reload');
+        return BenchmarkUrlService::PRELOAD_GENERATOR_HOST;
     }
 
-    protected function doExecute(): int
+    protected function getContainerVhostFileName(): string
     {
-        $this
-            ->outputTitle('Create ' . BenchmarkUrlService::PRELOAD_GENERATOR_HOST . ' virtual host')
-            ->assertPhpVersionArgument($this->getInput());
-
-        $phpVersion = $this->getPhpVersionFromArgument($this->getInput());
-        if ($phpVersion->isPreloadAvailable() === false) {
-            throw new \Exception('Preload is not available for PHP ' . $phpVersion->toString() . '.');
-        }
-
-        $this
-            ->createVhostFile()
-            ->createPublicFile($phpVersion)
-            ->defineVhostVariables(
-                $this->getContainerVhostFilePath(),
-                $this->getPhpVersionFromArgument($this->getInput()),
-                BenchmarkUrlService::PRELOAD_GENERATOR_HOST,
-                Benchmark::getPublicPath() . '/' . Path::getPreloadEntryPointName(),
-                [$this, 'filePutContent'],
-                [$this, 'outputSuccess']
-            );
-
-        if ($this->getInput()->getOption('no-nginx-reload') === false) {
-            $this->reloadNginx($this, true);
-        }
-
-        if ($this->getInput()->getOption('no-url-output') === false) {
-            $this->outputUrl();
-        }
-
-        return 0;
+        return 'preload-generator.benchmark-kit.loc.conf';
     }
 
-    private function createVhostFile(): self
+    protected function getEntryPointPath(): string
     {
-        $destination = $this->getContainerVhostFilePath();
-
-        return $this
-            ->runProcess(['cp', Path::getVhostPath(), $destination])
-            ->outputSuccess('Create ' . $destination . '.');
+        return 'public/preload-generator.php';
     }
 
-    private function getContainerVhostFilePath(): string
+    protected function getInstallationPath(): string
     {
-        return Path::getNginxVhostPath() . '/preload-generator.benchmark-kit.loc.conf';
+        return Path::getBenchmarkKitPath();
     }
 
-    private function createPublicFile(PhpVersion $phpVersion): self
+    protected function getOutputUrlMessage(): string
     {
-        $preloaderRelativePath = dirname(Benchmark::getSourceCodeEntryPoint()) . '/' . Path::getPreloadEntryPointName();
-
-        return $this
-            ->filePutContent(
-                Path::getSourceCodePath() . "/$preloaderRelativePath",
-                $this->renderBenchmarkTemplate(
-                    Path::getPreloadEntryPointName(),
-                    [
-                        'sourceCodePath' => Path::getSourceCodePath(),
-                        'sourceCodeRelativePath' => '/../../../',
-                        'entryPointPath' =>
-                            realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
-                        'preloadPath' => Path::getPreloadPath($phpVersion)
-                    ]
-                ),
-                true
-            );
+        return 'Generate preload files at this url: ' . BenchmarkUrlService::getPreloadGeneratorUrl();
     }
 
-    private function outputUrl(): self
+    protected function onVhostCreated(): self
     {
-        $this->getOutput()->writeln('');
-
-        return $this->outputBlock(
-            [
-                '',
-                'You can test your code at this url: ' . BenchmarkUrlService::getPreloadGeneratorUrl(),
-                ''
-            ],
-            'green',
-            $this->getOutput()
+        return $this->filePutContent(
+            Path::getBenchmarkKitPath() . '/public/preload-generator.php',
+            $this->renderTemplate(
+                'public/preload-generator.php.twig',
+                [
+                    'sourceCodePath' => Path::getSourceCodePath(),
+                    'sourceCodeRelativePath' => '/../../../',
+                    'entryPointPath' =>
+                        realpath(Path::getSourceCodePath()) . '/' . Benchmark::getSourceCodeEntryPoint(),
+                    'preloadFilePath' => Path::getPreloadPath(
+                        $this->getPhpVersionFromArgument($this->getInput())
+                    )
+                ]
+            ),
+            false
         );
     }
 }
