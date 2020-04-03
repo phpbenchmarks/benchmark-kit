@@ -4,6 +4,7 @@
 /docker/.env
 /phpcs.bootstrap.local.php
 /public/statistics.php
+/public/preload-generator.php
 
 ###> symfony/framework-bundle ###
 /.env.local

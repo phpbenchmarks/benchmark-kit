@@ -128,22 +128,27 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    protected function renderTemplate(string $templatePath, array $templateParameters = []): string
+    {
+        static $twig;
+        if ($twig instanceof Environment === false) {
+            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates'));
+        }
+
+        return $twig->render($templatePath, $templateParameters);
+    }
+
     protected function renderBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
         int $benchmarkType = null
     ): string {
-        static $twig;
-        if ($twig instanceof Environment === false) {
-            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates/benchmark'));
-        }
-
         $componentPath = ComponentType::getCamelCaseName($componentType);
         $templates = [
             $componentPath . '/' . $templatePath . '.' . BenchmarkType::getCamelCaseName($benchmarkType) . '.twig',
-            $componentPath . '/' . $templatePath . '.twig',
-            'default/' . $templatePath . '.twig'
+            "$componentPath/$templatePath.twig",
+            "default/$templatePath.twig"
         ];
 
         $templateTwigPath = null;
@@ -155,24 +160,10 @@ abstract class AbstractCommand extends Command
         }
 
         if ($templateTwigPath === null) {
-            throw new \Exception('Benchmark template ' . $templatePath . ' not found.');
+            throw new \Exception("Benchmark template $templatePath not found.");
         }
 
-        return $twig->render($templateTwigPath, $templateParameters);
-    }
-
-    protected function renderVhostTemplate(string $templatePath, array $templateParameters = []): string
-    {
-        static $twig;
-        if ($twig instanceof Environment === false) {
-            $twig = new Environment(new FilesystemLoader(__DIR__ . '/../../templates/vhost'));
-        }
-
-        if (is_readable(Path::getBenchmarkKitPath() . '/templates/vhost/' . $templatePath) === false) {
-            throw new \Exception('Vhost template ' . $templatePath . ' not found.');
-        }
-
-        return $twig->render($templatePath, $templateParameters);
+        return $this->renderTemplate("benchmark/$templateTwigPath", $templateParameters);
     }
 
     protected function writeFileFromTemplate(

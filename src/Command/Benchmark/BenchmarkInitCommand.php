@@ -11,6 +11,8 @@ use App\{
     Command\Behavior\ReloadNginxTrait,
     Command\Nginx\Vhost\NginxVhostBenchmarkKitCreateCommand,
     Command\Nginx\Vhost\NginxVhostPhpInfoCreateCommand,
+    Command\Nginx\Vhost\NginxVhostPreloadGeneratorCreateCommand,
+    Command\Nginx\Vhost\NginxVhostPreloadGeneratorDeleteCommand,
     Command\Nginx\Vhost\NginxVhostStatisticsCreateCommand,
     Command\Behavior\OutputBlockTrait,
     Command\Php\Cli\PhpCliChangeVersionCommand,
@@ -78,6 +80,7 @@ final class BenchmarkInitCommand extends AbstractCommand
                 NginxVhostStatisticsCreateCommand::getDefaultName(),
                 ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
             )
+            ->createOrRemovePreloadGeneratorVhost($phpVersion)
             ->reloadNginx($this)
             ->runCommand(PhpCliChangeVersionCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
             ->outputTitle('Prepare composer.lock')
@@ -89,7 +92,7 @@ final class BenchmarkInitCommand extends AbstractCommand
             ->outputTitle('Remove composer.lock')
             ->removeFile(Path::getSourceCodePath() . '/composer.lock')
             ->runCommand(PhpFpmRestartCommand::getDefaultName(), ['phpVersion' => $phpVersion->toString()])
-            ->outputUrls();
+            ->outputUrls($phpVersion);
 
         return 0;
     }
@@ -158,7 +161,7 @@ final class BenchmarkInitCommand extends AbstractCommand
         return $this;
     }
 
-    private function outputUrls(): self
+    private function outputUrls(PhpVersion $phpVersion): self
     {
         if ($this->getInput()->getOption('no-url-output') === true) {
             return $this;
@@ -166,21 +169,36 @@ final class BenchmarkInitCommand extends AbstractCommand
 
         $this->getOutput()->writeln('');
 
-        return $this->outputBlock(
-            [
-                '',
-                'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
-                'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl(),
-                'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true),
-                ''
-            ],
-            'green',
-            $this->getOutput()
-        );
+        $lines = [
+            '',
+            'You can test your code at this url: ' . BenchmarkUrlService::getUrl(false),
+            'View phpinfo() at this url: ' . BenchmarkUrlService::getPhpinfoUrl(),
+            'View statistics at this url: ' . BenchmarkUrlService::getStatisticsUrl(true)
+        ];
+        if ($phpVersion->isPreloadAvailable() === true) {
+            $lines[] = 'Generate preload files at this url: ' . BenchmarkUrlService::getPreloadGeneratorUrl();
+        }
+        $lines[] = '';
+
+        return $this->outputBlock($lines, 'green', $this->getOutput());
     }
 
     private function getPhpConfPath(PhpVersion $phpVersion): string
     {
         return '/etc/php/' . $phpVersion->toString() . '/fpm/conf.d';
+    }
+
+    private function createOrRemovePreloadGeneratorVhost(PhpVersion $phpVersion): self
+    {
+        if ($phpVersion->isPreloadAvailable() === true) {
+            $this->runCommand(
+                NginxVhostPreloadGeneratorCreateCommand::getDefaultName(),
+                ['phpVersion' => $phpVersion->toString(), '--no-url-output' => true, '--no-nginx-reload' => true]
+            );
+        } else {
+            $this->runCommand(NginxVhostPreloadGeneratorDeleteCommand::getDefaultName());
+        }
+
+        return $this;
     }
 }

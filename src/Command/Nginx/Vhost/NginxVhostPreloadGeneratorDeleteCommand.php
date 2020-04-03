@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Command\Nginx\Vhost;
 
 use App\{
-    Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\DefineVhostVariablesTrait,
     Command\Behavior\OutputBlockTrait,
     Command\Behavior\ReloadNginxTrait,
     Utils\Path
@@ -16,7 +14,6 @@ use App\{
 
 final class NginxVhostPreloadGeneratorDeleteCommand extends AbstractCommand
 {
-    use DefineVhostVariablesTrait;
     use OutputBlockTrait;
     use ReloadNginxTrait;
 
@@ -37,9 +34,7 @@ final class NginxVhostPreloadGeneratorDeleteCommand extends AbstractCommand
         $this->outputTitle('Delete ' . BenchmarkUrlService::HOST . ' virtual host');
 
         $this
-            ->removeFile(
-                Path::getSourceCodePath() . '/' . Benchmark::getPublicPath() . '/' . Path::getPreloadEntryPointName()
-            )
+            ->removeFile(Path::getBenchmarkKitPath() . '/public/preload-generator.php')
             ->removeFile(Path::getNginxVhostPath() . '/preload-generator.benchmark-kit.loc.conf');
 
         if ($this->getInput()->getOption('no-nginx-reload') === false) {

@@ -107,11 +107,6 @@ class Path
         return __DIR__ . '/../../var/statistics.json';
     }
 
-    public static function getPreloadEntryPointName()
-    {
-        return 'phpbenchmarks_preloader_generator.php';
-    }
-
     public static function getNginxVhostPath()
     {
         return '/etc/nginx/sites-enabled';
