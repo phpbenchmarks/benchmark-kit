@@ -6,13 +6,13 @@ namespace App\Command\Validate\Benchmark;
 
 use App\{
     Benchmark\BenchmarkUrlService,
-    Command\Benchmark\BenchmarkInitCommand,
+    BenchmarkConfiguration\BenchmarkConfiguration,
     PhpVersion\PhpVersion,
     Utils\Path
 };
 use steevanb\SymfonyOptionsResolver\OptionsResolver;
 
-final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmarkCommand
+final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmarkUrlCommand
 {
     /** @var string */
     protected static $defaultName = 'validate:benchmark:statistics';
@@ -24,21 +24,11 @@ final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmark
         $this->setDescription('Validate benchmark statistics (memory, declared classes etc)');
     }
 
-    protected function initBenchmark(PhpVersion $phpVersion): parent
+    protected function initBenchmark(PhpVersion $phpVersion, BenchmarkConfiguration $benchmarkConfiguration): parent
     {
-        return $this
-            ->outputTitle('Prepare benchmark')
-            ->removeFile(Path::getStatisticsPath(), false)
-            ->runCommand(
-                BenchmarkInitCommand::getDefaultName(),
-                [
-                    'phpVersion' => $phpVersion->toString(),
-                    '--no-url-output' => true,
-                    '--opcache-enabled' => true,
-                    '--preload-enabled' => true
-                ]
-            )
-            ->outputTitle('Validation of statistics for ' . BenchmarkUrlService::getStatisticsUrl(false));
+        parent::initBenchmark($phpVersion, $benchmarkConfiguration);
+
+        return $this->removeFile(Path::getStatisticsPath(), false);
     }
 
     protected function getUrl(): string
@@ -46,13 +36,11 @@ final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmark
         return BenchmarkUrlService::getStatisticsUrl(false);
     }
 
-    protected function validateBody(string $body, PhpVersion $phpVersion): self
-    {
-        return $this;
-    }
-
-    protected function afterBodyValidated(PhpVersion $phpVersion): self
-    {
+    protected function afterHttpCodeValidated(
+        PhpVersion $phpVersion,
+        BenchmarkConfiguration $benchmarkConfiguration,
+        ?string $body
+    ): self {
         // Wait for statistics.json file to be written, sometimes it's not the case at this stage
         sleep(1);
 

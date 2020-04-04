@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Command\Export\Benchmark;
 
 use App\{
+    Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Validate\Benchmark\ValidateBenchmarkStatisticsCommand,
+    Command\Behavior\CallUrlTrait,
     Utils\Path
 };
 
 final class ExportBenchmarkStatisticsCommand extends AbstractCommand
 {
+    use CallUrlTrait;
+
     /** @var string */
     protected static $defaultName = 'export:benchmark:statistics';
 
@@ -24,11 +27,9 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
-        $this->runCommand(
-            ValidateBenchmarkStatisticsCommand::getDefaultName(),
-            ['--init-calls' => 20],
-            false
-        );
+        $this
+            ->initializePhpCaches()
+            ->callUrl(BenchmarkUrlService::getStatisticsUrl(false));
 
         try {
             $statistics = file_get_contents(Path::getStatisticsPath());
@@ -39,5 +40,14 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
         $this->getOutput()->writeln($statistics);
 
         return 0;
+    }
+
+    protected function initializePhpCaches(): self
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->callUrl(BenchmarkUrlService::getStatisticsUrl(false));
+        }
+
+        return $this;
     }
 }
