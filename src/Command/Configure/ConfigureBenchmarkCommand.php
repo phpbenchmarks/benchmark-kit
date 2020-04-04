@@ -30,7 +30,7 @@ final class ConfigureBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Call all configure commands and ' . ComposerUpdateCommand::getDefaultName());
+        $this->setDescription('Configure your benchmark for benchmark-kit');
         foreach ($this->configurePhpBenchmarksConfigParameters as $name => $description) {
             $this->addOption($name, null, InputOption::VALUE_REQUIRED, $description);
         }
