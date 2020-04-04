@@ -6,6 +6,7 @@ namespace App\Command\Validate\Configuration;
 
 use App\{
     Command\AbstractCommand,
+    Command\Behavior\ValidateCircleCiOption,
     Command\Validate\Configuration\Composer\ValidateConfigurationComposerJsonCommand,
     Command\Validate\Configuration\Composer\ValidateConfigurationComposerLockCommand,
     Command\Validate\Configuration\Nginx\ValidateConfigurationNginxVhostCommand,
@@ -16,6 +17,8 @@ use App\{
 
 final class ValidateConfigurationCommand extends AbstractCommand
 {
+    use ValidateCircleCiOption;
+
     /** @var string */
     protected static $defaultName = 'validate:configuration';
 
@@ -23,13 +26,18 @@ final class ValidateConfigurationCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate configuration');
+        $this
+            ->setDescription('Validate configuration')
+            ->addValidateCircleCiOption($this->getDefinition());
     }
 
     protected function doExecute(): int
     {
+        if ($this->getValidateCircleCiOption($this->getInput()) === true) {
+            $this->runCommand(ValidateConfigurationCircleciCommand::getDefaultName());
+        }
+
         $this
-            ->runCommand(ValidateConfigurationCircleciCommand::getDefaultName())
             ->runCommand(ValidateConfigurationComposerJsonCommand::getDefaultName())
             ->runCommand(ValidateConfigurationComposerLockCommand::getDefaultName())
             ->runCommand(ValidateConfigurationEntryPointCommand::getDefaultName())

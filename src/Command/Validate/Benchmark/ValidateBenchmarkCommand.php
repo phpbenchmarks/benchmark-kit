@@ -6,12 +6,14 @@ namespace App\Command\Validate\Benchmark;
 
 use App\{
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait
+    Command\Behavior\CallUrlTrait,
+    Command\Behavior\ValidateCircleCiOption
 };
 
 final class ValidateBenchmarkCommand extends AbstractCommand
 {
     use CallUrlTrait;
+    use ValidateCircleCiOption;
 
     /** @var string */
     protected static $defaultName = 'validate:benchmark';
@@ -20,14 +22,24 @@ final class ValidateBenchmarkCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Validate benchmark');
+        $this
+            ->setDescription('Validate benchmark')
+            ->addValidateCircleCiOption($this->getDefinition());
     }
 
     protected function doExecute(): int
     {
         $this
-            ->runCommand(ValidateBenchmarkResponseCommand::getDefaultName())
-            ->runCommand(ValidateBenchmarkStatisticsCommand::getDefaultName());
+            ->runCommand(
+                ValidateBenchmarkResponseCommand::getDefaultName(),
+                $this->appendValidateCircleCiOption($this->getInput())
+            )
+            ->runCommand(
+                ValidateBenchmarkPhpInfoCommand::getDefaultName(),
+                $this->appendValidateCircleCiOption($this->getInput())
+            );
+            // Todo: https://github.com/phpbenchmarks/benchmark-kit/issues/118
+            // ->runCommand(ValidateBenchmarkStatisticsCommand::getDefaultName());
 
         return 0;
     }
