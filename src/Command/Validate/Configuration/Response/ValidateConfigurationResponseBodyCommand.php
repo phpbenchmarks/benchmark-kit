@@ -27,10 +27,12 @@ final class ValidateConfigurationResponseBodyCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
+        $this->outputTitle(
+            'Validation of ' . Path::rmPrefix(Path::getResponseBodyPath(new PhpVersion(0, 0))) . ' files'
+        );
+
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $responseBodyPath = Path::getResponseBodyPath($phpVersion);
-
-            $this->outputTitle('Validation of ' . Path::rmPrefix($responseBodyPath) . ' files');
             foreach (BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType()) as $file) {
                 $this->validateResponseBodyFile($responseBodyPath . '/' . $file);
             }

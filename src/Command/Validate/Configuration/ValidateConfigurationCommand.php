@@ -10,6 +10,7 @@ use App\{
     Command\Validate\Configuration\Composer\ValidateConfigurationComposerLockCommand,
     Command\Validate\Configuration\Nginx\ValidateConfigurationNginxVhostCommand,
     Command\Validate\Configuration\Php\ValidateConfigurationPhpIniCommand,
+    Command\Validate\Configuration\Php\ValidateConfigurationPhpPreloadCommand,
     Command\Validate\Configuration\Response\ValidateConfigurationResponseBodyCommand
 };
 
@@ -37,6 +38,7 @@ final class ValidateConfigurationCommand extends AbstractCommand
             ->runCommand(ValidateConfigurationPhpBenchmarksCommand::getDefaultName())
             ->runCommand(ValidateConfigurationInitBenchmarkCommand::getDefaultName())
             ->runCommand(ValidateConfigurationPhpIniCommand::getDefaultName())
+            ->runCommand(ValidateConfigurationPhpPreloadCommand::getDefaultName())
             ->runCommand(ValidateConfigurationResponseBodyCommand::getDefaultName())
             ->runCommand(ValidateConfigurationNginxVhostCommand::getDefaultName());
 

@@ -47,7 +47,7 @@ final class ValidateConfigurationSourceCodeUrlsCommand extends AbstractCommand
     {
         if ($this->skipSourceCodeUrls() === false) {
             $this
-                ->outputTitle('Validation of ' . Path::rmPrefix(Path::getConfigFilePath()) . ' sourceCode.urls')
+                ->outputTitle('Validation of sourceCode.urls in ' . Path::rmPrefix(Path::getConfigFilePath()))
                 ->assertCodeSourceUrls();
         }
 

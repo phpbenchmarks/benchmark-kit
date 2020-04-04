@@ -25,10 +25,11 @@ final class ValidateConfigurationPhpIniCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
-        $this->outputTitle('Validation of php.ini');
+        $this->outputTitle('Validation of ' . Path::rmPrefix(Path::getPhpIniPath(new PhpVersion(0, 0))));
+
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $iniPath = Path::getPhpIniPath($phpVersion);
-            if (is_readable(Path::getPhpIniPath($phpVersion))) {
+            if (is_readable($iniPath)) {
                 $this->outputSuccess(Path::rmPrefix($iniPath) . ' exists and is readable.');
             } else {
                 throw new \Exception(Path::rmPrefix($iniPath) . ' does not exists or is not readable.');

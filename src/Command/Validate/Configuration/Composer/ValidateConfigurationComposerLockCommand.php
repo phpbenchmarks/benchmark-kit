@@ -46,9 +46,10 @@ final class ValidateConfigurationComposerLockCommand extends AbstractCommand
 
     private function assertPhpVersionComposerJsons(): self
     {
+        $this->outputTitle('Validation of ' . Path::rmPrefix(Path::getComposerLockPath(new PhpVersion(0, 0))));
+
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
             $composerLockFilePath = Path::getComposerLockPath($phpVersion);
-            $this->outputTitle('Validation of ' . Path::rmPrefix($composerLockFilePath));
 
             if (is_readable($composerLockFilePath) === false) {
                 throw new \Exception(
