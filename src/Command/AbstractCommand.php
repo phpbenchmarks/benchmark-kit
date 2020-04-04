@@ -379,4 +379,14 @@ abstract class AbstractCommand extends Command
 
         return $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' exists.');
     }
+
+    /** @return $this */
+    protected function assertFileNotExists(string $filePath): self
+    {
+        if (is_readable($filePath) === true) {
+            throw new \Exception('File ' . Path::rmPrefix($filePath) . ' should not exist.');
+        }
+
+        return $this->outputSuccess('File ' . Path::rmPrefix($filePath) . ' does not exists.');
+    }
 }

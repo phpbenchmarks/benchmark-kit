@@ -26,13 +26,13 @@ final class ValidateConfigurationInitBenchmarkCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
+        $this->outputTitle('Validation of ' . Path::rmPrefix(Path::getInitBenchmarkPath(new PhpVersion(0, 0))));
+
         foreach (Benchmark::getCompatiblesPhpVersions() as $phpVersion) {
-            $this
-                ->outputTitle('Validation of ' . Path::rmPrefix(Path::getInitBenchmarkPath($phpVersion)))
-                ->assertFileExist(
-                    Path::getInitBenchmarkPath($phpVersion),
-                    ConfigureInitBenchmarkCommand::getDefaultName()
-                );
+            $this->assertFileExist(
+                Path::getInitBenchmarkPath($phpVersion),
+                ConfigureInitBenchmarkCommand::getDefaultName()
+            );
         }
 
         return 0;
