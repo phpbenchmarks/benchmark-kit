@@ -11,7 +11,7 @@ use Symfony\Component\Console\{
     Input\InputOption
 };
 
-trait ValidateCircleCiOption
+trait ValidateCircleCiOptionTrait
 {
     protected function getValidateCircleCiOptionName(): string
     {

@@ -6,7 +6,7 @@ namespace App\Command\Validate\Configuration;
 
 use App\{
     Command\AbstractCommand,
-    Command\Behavior\ValidateCircleCiOption,
+    Command\Behavior\ValidateCircleCiOptionTrait,
     Command\Validate\Configuration\Composer\ValidateConfigurationComposerJsonCommand,
     Command\Validate\Configuration\Composer\ValidateConfigurationComposerLockCommand,
     Command\Validate\Configuration\Nginx\ValidateConfigurationNginxVhostCommand,
@@ -17,7 +17,7 @@ use App\{
 
 final class ValidateConfigurationCommand extends AbstractCommand
 {
-    use ValidateCircleCiOption;
+    use ValidateCircleCiOptionTrait;
 
     /** @var string */
     protected static $defaultName = 'validate:configuration';
