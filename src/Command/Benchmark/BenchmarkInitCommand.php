@@ -48,7 +48,7 @@ final class BenchmarkInitCommand extends AbstractCommand
         parent::configure();
 
         $this
-            ->setDescription('Define PHP version and call initBenchmark.sh')
+            ->setDescription('Initialize the benchmark for the given PHP version')
             ->addPhpVersionArgument($this)
             ->addOption('no-url-output')
             ->addOption('opcache-enabled', null, InputOption::VALUE_OPTIONAL)
