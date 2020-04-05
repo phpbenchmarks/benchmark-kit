@@ -16,7 +16,7 @@ final class ValidateBenchmarkPhpInfoCommand extends AbstractValidateBenchmarkUrl
     use CallUrlTrait;
 
     /** @var string */
-    protected static $defaultName = 'validate:benchmark:php-info';
+    protected static $defaultName = 'validate:benchmark:phpinfo';
 
     protected function configure(): void
     {
