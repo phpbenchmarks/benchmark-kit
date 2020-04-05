@@ -15,7 +15,7 @@ final class ExportBenchmarkPhpInfoCommand extends AbstractCommand
     use CallUrlTrait;
 
     /** @var string */
-    protected static $defaultName = 'export:benchmark:php-info';
+    protected static $defaultName = 'export:benchmark:phpinfo';
 
     protected function configure(): void
     {
