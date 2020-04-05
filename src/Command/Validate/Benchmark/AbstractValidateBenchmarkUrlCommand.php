@@ -51,30 +51,23 @@ abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
     protected function validatePhpVersion(PhpVersion $phpVersion): self
     {
         foreach (BenchmarkConfigurationService::getAvailable($phpVersion) as $benchmarkConfiguration) {
+            $this->initBenchmark($phpVersion, $benchmarkConfiguration);
+
             $this->outputTitle(
                 'Validation of '
-                    . $this->getUrl()
-                    . ' for PHP ' . $phpVersion->toString()
-                    . ' with ' . $benchmarkConfiguration->toString()
+                . $this->getUrl()
+                . ' for PHP ' . $phpVersion->toString()
+                . ' with ' . $benchmarkConfiguration->toString()
             );
 
-            $this->validateBenchmarkConfiguration($phpVersion, $benchmarkConfiguration);
+            $body = $this->callUrl($this->getUrl());
+
+            $this
+                ->outputSuccess('Http code is 200.')
+                ->afterHttpCodeValidated($phpVersion, $benchmarkConfiguration, $body);
         }
 
         return $this;
-    }
-
-    protected function validateBenchmarkConfiguration($phpVersion, $benchmarkConfiguration): self
-    {
-        $this
-            ->initBenchmark($phpVersion, $benchmarkConfiguration)
-            ->outputSuccess('Benchmark initialized.');
-
-        $body = $this->callUrl($this->getUrl());
-
-        return $this
-            ->outputSuccess('Http code is 200.')
-            ->afterHttpCodeValidated($phpVersion, $benchmarkConfiguration, $body);
     }
 
     protected function afterHttpCodeValidated(
