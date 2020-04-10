@@ -7,13 +7,13 @@ namespace App\Command\Export\Benchmark;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     Utils\Path
 };
 
 final class ExportBenchmarkStatisticsCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'export:benchmark:statistics';
@@ -29,7 +29,7 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
     {
         $this
             ->initializePhpCaches()
-            ->callUrl(BenchmarkUrlService::getStatisticsUrl(false));
+            ->getBodyFromUrl(BenchmarkUrlService::getStatisticsUrl(false));
 
         try {
             $statistics = file_get_contents(Path::getStatisticsPath());
@@ -45,7 +45,7 @@ final class ExportBenchmarkStatisticsCommand extends AbstractCommand
     protected function initializePhpCaches(): self
     {
         for ($i = 0; $i < 10; $i++) {
-            $this->callUrl(BenchmarkUrlService::getStatisticsUrl(false));
+            $this->getBodyFromUrl(BenchmarkUrlService::getStatisticsUrl(false));
         }
 
         return $this;

@@ -7,12 +7,12 @@ namespace App\Command\Export\Benchmark;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait
+    Command\Behavior\GetBodyFromUrl
 };
 
 final class ExportBenchmarkPhpInfoCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'export:benchmark:phpinfo';
@@ -26,7 +26,7 @@ final class ExportBenchmarkPhpInfoCommand extends AbstractCommand
 
     protected function doExecute(): int
     {
-        $body = $this->callUrl(BenchmarkUrlService::getPhpinfoUrl());
+        $body = $this->getBodyFromUrl(BenchmarkUrlService::getPhpinfoUrl());
         if (is_string($body) === false || strlen($body) === 0) {
             throw new \Exception('phpinfo() should not output an empty string.');
         }

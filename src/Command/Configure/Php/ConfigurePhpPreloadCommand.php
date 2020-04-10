@@ -8,7 +8,7 @@ use App\{
     Benchmark\Benchmark,
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     Command\Benchmark\BenchmarkInitCommand,
     Command\Nginx\Vhost\NginxVhostPreloadGeneratorCreateCommand,
     Command\Nginx\Vhost\NginxVhostPreloadGeneratorDeleteCommand,
@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class ConfigurePhpPreloadCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'configure:php:preload';
@@ -91,12 +91,12 @@ final class ConfigurePhpPreloadCommand extends AbstractCommand
         $this->outputTitle('Generating preload file');
 
         for ($i = 0; $i < 5; $i++) {
-            $this->callUrl(BenchmarkUrlService::getUrl(false));
+            $this->getBodyFromUrl(BenchmarkUrlService::getUrl(false));
         }
 
         $this
             ->outputSuccess('Opcache initialized.')
-            ->callUrl(BenchmarkUrlService::getPreloadGeneratorUrl());
+            ->getBodyFromUrl(BenchmarkUrlService::getPreloadGeneratorUrl());
 
         if (is_file(Path::getPreloadPath($phpVersion)) === false) {
             throw new \Exception('Preload file ' . Path::rmPrefix(Path::getPreloadPath($phpVersion) . '  not found.'));

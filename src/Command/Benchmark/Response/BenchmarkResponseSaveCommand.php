@@ -7,14 +7,14 @@ namespace App\Command\Benchmark\Response;
 use App\{
     Benchmark\BenchmarkUrlService,
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     Utils\Path
 };
 use Symfony\Component\Console\Input\InputArgument;
 
 final class BenchmarkResponseSaveCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'benchmark:response:save';
@@ -51,7 +51,7 @@ final class BenchmarkResponseSaveCommand extends AbstractCommand
     private function getBenchmarkResponse(): string
     {
         $benchmarkUrl = BenchmarkUrlService::getUrl(false);
-        $response = $this->callUrl($benchmarkUrl, false);
+        $response = $this->getBodyFromUrl($benchmarkUrl, false);
         $this->outputSuccess("$benchmarkUrl called.");
 
         return $response;

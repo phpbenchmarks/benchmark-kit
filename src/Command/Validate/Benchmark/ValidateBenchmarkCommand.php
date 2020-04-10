@@ -6,14 +6,14 @@ namespace App\Command\Validate\Benchmark;
 
 use App\{
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     Command\Behavior\ValidateCircleCiOptionTrait,
     Command\Validate\Configuration\ValidateConfigurationCommand
 };
 
 final class ValidateBenchmarkCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
     use ValidateCircleCiOptionTrait;
 
     /** @var string */

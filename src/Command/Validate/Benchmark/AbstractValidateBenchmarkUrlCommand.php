@@ -8,7 +8,7 @@ use App\{
     BenchmarkConfiguration\BenchmarkConfiguration,
     BenchmarkConfiguration\BenchmarkConfigurationService,
     Command\AbstractCommand,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     Benchmark\Benchmark,
     Command\Behavior\ValidateCircleCiOptionTrait,
     Command\Benchmark\BenchmarkInitCommand,
@@ -18,7 +18,7 @@ use App\{
 
 abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
     use ValidateCircleCiOptionTrait;
 
     abstract protected function getUrl(): string;
@@ -60,7 +60,7 @@ abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
                 . ' with ' . $benchmarkConfiguration->toString()
             );
 
-            $body = $this->callUrl($this->getUrl());
+            $body = $this->getBodyFromUrl($this->getUrl());
 
             $this
                 ->outputSuccess('Http code is 200.')
