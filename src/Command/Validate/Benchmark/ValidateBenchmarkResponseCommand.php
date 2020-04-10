@@ -9,14 +9,14 @@ use App\{
     Benchmark\BenchmarkType,
     Benchmark\BenchmarkUrlService,
     BenchmarkConfiguration\BenchmarkConfiguration,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     PhpVersion\PhpVersion,
     Utils\Path
 };
 
 final class ValidateBenchmarkResponseCommand extends AbstractValidateBenchmarkUrlCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'validate:benchmark:response';

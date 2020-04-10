@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command\Behavior;
 
-trait CallUrlTrait
+trait GetBodyFromUrl
 {
     /** @return $this */
-    protected function callUrl(string $url, bool $assertIs200 = true): ?string
+    protected function getBodyFromUrl(string $url, bool $assertIs200 = true): ?string
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

@@ -4,6 +4,7 @@ services:
         autoconfigure: true
         bind:
             $opcachePreloadUser: '%env(OPCACHE_PRELOAD_USER)%'
+            $varDir: "%kernel.cache_dir%/../.."
 
     Huttopia\ConsoleBundle\Command\ListCommand:
         class: App\Command\DefaultCommand

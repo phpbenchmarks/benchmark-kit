@@ -7,13 +7,13 @@ namespace App\Command\Validate\Benchmark;
 use App\{
     Benchmark\BenchmarkUrlService,
     BenchmarkConfiguration\BenchmarkConfiguration,
-    Command\Behavior\CallUrlTrait,
+    Command\Behavior\GetBodyFromUrl,
     PhpVersion\PhpVersion
 };
 
 final class ValidateBenchmarkPhpInfoCommand extends AbstractValidateBenchmarkUrlCommand
 {
-    use CallUrlTrait;
+    use GetBodyFromUrl;
 
     /** @var string */
     protected static $defaultName = 'validate:benchmark:phpinfo';

@@ -44,6 +44,11 @@ class Benchmark
 
     protected static ?int $coreDependencyPatchVersion;
 
+    public static function reload(): void
+    {
+        static::$loaded = false;
+    }
+
     public static function getComponentId(): int
     {
         static::load();
