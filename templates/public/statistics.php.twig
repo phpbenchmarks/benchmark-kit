@@ -2,6 +2,15 @@
 
 require('{{ entryPointPath }}');
 
+$opcacheStatus = function_exists('opcache_get_status') ? opcache_get_status() : [];
+if (array_key_exists('preload_statistics', $opcacheStatus) === true) {
+    $preloadMemory = $opcacheStatus['preload_statistics']['memory_consumption'];
+    $preloadFiles = count($opcacheStatus['preload_statistics']['scripts']);
+} else {
+    $preloadMemory = null;
+    $preloadFiles = null;
+}
+
 $statistics = json_encode(
     [
         'memory' => [
@@ -16,6 +25,10 @@ $statistics = json_encode(
             'traits' => count(get_declared_traits()),
             'functions' => count(get_defined_functions()),
             'constants' => count(get_defined_constants())
+        ],
+        'preload' => [
+            'memory' => $preloadMemory,
+            'files' => $preloadFiles,
         ]
     ],
     JSON_PRETTY_PRINT

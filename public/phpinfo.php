@@ -86,7 +86,7 @@ $opcacheStatus = opcache_get_status();
     </table>
 
     <?php $preload = ini_get('opcache.preload'); ?>
-    <?php if (is_string($preload)) { ?>
+    <?php if (is_string($preload) === true) { ?>
         <table>
             <tbody>
                 <tr class="h h_phpbenchmarks">
@@ -97,7 +97,7 @@ $opcacheStatus = opcache_get_status();
                 <tr>
                     <td class="e">opcache.preload</td>
                     <td class="v">
-                        <?php if (strlen(ini_get('opcache.preload'))) { ?>
+                        <?php if (strlen(ini_get('opcache.preload')) > 0) { ?>
                             <?= App\Utils\Path::rmPrefix($preload) ?>
                         <?php } else { ?>
                             <span class="warning">disabled</span> (<strong>phpbenchkit benchmark:init</strong> to enable it)
