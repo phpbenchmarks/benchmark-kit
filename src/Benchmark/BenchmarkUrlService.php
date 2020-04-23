@@ -46,7 +46,12 @@ class BenchmarkUrlService
 
     public static function getPreloadGeneratorUrl(): string
     {
-        return 'http://' . static::PRELOAD_GENERATOR_HOST . ':' . static::getNginxPort() . Benchmark::getBenchmarkRelativeUrl();
+        return
+            'http://'
+            . static::PRELOAD_GENERATOR_HOST
+            . ':'
+            . static::getNginxPort()
+            . Benchmark::getBenchmarkRelativeUrl();
     }
 
     public static function getNginxPort(): int

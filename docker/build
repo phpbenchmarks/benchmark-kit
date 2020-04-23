@@ -1,30 +1,31 @@
 #!/usr/bin/env bash
 
-set -e
+set -eu
 
-readonly DOCKER_DIRECTORY=$(realpath $(dirname $(realpath $0)))
-readonly VERSION_PATH=$DOCKER_DIRECTORY/../src/Version.php
+readonly ROOT_DIRECTORY=$(realpath $(dirname $(realpath $0))/..)
+readonly VERSION_PATH="${ROOT_DIRECTORY}/src/Version.php"
 readonly IMAGE_NAME="phpbenchmarks/benchmark-kit"
-
-readonly MAJOR_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::MAJOR;")
-readonly MINOR_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::MINOR;")
-readonly PATCH_VERSION=$(php -r "require('$VERSION_PATH'); echo App\Version::PATCH;")
-
-readonly IMAGE_PATCH_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
-readonly IMAGE_MINOR_TAG=$IMAGE_NAME:$MAJOR_VERSION.$MINOR_VERSION
-readonly IMAGE_MAJOR_TAG=$IMAGE_NAME:$MAJOR_VERSION
-
 readonly LOG_FILE="/tmp/benchmark-kit_build.log"
+readonly DOCKER_COMPOSER_CMD="docker run -it --user $(id -u):$(id -g) -v ${ROOT_DIRECTORY}:/app composer:1.10"
+
+echo "Fetch Benchmark kit version."
+readonly DOCKER_VERSION_CMD="docker run --rm -v ${ROOT_DIRECTORY}/src/Version.php:/app/src/Version.php php:7.4-cli-alpine3.10 php -r"
+readonly MAJOR_VERSION=$(${DOCKER_VERSION_CMD} "require('/app/src/Version.php'); echo App\Version::MAJOR;")
+readonly MINOR_VERSION=$(${DOCKER_VERSION_CMD} "require('/app/src/Version.php'); echo App\Version::MINOR;")
+readonly PATCH_VERSION=$(${DOCKER_VERSION_CMD} "require('/app/src/Version.php'); echo App\Version::PATCH;")
+readonly IMAGE_PATCH_TAG="${IMAGE_NAME}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
+readonly IMAGE_MINOR_TAG="${IMAGE_NAME}:${MAJOR_VERSION}.${MINOR_VERSION}"
+readonly IMAGE_MAJOR_TAG="${IMAGE_NAME}:${MAJOR_VERSION}"
 
 function rmLogFile() {
-    if [ -f "$LOG_FILE" ]; then
-        rm $LOG_FILE;
+    if [ -f "${LOG_FILE}" ]; then
+        rm "${LOG_FILE}";
     fi
 }
 
 function onError() {
-    if [ -f "$LOG_FILE" ]; then
-        cat $LOG_FILE
+    if [ -f "${LOG_FILE}" ]; then
+        cat "${LOG_FILE}"
         rmLogFile
     fi
 
@@ -34,9 +35,9 @@ function onError() {
 trap onError ERR
 rmLogFile
 
-echo -n "Image to build: $IMAGE_PATCH_TAG? [Y/n] "
+echo -n "Image to build: ${IMAGE_PATCH_TAG}? [Y/n] "
 read validate
-if [ "$validate" != "" ] && [ "$validate" != "y" ] && [ "$validate" != "y" ]; then
+if [ "${validate}" != "" ] && [ "${validate}" != "y" ] && [ "${validate}" != "y" ]; then
     exit 1
 fi
 
@@ -44,49 +45,49 @@ dockerQuiet="-q"
 dockerNoCache=""
 push=false
 for param in "$@"; do
-    if [ "$param" == "-v" ]; then
+    if [ "${param}" == "-v" ]; then
         dockerQuiet=""
-    elif [ "$param" == "--no-cache" ]; then
+    elif [ "${param}" == "--no-cache" ]; then
         dockerNoCache="--no-cache"
-    elif [ "$param" == "--push" ]; then
+    elif [ "${param}" == "--push" ]; then
         push=true
     fi
 done
 
 echo "Install Composer prod dependencies."
-composer install --no-dev > $LOG_FILE 2>&1
+${DOCKER_COMPOSER_CMD} install --no-dev > ${LOG_FILE} 2>&1
 rmLogFile
 
 echo "Build image."
 docker \
     build \
-    $DOCKER_DIRECTORY/.. \
+    ${ROOT_DIRECTORY} \
     --file=docker/Dockerfile \
-    --tag=$IMAGE_PATCH_TAG \
-    $dockerQuiet \
-    $dockerNoCache
-docker tag $IMAGE_PATCH_TAG $IMAGE_MINOR_TAG
-docker tag $IMAGE_PATCH_TAG $IMAGE_MAJOR_TAG
+    --tag=${IMAGE_PATCH_TAG} \
+    ${dockerQuiet} \
+    ${dockerNoCache}
+docker tag ${IMAGE_PATCH_TAG} ${IMAGE_MINOR_TAG}
+docker tag ${IMAGE_PATCH_TAG} ${IMAGE_MAJOR_TAG}
 
-if [ $push == true ]; then
+if [ ${push} == true ]; then
     echo "Login to dockerhub."
-    docker logout > $LOG_FILE 2>&1
+    docker logout > ${LOG_FILE} 2>&1
     rmLogFile
     docker login --username=phpbenchmarks
 
-    echo "Push Docker image $IMAGE_PATCH_TAG."
-    docker push $IMAGE_PATCH_TAG > $LOG_FILE 2>&1
+    echo "Push Docker image ${IMAGE_PATCH_TAG}."
+    docker push ${IMAGE_PATCH_TAG} > ${LOG_FILE} 2>&1
     rmLogFile
 
-    echo "Push Docker image $IMAGE_MINOR_TAG."
-    docker push $IMAGE_MINOR_TAG > $LOG_FILE 2>&1
+    echo "Push Docker image ${IMAGE_MINOR_TAG}."
+    docker push ${IMAGE_MINOR_TAG} > ${LOG_FILE} 2>&1
     rmLogFile
 
-    echo "Push Docker image $IMAGE_MAJOR_TAG."
-    docker push $IMAGE_MAJOR_TAG > $LOG_FILE 2>&1
+    echo "Push Docker image ${IMAGE_MAJOR_TAG}."
+    docker push ${IMAGE_MAJOR_TAG} > ${LOG_FILE} 2>&1
     rmLogFile
 fi
 
 echo "Install Composer dev dependencies."
-composer install > $LOG_FILE 2>&1
+${DOCKER_COMPOSER_CMD} install > ${LOG_FILE} 2>&1
 rmLogFile
