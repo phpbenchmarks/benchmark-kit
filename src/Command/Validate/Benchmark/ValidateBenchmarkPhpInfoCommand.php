@@ -35,7 +35,7 @@ final class ValidateBenchmarkPhpInfoCommand extends AbstractValidateBenchmarkUrl
         BenchmarkConfiguration $benchmarkConfiguration,
         ?string $body
     ): self {
-        if (is_string($body) === false || strlen($body) === false) {
+        if (is_string($body) === false || strlen($body) === 0) {
             throw new \Exception('phpinfo() should not output an empty string.');
         }
 

@@ -47,7 +47,7 @@ class ComponentType
         return static::getConfiguration($type)['name'];
     }
 
-    public static function getCamelCaseName(int $type = null): string
+    public static function getCamelCaseName(string $type = null): string
     {
         return static::getConfiguration($type)['camelCaseName'];
     }

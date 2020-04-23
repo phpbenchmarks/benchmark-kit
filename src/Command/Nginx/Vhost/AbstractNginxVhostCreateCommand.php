@@ -120,7 +120,7 @@ abstract class AbstractNginxVhostCreateCommand extends AbstractCommand
             throw new \Exception('Error while reading ' . $vhostFilePath . '.');
         }
 
-        $content = str_replace('____PORT____', BenchmarkUrlService::getNginxPort(), $content);
+        $content = str_replace('____PORT____', (string) BenchmarkUrlService::getNginxPort(), $content);
         $content = str_replace('____HOST____', $host, $content);
 
         $sourceCodePath = realpath($sourceCodePath);
