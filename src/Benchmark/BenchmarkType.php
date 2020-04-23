@@ -276,7 +276,7 @@ class BenchmarkType
         ];
     }
 
-    public static function getByComponentType(int $componentType): array
+    public static function getByComponentType(string $componentType): array
     {
         return static::getAllByComponentType()[$componentType];
     }
@@ -311,7 +311,7 @@ class BenchmarkType
         return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
-    public static function getSourceCodeUrlIds(string $type = null, int $componentType = null): array
+    public static function getSourceCodeUrlIds(string $type = null, string $componentType = null): array
     {
         $ids = static::getConfiguration($type, 'sourceCodeUrlIds');
 

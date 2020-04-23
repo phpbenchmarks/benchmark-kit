@@ -6,80 +6,81 @@ namespace App\Component;
 
 class Component
 {
+    public const PHP = 'php';
+    public const SYMFONY = 'symfony';
+    public const LARAVEL = 'laravel';
+    public const ZEND_FRAMEWORK = 'zend-framework';
+    public const CAKE_PHP = 'cake-php';
+    public const TWIG = 'twig';
+    public const PLATES = 'plates';
+    public const SMARTY = 'smarty';
+    public const LATTE = 'latte';
+    public const SYMLEX = 'symlex';
+    public const CODE_IGNITER = 'code-igniter';
+    public const UBIQUITY = 'ubiquity';
+    public const PHPIXIE = 'phpixie';
+    public const YII = 'yii';
+    public const SYMFONY_JSON_SERIALIZER = 'symfony-json-serializer';
+
     protected const COMPONENTS = [
-        'php' => [
+        self::PHP => [
             'name' => 'PHP',
-            'slug' => 'php',
             'type' => ComponentType::PHP
         ],
-        'symfony' => [
+        self::SYMFONY => [
             'name' => 'Symfony',
-            'slug' => 'symfony',
             'type' => ComponentType::FRAMEWORK
         ],
-        'laravel' => [
+        self::LARAVEL => [
             'name' => 'Laravel',
-            'slug' => 'laravel',
             'type' => ComponentType::FRAMEWORK
         ],
-        'zend-framework' => [
+        self::ZEND_FRAMEWORK => [
             'name' => 'Zend Framework',
-            'slug' => 'zend-framework',
             'type' => ComponentType::FRAMEWORK
         ],
-        'cake-php' => [
+        self::CAKE_PHP => [
             'name' => 'CakePHP',
-            'slug' => 'cake-php',
             'type' => ComponentType::FRAMEWORK
         ],
-        'twig' => [
+        self::TWIG => [
             'name' => 'Twig',
-            'slug' => 'twig',
             'type' => ComponentType::TEMPLATE_ENGINE
         ],
-        'plates' => [
+        self::PLATES => [
             'name' => 'Plates',
-            'slug' => 'plates',
             'type' => ComponentType::TEMPLATE_ENGINE
         ],
-        'smarty' => [
+        self::SMARTY => [
             'name' => 'Smarty',
-            'slug' => 'smarty',
             'type' => ComponentType::TEMPLATE_ENGINE
         ],
-        'latte' => [
+        self::LATTE => [
             'name' => 'Latte',
-            'slug' => 'latte',
             'type' => ComponentType::TEMPLATE_ENGINE
         ],
-        'symlex' => [
+        self::SYMLEX => [
             'name' => 'Symlex',
-            'slug' => 'symlex',
             'type' => ComponentType::FRAMEWORK
         ],
-        'code-igniter' => [
+        self::CODE_IGNITER => [
             'name' => 'CodeIgniter',
-            'slug' => 'code-igniter',
             'type' => ComponentType::FRAMEWORK
         ],
-        'ubiquity' => [
+        self::UBIQUITY => [
             'name' => 'Ubiquity',
-            'slug' => 'Ubiquity',
             'type' => ComponentType::FRAMEWORK
         ],
-        'phpixie' => [
+        self::PHPIXIE => [
             'name' => 'PHPixie',
-            'slug' => 'phpixie',
             'type' => ComponentType::FRAMEWORK
         ],
-        'yii' => [
+        self::YII => [
             'name' => 'Yii',
-            'slug' => 'Yii',
             'type' => ComponentType::FRAMEWORK
         ],
-        'symfony-json-serializer' => [
+        self::SYMFONY_JSON_SERIALIZER => [
             'name' => 'Symfony JSON serializer',
-            'slug' => 'symfony-json-serializer',
             'type' => ComponentType::JSON_SERIALIZER
         ]
     ];
@@ -91,10 +92,10 @@ class Component
         }
     }
 
-    public static function getByType(int $type): array
+    public static function getByType(string $type): array
     {
         $return = [];
-        foreach (static::COMPONENTS as $slug => $configuration) {
+        foreach (array_keys(static::COMPONENTS) as $slug) {
             if (static::getType($slug) === $type) {
                 $return[$slug] = static::getName($slug);
             }
@@ -109,12 +110,7 @@ class Component
         return static::getConfiguration($slug)['name'];
     }
 
-    public static function getSlug(string $slug): string
-    {
-        return static::getConfiguration($slug)['slug'];
-    }
-
-    public static function getType(string $slug): int
+    public static function getType(string $slug): string
     {
         return static::getConfiguration($slug)['type'];
     }
