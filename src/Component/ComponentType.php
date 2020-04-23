@@ -16,23 +16,19 @@ class ComponentType
     protected const TYPES = [
         self::PHP => [
             'name' => 'PHP',
-            'camelCaseName' => 'php',
-            'showResultsQueryParameter' => 'phpBenchmarksShowResults=1'
+            'camelCaseName' => 'php'
         ],
         self::FRAMEWORK => [
             'name' => 'Framework',
-            'camelCaseName' => 'framework',
-            'showResultsQueryParameter' => null
+            'camelCaseName' => 'framework'
         ],
         self::TEMPLATE_ENGINE => [
             'name' => 'Template engine',
-            'camelCaseName' => 'templateEngine',
-            'showResultsQueryParameter' => null
+            'camelCaseName' => 'templateEngine'
         ],
         self::JSON_SERIALIZER => [
             'name' => 'JSON serializer',
-            'camelCaseName' => 'jsonSerializer',
-            'showResultsQueryParameter' => 'phpBenchmarksShowResults=1'
+            'camelCaseName' => 'jsonSerializer'
         ],
     ];
 
@@ -54,11 +50,6 @@ class ComponentType
     public static function getCamelCaseName(int $type = null): string
     {
         return static::getConfiguration($type)['camelCaseName'];
-    }
-
-    public static function getShowResultsQueryParameter(int $type = null): ?string
-    {
-        return static::getConfiguration($type)['showResultsQueryParameter'];
     }
 
     protected static function getConfiguration(int $type = null): array

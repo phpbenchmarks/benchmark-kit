@@ -24,7 +24,7 @@ class Benchmark
 
     protected static ?int $componentType;
 
-    protected static ?int $benchmarkType;
+    protected static ?string $benchmarkType;
 
     protected static ?string $sourceCodeEntryPoint;
 
@@ -68,7 +68,7 @@ class Benchmark
         return static::$componentType;
     }
 
-    public static function getBenchmarkType(): int
+    public static function getBenchmarkType(): string
     {
         static::load();
 
@@ -166,15 +166,6 @@ class Benchmark
                             . '/'
                             . BenchmarkType::getResponseBodyFiles(static::getBenchmarkType())[0]
                     );
-    }
-
-    public static function getPublicPath(): string
-    {
-        if (strlen(static::getSourceCodeEntryPoint()) === 0) {
-            throw new \Exception('Unable to find source code entry point path.');
-        }
-
-        return dirname(static::getSourceCodeEntryPoint());
     }
 
     protected static function isCompatibleWithPhp(PhpVersion $phpVersion): bool

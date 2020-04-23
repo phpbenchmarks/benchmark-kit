@@ -11,13 +11,13 @@ use App\{
 
 class BenchmarkType
 {
-    public const HELLO_WORLD = 1;
-    public const REST_API = 3;
-    public const TEMPLATING_SMALL_OVERLOAD = 4;
-    public const TEMPLATING_BIG_OVERLOAD = 5;
-    public const JSON_SERIALIZATION_HELLO_WORLD = 6;
-    public const JSON_SERIALIZATION_SMALL_OVERLOAD = 7;
-    public const JSON_SERIALIZATION_BIG_OVERLOAD = 8;
+    public const HELLO_WORLD = 'hello-world';
+    public const REST_API = 'rest-api';
+    public const TEMPLATING_SMALL_OVERLOAD = 'templating-small-overload';
+    public const TEMPLATING_BIG_OVERLOAD = 'templating-big-overload';
+    public const JSON_SERIALIZATION_HELLO_WORLD = 'json-serialization-hello-world';
+    public const JSON_SERIALIZATION_SMALL_OVERLOAD = 'json-serialization-small-overload';
+    public const JSON_SERIALIZATION_BIG_OVERLOAD = 'json-serialization-big-overload';
 
     protected const CONFIGURATIONS = [
         self::HELLO_WORLD => [
@@ -249,29 +249,29 @@ class BenchmarkType
 
     public static function getAllByComponentType(): array
     {
-        $benchmarkTypes = static::getAll();
+        $types = static::getAll();
 
         return [
             ComponentType::PHP => [
-                static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD],
-                static::REST_API => $benchmarkTypes[static::REST_API],
-                static::TEMPLATING_SMALL_OVERLOAD => $benchmarkTypes[static::TEMPLATING_SMALL_OVERLOAD],
-                static::TEMPLATING_BIG_OVERLOAD => $benchmarkTypes[static::TEMPLATING_BIG_OVERLOAD],
-                static::JSON_SERIALIZATION_HELLO_WORLD => $benchmarkTypes[static::JSON_SERIALIZATION_HELLO_WORLD],
-                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
-                static::JSON_SERIALIZATION_BIG_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_BIG_OVERLOAD]
+                static::HELLO_WORLD => $types[static::HELLO_WORLD],
+                static::REST_API => $types[static::REST_API],
+                static::TEMPLATING_SMALL_OVERLOAD => $types[static::TEMPLATING_SMALL_OVERLOAD],
+                static::TEMPLATING_BIG_OVERLOAD => $types[static::TEMPLATING_BIG_OVERLOAD],
+                static::JSON_SERIALIZATION_HELLO_WORLD => $types[static::JSON_SERIALIZATION_HELLO_WORLD],
+                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $types[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
+                static::JSON_SERIALIZATION_BIG_OVERLOAD => $types[static::JSON_SERIALIZATION_BIG_OVERLOAD]
             ],
             ComponentType::FRAMEWORK => [
-                static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD],
-                static::REST_API => $benchmarkTypes[static::REST_API],
+                static::HELLO_WORLD => $types[static::HELLO_WORLD],
+                static::REST_API => $types[static::REST_API],
             ],
             ComponentType::TEMPLATE_ENGINE => [
-                static::HELLO_WORLD => $benchmarkTypes[static::HELLO_WORLD]
+                static::HELLO_WORLD => $types[static::HELLO_WORLD]
             ],
             ComponentType::JSON_SERIALIZER => [
-                static::JSON_SERIALIZATION_HELLO_WORLD => $benchmarkTypes[static::JSON_SERIALIZATION_HELLO_WORLD],
-                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
-                static::JSON_SERIALIZATION_BIG_OVERLOAD => $benchmarkTypes[static::JSON_SERIALIZATION_BIG_OVERLOAD]
+                static::JSON_SERIALIZATION_HELLO_WORLD => $types[static::JSON_SERIALIZATION_HELLO_WORLD],
+                static::JSON_SERIALIZATION_SMALL_OVERLOAD => $types[static::JSON_SERIALIZATION_SMALL_OVERLOAD],
+                static::JSON_SERIALIZATION_BIG_OVERLOAD => $types[static::JSON_SERIALIZATION_BIG_OVERLOAD]
             ]
         ];
     }
@@ -281,50 +281,50 @@ class BenchmarkType
         return static::getAllByComponentType()[$componentType];
     }
 
-    public static function getName(int $type = null): string
+    public static function getName(string $type = null): string
     {
         return static::getConfiguration($type, 'name');
     }
 
-    public static function getSlug(int $type = null): string
+    public static function getSlug(string $type = null): string
     {
         return static::getConfiguration($type, 'slug');
     }
 
-    public static function getCamelCaseName(int $type = null): string
+    public static function getCamelCaseName(string $type = null): string
     {
         return static::getConfiguration($type, 'camelCaseName');
     }
 
-    public static function getDefaultBenchmarkRelativeUrl(int $type = null): string
+    public static function getDefaultBenchmarkRelativeUrl(string $type = null): string
     {
         return static::getConfiguration($type, 'defaultBenchmarkRelativeUrl');
     }
 
-    public static function getResponseBodyFiles(int $type = null): array
+    public static function getResponseBodyFiles(string $type = null): array
     {
         return static::getConfiguration($type, 'responseBodyFiles');
     }
 
-    public static function getResponseBodyFileMinSize(int $type = null): int
+    public static function getResponseBodyFileMinSize(string $type = null): int
     {
         return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
-    public static function getSourceCodeUrlIds(int $type = null, int $componentType = null): array
+    public static function getSourceCodeUrlIds(string $type = null, int $componentType = null): array
     {
         $ids = static::getConfiguration($type, 'sourceCodeUrlIds');
 
         return $ids[$componentType ?? Benchmark::getComponentType()];
     }
 
-    public static function isResultHidden(int $type = null): bool
+    public static function isResultHidden(string $type = null): bool
     {
         return static::getConfiguration($type, 'resultHidden');
     }
 
     /** @return mixed */
-    protected static function getConfiguration(?int $type, string $name)
+    protected static function getConfiguration(?string $type, string $name)
     {
         $type = $type ?? Benchmark::getBenchmarkType();
 
