@@ -25,7 +25,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
 
         $this
             ->setDescription('Create ' . Path::rmPrefix(Path::getConfigFilePath()))
-            ->addOption('component', null, InputOption::VALUE_REQUIRED, 'Component id')
+            ->addOption('component', null, InputOption::VALUE_REQUIRED, 'Component slug')
             ->addOption('benchmark-type', null, InputOption::VALUE_REQUIRED, 'Benchmark type id')
             ->addOption('entry-point', null, InputOption::VALUE_REQUIRED, 'Entry point file name')
             ->addOption(
@@ -46,11 +46,11 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
     {
         $this->outputTitle('Creation of ' . Path::rmPrefix(Path::getConfigFilePath()));
 
-        $componentId = $this->getComponentId();
-        $benchmarkType = $this->getBenchmarkType($componentId);
+        $componentSlug = $this->getComponentSlug();
+        $benchmarkType = $this->getBenchmarkType($componentSlug);
         $sourceCodeEntryPoint = $this->getSourceCodeEntryPoint();
         $benchmarkRelativeUrl = $this->getBenchmarkRelativeUrl($benchmarkType);
-        $coreDependency = $this->getCoreDependency($componentId);
+        $coreDependency = $this->getCoreDependency($componentSlug);
         while ($this->validateVersion($coreDependency['version']) === false) {
             $coreDependency['version'] = $this->askQuestion('Core dependency version?');
             if ($this->validateVersion($coreDependency['version']) === false) {
@@ -71,7 +71,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
             Path::getConfigFilePath(),
             Yaml::dump(
                 [
-                    'component' => ['id' => $componentId],
+                    'component' => ['slug' => $componentSlug],
                     'benchmark' => [
                         'type' => $benchmarkType,
                         'relativeUrl' => $benchmarkRelativeUrl
@@ -112,13 +112,13 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
         );
     }
 
-    private function getComponentId(): int
+    private function getComponentSlug(): string
     {
-        $componentId = $this->getInput()->getOption('component');
-        if (is_string($componentId) === true) {
-            Component::assertExists((int) $componentId);
+        $componentSlug = $this->getInput()->getOption('component');
+        if (is_string($componentSlug) === true) {
+            Component::assertExists($componentSlug);
 
-            return (int) $componentId;
+            return $componentSlug;
         }
 
         $componentTypes = ComponentType::getAll();
@@ -127,18 +127,13 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
             $componentTypes
         );
 
-        $components = Component::getByType($componentType);
-
-        return (int) array_search(
-            $this->askChoiceQuestion('Component?', $components),
-            $components
-        );
+        return $this->askChoiceQuestion('Component?', Component::getByType($componentType));
     }
 
-    private function getBenchmarkType(int $componentId): int
+    private function getBenchmarkType(string $componentSlug): int
     {
         $benchmarkTypes = BenchmarkType::getByComponentType(
-            Component::getType($componentId)
+            Component::getType($componentSlug)
         );
 
         $benchmarkType = $this->getInput()->getOption('benchmark-type');
@@ -156,7 +151,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
         );
     }
 
-    private function getCoreDependency(int $componentId): array
+    private function getCoreDependency(string $componentSlug): array
     {
         $composerPath = Path::getSourceCodePath() . '/composer.json';
         $composerData = null;
@@ -173,7 +168,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
             }
         }
 
-        $componentType = Component::getType($componentId);
+        $componentType = Component::getType($componentSlug);
         if ($componentType === ComponentType::PHP) {
             $name = 'php';
         } else {

@@ -22,7 +22,7 @@ trait GetBodyFromUrl
         curl_close($curl);
 
         if ($assertIs200 && $httpCode !== 200) {
-            throw new \Exception('Http code should be 200 but is ' . $httpCode . '.');
+            throw new \Exception("Http code for $url should be 200 but is $httpCode.");
         }
 
         return $body;

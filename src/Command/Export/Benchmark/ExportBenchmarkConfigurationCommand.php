@@ -81,9 +81,8 @@ final class ExportBenchmarkConfigurationCommand extends AbstractCommand
             json_encode(
                 [
                     'component' => [
-                        'id' => Benchmark::getComponentId(),
-                        'name' => Benchmark::getComponentName(),
                         'slug' => Benchmark::getComponentSlug(),
+                        'name' => Benchmark::getComponentName(),
                         'type' => [
                             'id' => Benchmark::getBenchmarkType(),
                             'name' => ComponentType::getName(Benchmark::getComponentType())
