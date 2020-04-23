@@ -13,7 +13,7 @@ trait OutputBlockTrait
     {
         foreach ($lines as $line) {
             $output->writeln(
-                "<fg=black;bg=$backgroundColor>  " . str_pad($line, 115) . '</>'
+                "<fg=black;bg=$backgroundColor>  " . str_pad($line, 130) . '</>'
             );
         }
 
