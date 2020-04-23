@@ -97,7 +97,6 @@ final class ExportBenchmarkConfigurationCommand extends AbstractCommand
                             'relative' => Benchmark::getBenchmarkRelativeUrl()
                         ],
                         'type' => [
-                            'id' => Benchmark::getBenchmarkType(),
                             'name' => BenchmarkType::getName(Benchmark::getBenchmarkType()),
                             'slug' => BenchmarkType::getSlug(Benchmark::getBenchmarkType())
                         ]

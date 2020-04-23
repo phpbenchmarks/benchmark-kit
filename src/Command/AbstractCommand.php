@@ -142,7 +142,7 @@ abstract class AbstractCommand extends Command
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
-        int $benchmarkType = null
+        string $benchmarkType = null
     ): string {
         $componentPath = ComponentType::getCamelCaseName($componentType);
         $templates = [
@@ -170,7 +170,7 @@ abstract class AbstractCommand extends Command
         string $templatePath,
         array $templateParameters = [],
         int $componentType = null,
-        int $benchmarkType = null
+        string $benchmarkType = null
     ): self {
         $file = Path::getSourceCodePath() . '/' . $templatePath;
 

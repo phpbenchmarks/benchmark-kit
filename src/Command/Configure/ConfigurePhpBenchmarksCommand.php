@@ -99,7 +99,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
         return $this->askQuestion('Entry point file name?', 'public/index.php');
     }
 
-    private function getBenchmarkRelativeUrl(int $benchmarkType): string
+    private function getBenchmarkRelativeUrl(string $benchmarkType): string
     {
         $benchmarkRelativeUrl = $this->getInput()->getOption('benchmark-relative-url');
         if (is_string($benchmarkRelativeUrl) === true) {
@@ -130,7 +130,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
         return $this->askChoiceQuestion('Component?', Component::getByType($componentType));
     }
 
-    private function getBenchmarkType(string $componentSlug): int
+    private function getBenchmarkType(string $componentSlug): string
     {
         $benchmarkTypes = BenchmarkType::getByComponentType(
             Component::getType($componentSlug)
@@ -142,13 +142,10 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
                 throw new \Exception("Benchmark type $benchmarkType does not exists.");
             }
 
-            return (int) $benchmarkType;
+            return $benchmarkType;
         }
 
-        return (int) array_search(
-            $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes),
-            $benchmarkTypes
-        );
+        return $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes);
     }
 
     private function getCoreDependency(string $componentSlug): array
