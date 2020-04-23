@@ -121,11 +121,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
             return $componentSlug;
         }
 
-        $componentTypes = ComponentType::getAll();
-        $componentType = (int) array_search(
-            $this->askChoiceQuestion('Component type?', $componentTypes),
-            $componentTypes
-        );
+        $componentType = $this->askChoiceQuestion('Component type?', ComponentType::getAll());
 
         return $this->askChoiceQuestion('Component?', Component::getByType($componentType));
     }
@@ -167,7 +163,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
 
         $componentType = Component::getType($componentSlug);
         if ($componentType === ComponentType::PHP) {
-            $name = 'php';
+            $name = Component::PHP;
         } else {
             if (is_array($composerData)) {
                 $choices = [];

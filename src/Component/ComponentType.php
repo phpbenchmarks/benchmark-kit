@@ -8,10 +8,10 @@ use App\Benchmark\Benchmark;
 
 class ComponentType
 {
-    public const PHP = 1;
-    public const FRAMEWORK = 2;
-    public const TEMPLATE_ENGINE = 3;
-    public const JSON_SERIALIZER = 4;
+    public const PHP = 'php';
+    public const FRAMEWORK = 'framework';
+    public const TEMPLATE_ENGINE = 'template-engine';
+    public const JSON_SERIALIZER = 'json-serializer';
 
     protected const TYPES = [
         self::PHP => [
@@ -42,7 +42,7 @@ class ComponentType
         ];
     }
 
-    public static function getName(int $type = null): string
+    public static function getName(string $type = null): string
     {
         return static::getConfiguration($type)['name'];
     }
@@ -52,7 +52,7 @@ class ComponentType
         return static::getConfiguration($type)['camelCaseName'];
     }
 
-    protected static function getConfiguration(int $type = null): array
+    protected static function getConfiguration(string $type = null): array
     {
         $type = $type ?? Benchmark::getComponentType();
 

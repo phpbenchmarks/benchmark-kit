@@ -141,7 +141,7 @@ abstract class AbstractCommand extends Command
     protected function renderBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
-        int $componentType = null,
+        string $componentType = null,
         string $benchmarkType = null
     ): string {
         $componentPath = ComponentType::getCamelCaseName($componentType);
@@ -169,7 +169,7 @@ abstract class AbstractCommand extends Command
     protected function writeFileFromTemplate(
         string $templatePath,
         array $templateParameters = [],
-        int $componentType = null,
+        string $componentType = null,
         string $benchmarkType = null
     ): self {
         $file = Path::getSourceCodePath() . '/' . $templatePath;

@@ -22,7 +22,7 @@ class Benchmark
 
     protected static ?string $componentName;
 
-    protected static ?int $componentType;
+    protected static ?string $componentType;
 
     protected static ?string $benchmarkType;
 
@@ -61,7 +61,7 @@ class Benchmark
         return static::$componentSlug;
     }
 
-    public static function getComponentType(): int
+    public static function getComponentType(): string
     {
         static::load();
 
