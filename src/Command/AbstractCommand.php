@@ -182,6 +182,7 @@ abstract class AbstractCommand extends Command
             );
     }
 
+    /** @return $this */
     protected function filePutContent(string $filename, string $content, bool $rmPathPrefix = true): self
     {
         $fileExists = file_exists($filename);
@@ -197,6 +198,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    /** @return $this */
     protected function createDirectory(string $directory): self
     {
         if (is_dir($directory) === false) {
@@ -207,6 +209,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    /** @return $this */
     protected function removeDirectory(string $directory): self
     {
         if (is_dir($directory)) {
@@ -217,6 +220,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    /** @return $this */
     protected function removeFile(string $file, bool $rmPrefix = true): self
     {
         if (is_file($file)) {

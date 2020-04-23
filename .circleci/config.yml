@@ -27,10 +27,10 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                  key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+                key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
             - run:
-                  name: composer-require-checker
-                  command: bin/composerRequireChecker
+                name: composer-require-checker
+                command: bin/composerRequireChecker
 
     phpcs:
         docker:
@@ -39,8 +39,8 @@ jobs:
         steps:
             - checkout
             - run:
-                  name: phpcs
-                  command: bin/phpcs
+                name: phpcs
+                command: bin/phpcs
 
     phpcf:
         docker:
@@ -49,8 +49,20 @@ jobs:
         steps:
             - checkout
             - run:
-                  name: phpcf
-                  command: bin/phpcf
+                name: phpcf
+                command: bin/phpcf
+
+    phpstan:
+        docker:
+            - image: php:7.4-cli-alpine3.10
+        working_directory: /app
+        steps:
+            - checkout
+            - restore_cache:
+                key: vendor-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+            - run:
+                name: phpstan
+                command: bin/phpstan
 
 workflows:
     version: '2.1'
@@ -60,5 +72,8 @@ workflows:
             - phpcf
             - composer
             - composerRequireChecker:
-                  requires:
-                      - composer
+                requires:
+                    - composer
+            - phpstan:
+                requires:
+                    - composer

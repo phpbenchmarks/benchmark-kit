@@ -6,7 +6,6 @@ namespace App\Command\Behavior;
 
 trait GetBodyFromUrl
 {
-    /** @return $this */
     protected function getBodyFromUrl(string $url, bool $assertIs200 = true): ?string
     {
         $curl = curl_init();

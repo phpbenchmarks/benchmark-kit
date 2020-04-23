@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - src/
+    inferPrivatePropertyTypeFromConstructor: true
+    symfony:
+        container_xml_path: /app/var/cache/dev/srcApp_KernelDevDebugContainer.xml
+    excludes_analyse:
+        - src/Version.php
+includes:
+    - /app/vendor/phpstan/phpstan-symfony/extension.neon

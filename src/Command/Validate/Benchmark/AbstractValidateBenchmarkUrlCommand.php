@@ -48,6 +48,7 @@ abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
         return 0;
     }
 
+    /** @return $this */
     protected function validatePhpVersion(PhpVersion $phpVersion): self
     {
         foreach (BenchmarkConfigurationService::getAvailable($phpVersion) as $benchmarkConfiguration) {
@@ -70,6 +71,7 @@ abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
         return $this;
     }
 
+    /** @return $this */
     protected function afterHttpCodeValidated(
         PhpVersion $phpVersion,
         BenchmarkConfiguration $benchmarkConfiguration,
@@ -78,6 +80,7 @@ abstract class AbstractValidateBenchmarkUrlCommand extends AbstractCommand
         return $this;
     }
 
+    /** @return $this */
     protected function initBenchmark(PhpVersion $phpVersion, BenchmarkConfiguration $benchmarkConfiguration): self
     {
         return $this->runCommand(
