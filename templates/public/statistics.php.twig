@@ -3,6 +3,8 @@
 require('{{ entryPointPath }}');
 
 $opcacheStatus = function_exists('opcache_get_status') ? opcache_get_status() : [];
+$opcacheStatus = is_array($opcacheStatus) ? $opcacheStatus : [];
+
 if (array_key_exists('preload_statistics', $opcacheStatus) === true) {
     $preloadMemory = $opcacheStatus['preload_statistics']['memory_consumption'];
     $preloadFiles = count($opcacheStatus['preload_statistics']['scripts']);
