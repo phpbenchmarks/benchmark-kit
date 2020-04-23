@@ -101,7 +101,9 @@ RUN \
 # Install git alone, or it will ask some geographical configs, I don't know why
 RUN apt-get install -y git
 
+COPY --chown=phpbenchmarks docker/entrypoint.sh /usr/local/bin/entrypoint
+COPY docker/phpbenchkit.sh /usr/local/bin/phpbenchkit
+
 # Run
 WORKDIR /var/benchmark-kit
-COPY --chown=phpbenchmarks docker/entrypoint.sh /usr/local/bin/entrypoint
 ENTRYPOINT ["entrypoint"]
