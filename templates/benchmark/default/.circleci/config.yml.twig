@@ -8,11 +8,11 @@ jobs:
         steps:
             - checkout
             - run:
-                name: /var/entrypoint.sh
-                command: /var/entrypoint.sh --nginx-as-service
+                name: entrypoint
+                command: entrypoint --nginx-as-service
             - run:
                 name: "validate:benchmark"
-                command: "/var/benchmark-kit/bin/console validate:benchmark"
+                command: "phpbenchkit validate:benchmark -vvv"
 
 workflows:
     version: '2.1'
