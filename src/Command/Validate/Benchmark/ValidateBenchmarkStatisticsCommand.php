@@ -67,6 +67,7 @@ final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmark
             (new OptionsResolver())
                 ->configureRequiredOption('memory', ['array'])
                 ->configureRequiredOption('code', ['array'])
+                ->configureRequiredOption('preload', ['array'])
                 ->resolve($statistics);
 
             (new OptionsResolver())
@@ -83,6 +84,11 @@ final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmark
                 ->configureRequiredOption('functions', ['int'])
                 ->configureRequiredOption('constants', ['int'])
                 ->resolve($statistics['code']);
+
+            (new OptionsResolver())
+                ->configureRequiredOption('memory', ['int', 'null'])
+                ->configureRequiredOption('files', ['int', 'null'])
+                ->resolve($statistics['preload']);
         } catch (\Throwable $exception) {
             throw new \Exception('Invalid statistics JSON file format.', 0, $exception);
         }
