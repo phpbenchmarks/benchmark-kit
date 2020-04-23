@@ -18,11 +18,9 @@ class Benchmark
 {
     protected static bool $loaded = false;
 
-    protected static ?int $componentId;
+    protected static ?string $componentSlug;
 
     protected static ?string $componentName;
-
-    protected static ?string $componentSlug;
 
     protected static ?int $componentType;
 
@@ -47,13 +45,6 @@ class Benchmark
     public static function reload(): void
     {
         static::$loaded = false;
-    }
-
-    public static function getComponentId(): int
-    {
-        static::load();
-
-        return static::$componentId;
     }
 
     public static function getComponentName(): string
@@ -201,10 +192,9 @@ class Benchmark
         try {
             $config = Yaml::parseFile(Path::getConfigFilePath());
 
-            static::$componentId = $config['component']['id'];
-            static::$componentName = Component::getName(static::$componentId);
-            static::$componentSlug = Component::getSlug(static::$componentId);
-            static::$componentType = Component::getType(static::$componentId);
+            static::$componentSlug = $config['component']['slug'];
+            static::$componentName = Component::getName(static::$componentSlug);
+            static::$componentType = Component::getType(static::$componentSlug);
 
             static::$benchmarkType = $config['benchmark']['type'];
             static::$benchmarkRelativeUrl = $config['benchmark']['relativeUrl'];

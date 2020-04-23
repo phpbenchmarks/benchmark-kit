@@ -18,8 +18,9 @@ final class ConfigureBenchmarkCommand extends AbstractCommand
     /** @var string */
     protected static $defaultName = 'configure:benchmark';
 
+    /** @var string[] */
     private $configurePhpBenchmarksConfigParameters = [
-        'component' => 'Component id',
+        'component' => 'Component slug',
         'benchmark-type' => 'Benchmark type id',
         'entry-point' => 'Entry point file name',
         'benchmark-relative-url' => 'Benchmark relative url (example: /benchmark/helloworld)',

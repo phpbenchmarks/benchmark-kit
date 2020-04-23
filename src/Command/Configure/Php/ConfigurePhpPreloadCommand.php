@@ -10,8 +10,6 @@ use App\{
     Command\AbstractCommand,
     Command\Behavior\GetBodyFromUrl,
     Command\Benchmark\BenchmarkInitCommand,
-    Command\Nginx\Vhost\NginxVhostPreloadGeneratorCreateCommand,
-    Command\Nginx\Vhost\NginxVhostPreloadGeneratorDeleteCommand,
     PhpVersion\PhpVersion,
     Utils\Path
 };
@@ -42,11 +40,6 @@ final class ConfigurePhpPreloadCommand extends AbstractCommand
             }
         }
 
-        $this
-            ->outputTitle('Preload files created')
-            ->outputSuccess('Preload files for each compatible PHP version has been created.')
-            ->outputWarning('Call ' . BenchmarkInitCommand::getDefaultName() . ' to use them.');
-
         return 0;
     }
 
@@ -70,36 +63,31 @@ final class ConfigurePhpPreloadCommand extends AbstractCommand
         );
     }
 
-    private function createPreloadVhost(PhpVersion $phpVersion): self
-    {
-        return $this->runCommand(
-            NginxVhostPreloadGeneratorCreateCommand::getDefaultName(),
-            [
-                'phpVersion' => $phpVersion->toString(),
-                '--no-url-output' => true
-            ]
-        );
-    }
-
-    private function deletePreloadVhost(): self
-    {
-        return $this->runCommand(NginxVhostPreloadGeneratorDeleteCommand::getDefaultName());
-    }
-
     private function generatePreloadFile(PhpVersion $phpVersion): self
     {
-        $this->outputTitle('Generating preload file');
+        $this->outputTitle('Generating preload file for PHP ' . $phpVersion->toString());
 
         for ($i = 0; $i < 5; $i++) {
             $this->getBodyFromUrl(BenchmarkUrlService::getUrl(false));
         }
 
-        $this
-            ->outputSuccess('Opcache initialized.')
-            ->getBodyFromUrl(BenchmarkUrlService::getPreloadGeneratorUrl());
+        $this->outputSuccess('Opcache initialized.');
+        try {
+            $this->getBodyFromUrl(BenchmarkUrlService::getPreloadGeneratorUrl());
+        } catch (\Throwable $exception) {
+            $this->outputWarning('Preload has not been generated: ' . $exception->getMessage());
+
+            return $this;
+        }
 
         if (is_file(Path::getPreloadPath($phpVersion)) === false) {
-            throw new \Exception('Preload file ' . Path::rmPrefix(Path::getPreloadPath($phpVersion) . '  not found.'));
+            $this->outputWarning(
+                'Preload has not been generated: Preload file '
+                    . Path::rmPrefix(Path::getPreloadPath($phpVersion))
+                    . '  not found.'
+            );
+
+            return $this;
         }
 
         return $this
