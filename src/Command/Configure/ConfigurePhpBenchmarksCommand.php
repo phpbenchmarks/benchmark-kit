@@ -181,7 +181,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
 
                 $name = $this->getInput()->getOption('core-dependency-name');
                 if (is_string($name) === true) {
-                    if (in_array($name, $choices) === false) {
+                    if (in_array($name, $choices, true) === false) {
                         throw new \Exception("Core dependency name $name not found in composer.json.");
                     }
                 } else {

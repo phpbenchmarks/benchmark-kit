@@ -40,7 +40,7 @@ final class ValidateBenchmarkStatisticsCommand extends AbstractValidateBenchmark
         PhpVersion $phpVersion,
         BenchmarkConfiguration $benchmarkConfiguration,
         ?string $body
-    ): self {
+    ): parent {
         // Wait for statistics.json file to be written, sometimes it's not the case at this stage
         sleep(1);
 

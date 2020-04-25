@@ -71,7 +71,7 @@ final class ValidateConfigurationSourceCodeUrlsCommand extends AbstractCommand
 
         $urls = Benchmark::getSourceCodeUrls();
         foreach ($urls as $id => $url) {
-            if (in_array($id, $expectedUrlIds) === false) {
+            if (in_array($id, $expectedUrlIds, true) === false) {
                 throw new \Exception('Configuration sourceCode.urls contains an unknown key "' . $id . '".');
             }
 
