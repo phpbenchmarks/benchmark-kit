@@ -12,17 +12,26 @@ class Path
     /** @var ?string */
     protected static $sourceCodePath;
 
+    /** @return string */
     public static function getBenchmarkKitPath()
     {
         return __DIR__ . '/../..';
     }
 
+    /**
+     * @param string $sourceCodePath
+     * @return void
+     */
     public static function setSourceCodePath($sourceCodePath)
     {
         static::$sourceCodePath = $sourceCodePath;
     }
 
-    public static function getSourceCodePath(bool $exceptionOnNotFound = true)
+    /**
+     * @param bool $exceptionOnNotFound
+     * @return string|null
+     */
+    public static function getSourceCodePath($exceptionOnNotFound = true)
     {
         $sourceCodePath = static::$sourceCodePath ?? $_ENV['SOURCE_CODE_PATH'] ?? null;
         if (is_string($sourceCodePath) === false) {
@@ -37,7 +46,11 @@ class Path
         return is_string($return) ? $return : $sourceCodePath;
     }
 
-    public static function rmPrefix(string $path)
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function rmPrefix($path)
     {
         $prefix = static::getSourceCodePath(false);
         if (is_string($prefix) && substr($path, 0, strlen($prefix)) === $prefix) {
@@ -47,66 +60,79 @@ class Path
         return $path;
     }
 
+    /** @return string */
     public static function getBenchmarkConfigurationPath()
     {
         return static::getSourceCodePath() . '/.phpbenchmarks';
     }
 
+    /** @return string */
     public static function getConfigFilePath()
     {
         return static::getBenchmarkConfigurationPath() . '/config.yml';
     }
 
+    /** @return string */
     public static function getPhpConfigurationPath(PhpVersion $phpVersion)
     {
         return static::getBenchmarkConfigurationPath() . '/php/' . $phpVersion->toString();
     }
 
+    /** @return string */
     public static function getComposerLockPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/composer.lock';
     }
 
+    /** @return string */
     public static function getVhostPath()
     {
         return static::getBenchmarkConfigurationPath() . '/nginx/vhost.conf';
     }
 
+    /** @return string */
     public static function getInitBenchmarkPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/initBenchmark.sh';
     }
 
+    /** @return string */
     public static function getResponseBodyPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/responseBody';
     }
 
+    /** @return string */
     public static function getCircleCiPath()
     {
         return static::getSourceCodePath() . '/.circleci';
     }
 
+    /** @return string */
     public static function getCircleCiConfigPath()
     {
         return static::getCircleCiPath() . '/config.yml';
     }
 
+    /** @return string */
     public static function getPreloadPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/preload.php';
     }
 
+    /** @return string */
     public static function getPhpIniPath(PhpVersion $phpVersion)
     {
         return static::getPhpConfigurationPath($phpVersion) . '/php.ini';
     }
 
+    /** @return string */
     public static function getStatisticsPath()
     {
         return __DIR__ . '/../../var/statistics.json';
     }
 
+    /** @return string */
     public static function getNginxVhostPath()
     {
         return '/etc/nginx/sites-enabled';

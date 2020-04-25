@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Component;
 
 use App\Benchmark\Benchmark;
+use steevanb\PhpTypedArray\ScalarArray\StringArray;
 
 class ComponentType
 {
@@ -32,14 +33,16 @@ class ComponentType
         ],
     ];
 
-    public static function getAll(): array
+    public static function getAll(): StringArray
     {
-        return [
-            static::PHP => static::getName(static::PHP),
-            static::FRAMEWORK => static::getName(static::FRAMEWORK),
-            static::TEMPLATE_ENGINE => static::getName(static::TEMPLATE_ENGINE),
-            static::JSON_SERIALIZER => static::getName(static::JSON_SERIALIZER)
-        ];
+        return new StringArray(
+            [
+                static::PHP => static::getName(static::PHP),
+                static::FRAMEWORK => static::getName(static::FRAMEWORK),
+                static::TEMPLATE_ENGINE => static::getName(static::TEMPLATE_ENGINE),
+                static::JSON_SERIALIZER => static::getName(static::JSON_SERIALIZER)
+            ]
+        );
     }
 
     public static function getName(string $type = null): string
@@ -52,6 +55,7 @@ class ComponentType
         return static::getConfiguration($type)['camelCaseName'];
     }
 
+    /** @return string[] */
     protected static function getConfiguration(string $type = null): array
     {
         $type = $type ?? Benchmark::getComponentType();

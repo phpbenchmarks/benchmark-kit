@@ -92,6 +92,7 @@ class Component
         }
     }
 
+    /** @return string[] */
     public static function getByType(string $type): array
     {
         $return = [];
@@ -115,6 +116,7 @@ class Component
         return static::getConfiguration($slug)['type'];
     }
 
+    /** @return string[] */
     protected static function getConfiguration(string $slug): array
     {
         static::assertExists($slug);

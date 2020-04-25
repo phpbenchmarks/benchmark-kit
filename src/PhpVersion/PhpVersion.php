@@ -9,12 +9,14 @@ final class PhpVersion
     public static function getAll(): PhpVersionArray
     {
         return new PhpVersionArray(
-            new static(5, 6),
-            new static(7, 0),
-            new static(7, 1),
-            new static(7, 2),
-            new static(7, 3),
-            new static(7, 4)
+            [
+                new static(5, 6),
+                new static(7, 0),
+                new static(7, 1),
+                new static(7, 2),
+                new static(7, 3),
+                new static(7, 4)
+            ]
         );
     }
 

@@ -8,7 +8,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 trait OutputBlockTrait
 {
-    /** @return $this */
+    /**
+     * @param string[] $lines
+     * @return $this
+     */
     protected function outputBlock(array $lines, string $backgroundColor, OutputInterface $output): self
     {
         foreach ($lines as $line) {

@@ -128,6 +128,7 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
+    /** @param string[] $templateParameters */
     protected function renderTemplate(string $templatePath, array $templateParameters = []): string
     {
         static $twig;
@@ -138,6 +139,7 @@ abstract class AbstractCommand extends Command
         return $twig->render($templatePath, $templateParameters);
     }
 
+    /** @param string[] $templateParameters */
     protected function renderBenchmarkTemplate(
         string $templatePath,
         array $templateParameters = [],
@@ -166,6 +168,7 @@ abstract class AbstractCommand extends Command
         return $this->renderTemplate("benchmark/$templateTwigPath", $templateParameters);
     }
 
+    /** @param string[] $templateParameters */
     protected function writeFileFromTemplate(
         string $templatePath,
         array $templateParameters = [],
@@ -231,7 +234,10 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    /** @return $this */
+    /**
+     * @param string[] $commands
+     * @return $this
+     */
     protected function runProcess(
         array $commands,
         int $outputVerbosity = OutputInterface::VERBOSITY_NORMAL,
@@ -294,7 +300,10 @@ abstract class AbstractCommand extends Command
         return $this;
     }
 
-    /** @return $this */
+    /**
+     * @param array<mixed> $arguments
+     * @return $this
+     */
     protected function runCommand(
         string $name,
         array $arguments = [],
@@ -352,6 +361,7 @@ abstract class AbstractCommand extends Command
             );
     }
 
+    /** @param array<mixed> $choices */
     protected function askChoiceQuestion(string $question, array $choices): string
     {
         return $this

@@ -8,7 +8,8 @@ use steevanb\PhpTypedArray\ObjectArray\ObjectArray;
 
 class PhpVersionArray extends ObjectArray
 {
-    public function __construct(...$phpVersions)
+    /** @param iterable<PhpVersion> $phpVersions */
+    public function __construct(iterable $phpVersions = [])
     {
         parent::__construct($phpVersions, PhpVersion::class);
     }
@@ -18,6 +19,7 @@ class PhpVersionArray extends ObjectArray
         return parent::current();
     }
 
+    /** @param mixed $offset */
     public function offsetGet($offset): PhpVersion
     {
         return parent::offsetGet($offset);

@@ -118,7 +118,7 @@ final class ConfigurePhpCompatibleVersionCommand extends AbstractCommand
             );
         }
 
-        return new PhpVersionArray($phpVersion);
+        return new PhpVersionArray([$phpVersion]);
     }
 
     private function getPhpVersionsFromCarretVersionRange(int $major, int $minor): PhpVersionArray

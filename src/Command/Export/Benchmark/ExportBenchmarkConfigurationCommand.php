@@ -141,6 +141,7 @@ final class ExportBenchmarkConfigurationCommand extends AbstractCommand
         return 0;
     }
 
+    /** @return array<array> */
     private function getPhpVersions(): array
     {
         $return = [];
@@ -156,7 +157,7 @@ final class ExportBenchmarkConfigurationCommand extends AbstractCommand
                     'hideResultSize' => Benchmark::getResponseBodySize($phpVersion, false),
                     'showResultSize' => Benchmark::getResponseBodySize($phpVersion, true),
                     'showResultFiles' => array_map(
-                        function (string $responseBody) use ($phpVersion) {
+                        function (string $responseBody) use ($phpVersion): string {
                             return Path::rmPrefix(Path::getResponseBodyPath($phpVersion) . '/' . $responseBody);
                         },
                         BenchmarkType::getResponseBodyFiles(Benchmark::getBenchmarkType())

@@ -71,6 +71,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
         return 0;
     }
 
+    /** @param array<array> $data */
     private function defineName(array &$data): self
     {
         $name = static::getComposerName($this->getInput()->getOption('component-slug'));
@@ -79,6 +80,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
         return $this->outputSuccess("Name defined to $name.");
     }
 
+    /** @param array<array> $data */
     private function defineLicense(array &$data): self
     {
         $data = array_merge(['license' => static::LICENSE], $data);
@@ -86,6 +88,7 @@ final class ConfigureComposerJsonCommand extends AbstractCommand
         return $this->outputSuccess('License defined to ' . static::LICENSE . '.');
     }
 
+    /** @param array<array> $data */
     private function defineVersions(array &$data): self
     {
         if ($this->getInput()->getOption('no-dependency-version') === true) {

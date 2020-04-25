@@ -58,7 +58,7 @@ final class DefaultCommand extends ListCommand
         );
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

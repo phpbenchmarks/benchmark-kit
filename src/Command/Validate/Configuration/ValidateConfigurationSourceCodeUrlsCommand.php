@@ -15,6 +15,7 @@ use Symfony\Component\Validator\{
     Constraints\NotBlank,
     Constraints\Type,
     Constraints\Url,
+    ConstraintViolationInterface,
     ConstraintViolationListInterface,
     Validation
 };
@@ -24,7 +25,8 @@ final class ValidateConfigurationSourceCodeUrlsCommand extends AbstractCommand
     /** @var string */
     protected static $defaultName = 'validate:configuration:source-code-urls';
 
-    public static function validateUrl($url): ConstraintViolationListInterface
+    /** @return ConstraintViolationListInterface|ConstraintViolationInterface[] */
+    public static function validateUrl(?string $url): ConstraintViolationListInterface
     {
         return Validation::createValidator()->validate(
             $url,
