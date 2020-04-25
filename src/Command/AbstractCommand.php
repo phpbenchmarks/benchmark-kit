@@ -271,7 +271,7 @@ abstract class AbstractCommand extends Command
         string $silencedError = null
     ): self {
         $processResult = $process->run(
-            function (string $type, string $line) use ($outputVerbosity) {
+            function (string $type, string $line) use ($outputVerbosity): void {
                 if ($this->getOutput()->getVerbosity() >= $outputVerbosity) {
                     $this->getOutput()->writeln($line);
                 }

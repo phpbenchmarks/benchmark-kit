@@ -7,5 +7,8 @@ parameters:
         container_xml_path: /app/var/cache/dev/srcApp_KernelDevDebugContainer.xml
     excludes_analyse:
         - src/Version.php
+    ignoreErrors:
+        - '#Variable static method call on App\\Benchmark\\Benchmark.#'
 includes:
     - /app/vendor/phpstan/phpstan-symfony/extension.neon
+    - /app/vendor/phpstan/phpstan-strict-rules/rules.neon

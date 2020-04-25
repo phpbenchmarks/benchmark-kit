@@ -37,7 +37,7 @@ final class ValidateBenchmarkResponseCommand extends AbstractValidateBenchmarkUr
         PhpVersion $phpVersion,
         BenchmarkConfiguration $benchmarkConfiguration,
         ?string $body
-    ): self {
+    ): parent {
         $validated = false;
         $responseBodyPath = Path::getResponseBodyPath($phpVersion);
 

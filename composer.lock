@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee827b0fbcd8ca42bb64c58c023e427b",
+    "content-hash": "4dbcaf1c169a9be39048157761e5fcc8",
     "packages": [
         {
             "name": "huttopia/console-bundle",
@@ -3142,6 +3142,57 @@
             "time": "2020-04-19T20:35:10+00:00"
         },
         {
+            "name": "phpstan/phpstan-strict-rules",
+            "version": "0.12.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-strict-rules.git",
+                "reference": "a670a59aff7cf96f75d21b974860ada10e25b2ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/a670a59aff7cf96f75d21b974860ada10e25b2ee",
+                "reference": "a670a59aff7cf96f75d21b974860ada10e25b2ee",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.1",
+                "phpstan/phpstan": "^0.12.6"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^3.0.1",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+                "ergebnis/composer-normalize": "^2.0.2",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "phing/phing": "^2.16.0",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpunit/phpunit": "^7.0",
+                "slevomat/coding-standard": "^4.5.2"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Extra strict and opinionated rules for PHPStan",
+            "time": "2020-01-20T13:08:52+00:00"
+        },
+        {
             "name": "phpstan/phpstan-symfony",
             "version": "0.12.6",
             "source": {
@@ -3254,5 +3305,6 @@
         "ext-curl": "*",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
