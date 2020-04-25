@@ -8,6 +8,7 @@ use App\Utils\Path;
 
 trait GetComposerConfigurationTrait
 {
+    /** @return array<mixed> */
     protected function getComposerConfiguration(): array
     {
         $composerJsonFile = Path::getSourceCodePath() . '/composer.json';

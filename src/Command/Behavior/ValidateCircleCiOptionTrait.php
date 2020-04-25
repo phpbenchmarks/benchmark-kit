@@ -39,6 +39,10 @@ trait ValidateCircleCiOptionTrait
         return InputOptionService::getBoolValue($input, $this->getValidateCircleCiOptionName());
     }
 
+    /**
+     * @param string[] $parameters
+     * @return string[]
+     */
     protected function appendValidateCircleCiOption(InputInterface $input, array $parameters = []): array
     {
         return array_merge(

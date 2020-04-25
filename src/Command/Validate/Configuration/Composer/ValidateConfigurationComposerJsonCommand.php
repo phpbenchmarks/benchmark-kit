@@ -39,6 +39,7 @@ final class ValidateConfigurationComposerJsonCommand extends AbstractCommand
         return 0;
     }
 
+    /** @param array<mixed> $composerConfiguration */
     private function validateName(array $composerConfiguration): self
     {
         if (($composerConfiguration['name'] ?? null) !== ConfigureComposerJsonCommand::getComposerName()) {
@@ -50,6 +51,7 @@ final class ValidateConfigurationComposerJsonCommand extends AbstractCommand
         return $this->outputSuccess('Name ' . $composerConfiguration['name'] . ' is valid.');
     }
 
+    /** @param array<mixed> $composerConfiguration */
     private function validateLicense(array $composerConfiguration): self
     {
         if (($composerConfiguration['license'] ?? null) !== ConfigureComposerJsonCommand::LICENSE) {
@@ -59,6 +61,7 @@ final class ValidateConfigurationComposerJsonCommand extends AbstractCommand
         return $this->outputSuccess('License ' . $composerConfiguration['license'] . ' is valid.');
     }
 
+    /** @param array<mixed> $composerConfiguration */
     private function validateRequireComponent(array $composerConfiguration): self
     {
         if (is_null($composerConfiguration['require'][Benchmark::getCoreDependencyName()] ?? null)) {

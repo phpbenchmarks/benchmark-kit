@@ -121,7 +121,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
             return $componentSlug;
         }
 
-        $componentType = $this->askChoiceQuestion('Component type?', ComponentType::getAll());
+        $componentType = $this->askChoiceQuestion('Component type?', ComponentType::getAll()->toArray());
 
         return $this->askChoiceQuestion('Component?', Component::getByType($componentType));
     }
@@ -144,6 +144,7 @@ final class ConfigurePhpBenchmarksCommand extends AbstractCommand
         return $this->askChoiceQuestion('Benchmark type?', $benchmarkTypes);
     }
 
+    /** @return string[] */
     private function getCoreDependency(string $componentSlug): array
     {
         $composerPath = Path::getSourceCodePath() . '/composer.json';

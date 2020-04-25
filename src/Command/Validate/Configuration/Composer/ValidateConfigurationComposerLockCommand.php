@@ -83,6 +83,7 @@ final class ValidateConfigurationComposerLockCommand extends AbstractCommand
         return $this;
     }
 
+    /** @param array<array> $data */
     private function validateComponentVersion(array $data): self
     {
         $packageFound = false;

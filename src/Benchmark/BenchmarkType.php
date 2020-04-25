@@ -225,6 +225,7 @@ class BenchmarkType
         ]
     ];
 
+    /** @return string[] */
     public static function getAll(): array
     {
         return [
@@ -247,6 +248,7 @@ class BenchmarkType
         ];
     }
 
+    /** @return array<array> */
     public static function getAllByComponentType(): array
     {
         $types = static::getAll();
@@ -276,6 +278,7 @@ class BenchmarkType
         ];
     }
 
+    /** @return string[] */
     public static function getByComponentType(string $componentType): array
     {
         return static::getAllByComponentType()[$componentType];
@@ -301,6 +304,7 @@ class BenchmarkType
         return static::getConfiguration($type, 'defaultBenchmarkRelativeUrl');
     }
 
+    /** @return string[] */
     public static function getResponseBodyFiles(string $type = null): array
     {
         return static::getConfiguration($type, 'responseBodyFiles');
@@ -311,6 +315,7 @@ class BenchmarkType
         return static::getConfiguration($type, 'responseBodyFileMinSize');
     }
 
+    /** @return string[] */
     public static function getSourceCodeUrlIds(string $type = null, string $componentType = null): array
     {
         $ids = static::getConfiguration($type, 'sourceCodeUrlIds');

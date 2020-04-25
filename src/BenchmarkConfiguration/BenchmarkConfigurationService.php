@@ -11,8 +11,10 @@ class BenchmarkConfigurationService
     public static function getAvailable(PhpVersion $phpVersion): BenchmarkConfigurationArray
     {
         $return = new BenchmarkConfigurationArray(
-            new BenchmarkConfiguration(false, false),
-            new BenchmarkConfiguration(true, false),
+            [
+                new BenchmarkConfiguration(false, false),
+                new BenchmarkConfiguration(true, false)
+            ]
         );
 
         if ($phpVersion->isPreloadAvailable() === true) {

@@ -8,7 +8,8 @@ use steevanb\PhpTypedArray\ObjectArray\ObjectArray;
 
 class BenchmarkConfigurationArray extends ObjectArray
 {
-    public function __construct(...$benchmarkConfigurations)
+    /** @param iterable<BenchmarkConfiguration> $benchmarkConfigurations */
+    public function __construct(iterable $benchmarkConfigurations = [])
     {
         parent::__construct($benchmarkConfigurations, BenchmarkConfiguration::class);
     }
@@ -18,6 +19,7 @@ class BenchmarkConfigurationArray extends ObjectArray
         return parent::current();
     }
 
+    /** @param mixed $offset */
     public function offsetGet($offset): BenchmarkConfiguration
     {
         return parent::offsetGet($offset);
