@@ -21,7 +21,7 @@ Everything you need to use benchmark kit is is [hpbenchkit.sh](phpbenchkit.sh).
 
 Install it as global bin and give it execute mode:
 ```bash
-sudo wget https://raw.githubusercontent.com/phpbenchmarks/benchmark-kit/4.0.0/phpbenchkit.sh -O /usr/local/bin/phpbenchkit
+sudo wget https://raw.githubusercontent.com/phpbenchmarks/benchmark-kit/master/phpbenchkit.sh -O /usr/local/bin/phpbenchkit
 sudo chmod +x /usr/local/bin/phpbenchkit
 ```
 
