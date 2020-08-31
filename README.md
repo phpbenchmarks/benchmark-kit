@@ -30,7 +30,7 @@ Then call `phpbenchkit`, it will add vhosts and run Docker benchmatk kit contain
 # Add vhosts if needed, run Docker container and call bin/console to show available commands
 phpbenchkit
 
-# Restart Docker container
+# Restart Docker container
 phpbenchkit --restart
 
 # Stop Docker container
@@ -68,41 +68,21 @@ To make your benchmark work you will need some files into `.phpbenchmarks` direc
 * `responseBody/`: benchmark url body will be compared to files in this directory to validate it's content.
 * `composer/composer.lock.phpX.Y`: created by `phpbenchkit composer:update` to install dependencies by PHP version.
 
-All this files can be created and configured with `phpbenchkit` commands:
+All this files can be created and configured with `configure` commands.
 
-```
-composer
-    composer:update                                 Execute composer update for all enabled PHP versions and create .phpbenchmarks/composer/composer.lock.phpX.Y
-configure
-    configure:all                                   Call all configure commands and composer:update
-    configure:configuration-class                   Create .phpbenchmarks/Configuration.php and configure it
-    configure:configuration-class:source-code-urls  Create .phpbenchmarks/Configuration.php and configure getSourceCodeUrls()
-    configure:directory                             Create .phpbenchmarks directory and subdirectories
-    configure:initBenchmark                         Create .phpbenchmarks/initBenchmark.sh
-    configure:readme                                Create README.md
-    configure:response-body                         Create .phpbenchmarks/responseBody files
-    configure:vhost                                 Create .phpbenchmarks/vhost.conf
-```
+See list of configure commands with `phpbenchkit configure:`.
 
-You can call `configure:all` to create all of them or use the one your need.
+You can call `phpbenchkit configure:benchmark` to create all of them or use the one your need.
 
 ```bash
-phpbench composer:update
+phpbenchkit composer:update
 # you can specify a version of php
-phpbench composer:update 7.1
+phpbenchkit composer:update 7.1
 ```
 
-You can validate each part of your configuration with `phpbench` commands:
-```
-validate:all                                     Call all validate commands
-validate:composer:json                           Validate dependencies in composer.json
-validate:composer:lock                           Validate dependencies in .phpbenchmarks/composer/composer.lock.phpX.Y
-validate:configuration:class                     Validate .phpbenchmarks/Configuration.php
-validate:configuration:class:sourceCodeUrls      Validate .phpbenchmarks/Configuration.php::getSourceCodeUrls()
-validate:configuration:initBenchmark             Validate .phpbenchmarks/initBenchmark.sh
-validate:configuration:responseBody              Validate .phpbenchmarks/responseBody files
-validate:configuration:vhost                     Validate .phpbenchmarks/vhost.conf
-```
+You can validate each part of your configuration with `validate`.
+
+See list of validation commands with with `phpbenchkit validate:`.
 
 ## #4 Add required feaures for benchmarks
 
@@ -125,11 +105,11 @@ To change PHP version (CLI and FPM):
 phpbenchkit 
 ```
 
-When you think it's ok, use `phpbench benchmark:validate` to validate it.
+When you think it's ok, use `phpbenchkit validate:benchmark` to validate it.
 
 ## #6 Submit your code
 
-When `phpbench benchmark:validate` say it's good, push your code,
+When `phpbenchkit validate:benchmark` say it's good, push your code,
 then you can tell us to launch benchmarks with [contact form](http://www.phpbenchmarks.com/en/contact?subject=launch-benchmark).
 
 Thank you!
