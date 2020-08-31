@@ -101,7 +101,7 @@ final class DefaultCommand extends ListCommand
             $this->outputBlock(
                 [
                     'Benchmark need to be configured before doing anything.',
-                    'Call "phpbenchkit configure:all" to configure it.'
+                    'Call "phpbenchkit configure:benchmark" to configure it.'
                 ],
                 $backgroundColor,
                 $output
