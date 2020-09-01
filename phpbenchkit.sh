@@ -92,20 +92,29 @@ function startContainer() {
 
 function updatePhpBenchKitScript()
 {
+    set +e
+    docker stop phpbenchmarks_benchmark-kit_selfupdate > /dev/null 2>&1
+    set -e
+
     docker run \
         -it \
         -d \
         --name=$SELFUPDATE_CONTAINER_NAME \
         --rm \
         $DOCKER_IMAGE_NAME
-    docker cp $SELFUPDATE_CONTAINER_NAME:$BENCHMARK_KIT_PATH/phpbenchkit.sh $ROOT_DIR/$(basename $0)
+
+    local binPath="$ROOT_DIR/$(basename $0)"
+    echo -en "\e[43m sudo password could be asked to update $binPath \e[0m\n"
+    sudo docker cp $SELFUPDATE_CONTAINER_NAME:$BENCHMARK_KIT_PATH/phpbenchkit.sh "$binPath"
     docker stop $SELFUPDATE_CONTAINER_NAME
 }
 
 function stopContainer() {
     if [ $containerStarted == true ]; then
         echo -e "Stop \e[32m$CONTAINER_NAME\e[0m container."
-        docker kill $CONTAINER_NAME > /dev/null
+        set +e
+        docker kill $CONTAINER_NAME
+        set -e
     fi
 }
 

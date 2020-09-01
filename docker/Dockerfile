@@ -1,26 +1,11 @@
 # This container should represent the benchmark server who is not dockerised
-# So everything is installed into one container
+# So everything is installed into one container
 FROM ubuntu:18.04
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-# Copy benchmark kit source code
-COPY bin/console /var/benchmark-kit/bin/console
-COPY config /var/benchmark-kit/config
-COPY documentation /var/benchmark-kit/documentation
-COPY public /var/benchmark-kit/public
-COPY src /var/benchmark-kit/src
-COPY templates /var/benchmark-kit/templates
-COPY vendor /var/benchmark-kit/vendor
-COPY .env /var/benchmark-kit/.env
-COPY changelog.md /var/benchmark-kit/changelog.md
-COPY README.md /var/benchmark-kit/README.md
-COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
-# Configure nginx default page
-COPY docker/html /var/www/html
-COPY docker/nginx/default /etc/nginx/sites-available
 
 RUN \
-    # Update and instal some dependencies
+    # Update and instal some dependencies
     apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y \
@@ -61,10 +46,6 @@ RUN \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.2-fpm restart" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.3-fpm restart" >> /etc/sudoers.d/phpbenchmarks \
     && echo "phpbenchmarks ALL=(ALL) NOPASSWD: /usr/sbin/service php7.4-fpm restart" >> /etc/sudoers.d/phpbenchmarks \
-    # We have some commands to do in this directories with phpbenchmarks user.
-    # So instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
-    # change this directories mod to 777
-    && mkdir /var/benchmark-kit/var \
     && chmod -R 777 \
         /etc/nginx/sites-enabled \
         /var/log/nginx \
@@ -74,8 +55,6 @@ RUN \
         /etc/php/7.2/fpm/conf.d \
         /etc/php/7.3/fpm/conf.d \
         /etc/php/7.4/fpm/conf.d \
-        /var/benchmark-kit/public \
-        /var/benchmark-kit/var \
     # Create phpbenchmarks user, we assume final host user id will be 1000 (should be it 99% of the time)
     && useradd -ms /bin/bash --uid 1000 phpbenchmarks \
     && usermod -a -G www-data phpbenchmarks \
@@ -93,13 +72,39 @@ RUN \
     && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.3/fpm/pool.d/www.conf \
     && sed -i 's/user = www-data/user = phpbenchmarks/g' /etc/php/7.4/fpm/pool.d/www.conf \
     && sed -i 's/group = www-data/group = phpbenchmarks/g' /etc/php/7.4/fpm/pool.d/www.conf \
-    # Define PHP 7.4 as default
+    # Define PHP 7.4 as default
     && /usr/bin/update-alternatives --set php /usr/bin/php7.4 \
     # Remove nginx default page
     && rm /var/www/html/index.nginx-debian.html
 
-# Install git alone, or it will ask some geographical configs, I don't know why
+# Install git alone, or it will ask some geographical configs, I don't know why
 RUN apt-get install -y git
+
+# Copy benchmark kit source code
+COPY bin/console /var/benchmark-kit/bin/console
+COPY config /var/benchmark-kit/config
+COPY documentation /var/benchmark-kit/documentation
+COPY public /var/benchmark-kit/public
+COPY src /var/benchmark-kit/src
+COPY templates /var/benchmark-kit/templates
+COPY vendor /var/benchmark-kit/vendor
+COPY .env /var/benchmark-kit/.env
+COPY changelog.md /var/benchmark-kit/changelog.md
+COPY README.md /var/benchmark-kit/README.md
+COPY phpbenchkit.sh /var/benchmark-kit/phpbenchkit.sh
+# Configure nginx default page
+COPY docker/html /var/www/html
+COPY docker/nginx/default /etc/nginx/sites-available
+
+# Configure benchmark kit directories
+RUN \
+    mkdir /var/benchmark-kit/var \
+    # We have some commands to do in this directories with phpbenchmarks user.
+    # So instead of adding a lot of commands into sudoers, and as security doesn't matter in this container,
+    # change this directories mod to 777
+    && chmod -R 777 \
+        /var/benchmark-kit/public \
+        /var/benchmark-kit/var
 
 COPY --chown=phpbenchmarks docker/entrypoint.sh /usr/local/bin/entrypoint
 COPY docker/phpbenchkit.sh /usr/local/bin/phpbenchkit

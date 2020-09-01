@@ -11,6 +11,7 @@ class Component
     public const LARAVEL = 'laravel';
     public const ZEND_FRAMEWORK = 'zend-framework';
     public const CAKE_PHP = 'cake-php';
+    public const ZEST_FRAMEWORK = 'zest-framework';
     public const TWIG = 'twig';
     public const PLATES = 'plates';
     public const SMARTY = 'smarty';
@@ -41,6 +42,10 @@ class Component
         ],
         self::CAKE_PHP => [
             'name' => 'CakePHP',
+            'type' => ComponentType::FRAMEWORK
+        ],
+        self::ZEST_FRAMEWORK => [
+            'name' => 'Zest Framework',
             'type' => ComponentType::FRAMEWORK
         ],
         self::TWIG => [

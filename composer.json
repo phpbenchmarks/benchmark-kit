@@ -1,6 +1,6 @@
 {
     "name": "phpbenchmarks/benchmark-kit",
-    "description": "PHPBenchmarks kit to add benchmarks",
+    "description": "PHPBenchmarks kit to add benchmarks on phpbenchmarks.com",
     "license": "proprietary",
     "authors": [
         {
