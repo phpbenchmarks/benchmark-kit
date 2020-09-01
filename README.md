@@ -36,7 +36,7 @@ phpbenchkit --restart
 # Stop Docker container
 phpbenchkit --stop
 
-# Update docker image and phpbenchkit command
+# Update docker image and phpbenchkit command
 phpbenchkit --selfupdate
 ```
 
