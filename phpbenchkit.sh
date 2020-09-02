@@ -86,6 +86,7 @@ function startContainer() {
 
     docker exec -it $CONTAINER_NAME /bin/bash -c "echo NGINX_PORT=$nginxPort > $BENCHMARK_KIT_PATH/.env.local"
     docker exec -it $CONTAINER_NAME /bin/bash -c "echo HOST_SOURCE_CODE_PATH=$hostSourceCodePath >> $BENCHMARK_KIT_PATH/.env.local"
+    docker exec -it $CONTAINER_NAME /bin/bash -c "chown -R phpbenchmarks:phpbenchmarks /var/www/benchmark"
 
     containerStarted=true
 }
