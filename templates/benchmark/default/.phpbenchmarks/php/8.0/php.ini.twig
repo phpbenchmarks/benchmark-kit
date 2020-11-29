@@ -1,0 +1,31 @@
+; ----------------------------------------------------------------------------------------------------------------------
+; This file will be added to PHP ini files loaded before benchmarking.
+; Configure what you need here.
+;
+; /!\ Do NOT configure opcache.enable: it will be configured automatically.
+; /!\ Do NOT configure opcache.preload and opcache.preload_user: it will be configured automatically. /!\
+; ----------------------------------------------------------------------------------------------------------------------
+
+; Examples of configuration you could change for your needs.
+
+; The maximum number of keys (scripts) in the OPcache hash table.
+; Only numbers between 200 and 1000000 are allowed.
+;opcache.max_accelerated_files=10000
+
+; If disabled, all PHPDoc comments are dropped from the code to reduce the
+; size of the optimized code.
+;opcache.save_comments=1
+
+; A bitmask, where each bit enables or disables the appropriate OPcache
+; passes
+;opcache.optimization_level=0x7FFFBFFF
+
+; Allows exclusion of large files from being cached. By default all files
+; are cached.
+;opcache.max_file_size=0
+
+; Enables or disables opcode caching in shared memory.
+;opcache.file_cache_only=0
+
+; The OPcache shared memory storage size.
+;opcache.memory_consumption=128
