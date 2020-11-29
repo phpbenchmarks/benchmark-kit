@@ -52,38 +52,40 @@ $opcacheStatus = opcache_get_status();
         </tbody>
     </table>
 
-    <table>
-        <tbody>
-            <tr class="h h_phpbenchmarks">
-                <td colspan="3">
-                    <h1 class="p">opcache_get_status()</h1>
-                </td>
-            </tr>
-            <?php $currentStatusKey = null; ?>
-            <?php foreach (['memory_usage', 'interned_strings_usage', 'opcache_statistics'] as $statusKey) { ?>
-                <?php foreach ($opcacheStatus[$statusKey] as $key => $value) { ?>
-                    <tr class="<?php if ($currentStatusKey === $statusKey) echo 'foo' ?>">
-                        <?php if ($currentStatusKey !== $statusKey) { ?>
-                            <td class="e" rowspan="<?= count($opcacheStatus[$statusKey]) ?>>"><?= $statusKey ?></td>
-                        <?php } ?>
-                        <td class="v"><?= $key ?></td>
-                        <td class="v">
-                            <?php
-                            if (in_array($key, ['start_time', 'last_restart_time'])) {
-                                echo $value === 0 ? $value : (new \DateTime())->setTimestamp($value)->format('Y-m-d H:i:s');
-                            } elseif (is_numeric($value)) {
-                                echo number_format($value);
-                            } else {
-                                echo $value;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <?php $currentStatusKey = $statusKey ?>
+    <?php if (is_array($opcacheStatus)) { ?>
+        <table>
+            <tbody>
+                <tr class="h h_phpbenchmarks">
+                    <td colspan="3">
+                        <h1 class="p">opcache_get_status()</h1>
+                    </td>
+                </tr>
+                <?php $currentStatusKey = null; ?>
+                <?php foreach (['memory_usage', 'interned_strings_usage', 'opcache_statistics'] as $statusKey) { ?>
+                    <?php foreach ($opcacheStatus[$statusKey] as $key => $value) { ?>
+                        <tr class="<?php if ($currentStatusKey === $statusKey) echo 'foo' ?>">
+                            <?php if ($currentStatusKey !== $statusKey) { ?>
+                                <td class="e" rowspan="<?= count($opcacheStatus[$statusKey]) ?>>"><?= $statusKey ?></td>
+                            <?php } ?>
+                            <td class="v"><?= $key ?></td>
+                            <td class="v">
+                                <?php
+                                if (in_array($key, ['start_time', 'last_restart_time'])) {
+                                    echo $value === 0 ? $value : (new \DateTime())->setTimestamp($value)->format('Y-m-d H:i:s');
+                                } elseif (is_numeric($value)) {
+                                    echo number_format($value);
+                                } else {
+                                    echo $value;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php $currentStatusKey = $statusKey ?>
+                    <?php } ?>
                 <?php } ?>
-            <?php } ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    <?php } ?>
 
     <?php $preload = ini_get('opcache.preload'); ?>
     <?php if (is_string($preload) === true) { ?>
@@ -111,33 +113,37 @@ $opcacheStatus = opcache_get_status();
             </tbody>
         </table>
 
-        <table>
-            <tbody>
-                <tr class="h h_phpbenchmarks">
-                    <td colspan="2">
-                        <h1 class="p">opcache_get_status()['preload_statistics']</h1>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="e">memory_consumption</td>
-                    <td class="v"><?= number_format($opcacheStatus['preload_statistics']['memory_consumption']) ?></td>
-                </tr>
-                <tr>
-                    <?php $countPreloadedScripts = count($opcacheStatus['preload_statistics']['scripts']) ?>
-                    <td class="e" rowspan="<?= max(1, $countPreloadedScripts) ?>">scripts [<?= $countPreloadedScripts ?>]</td>
-                    <td class="v">
-                        <?= $countPreloadedScripts > 0 ? App\Utils\Path::rmPrefix($opcacheStatus['preload_statistics']['scripts'][0]) : null ?>
-                    </td>
-                </tr>
-                <?php foreach ($opcacheStatus['preload_statistics']['scripts'] as $index => $script) { ?>
-                    <?php if ($index > 0) { ?>
-                        <tr>
-                            <td class="v"><?= App\Utils\Path::rmPrefix($script) ?></td>
-                        </tr>
+        <?php if (is_array($opcacheStatus)) { ?>
+            <table>
+                <tbody>
+                    <tr class="h h_phpbenchmarks">
+                        <td colspan="2">
+                            <h1 class="p">opcache_get_status()['preload_statistics']</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="e">memory_consumption</td>
+                        <td class="v">
+                            <?= number_format($opcacheStatus['preload_statistics']['memory_consumption']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <?php $countPreloadedScripts = count($opcacheStatus['preload_statistics']['scripts'] ) ?>
+                        <td class="e" rowspan="<?= max(1, $countPreloadedScripts) ?>">scripts [<?= $countPreloadedScripts ?>]</td>
+                        <td class="v">
+                            <?= $countPreloadedScripts > 0 ? App\Utils\Path::rmPrefix($opcacheStatus['preload_statistics']['scripts'][0]) : null ?>
+                        </td>
+                    </tr>
+                    <?php foreach ($opcacheStatus['preload_statistics']['scripts'] as $index => $script) { ?>
+                        <?php if ($index > 0) { ?>
+                            <tr>
+                                <td class="v"><?= App\Utils\Path::rmPrefix($script) ?></td>
+                            </tr>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        <?php } ?>
     <?php } ?>
 </div>
 
