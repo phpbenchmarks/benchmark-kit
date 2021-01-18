@@ -11,6 +11,7 @@ use App\{
     PhpVersion\PhpVersionArray,
     Utils\Path
 };
+use Symfony\Component\Console\Input\InputOption;
 
 final class ConfigurePhpCompatibleVersionCommand extends AbstractCommand
 {
@@ -23,7 +24,14 @@ final class ConfigurePhpCompatibleVersionCommand extends AbstractCommand
     {
         parent::configure();
 
-        $this->setDescription('Create configuration for each compatible PHP version');
+        $this
+            ->setDescription('Create configuration for each compatible PHP version')
+            ->addOption(
+                'php-versions',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'PHP version separated by "," (exemple: 7.1,7.2)'
+            );
     }
 
     protected function doExecute(): int
@@ -55,6 +63,17 @@ final class ConfigurePhpCompatibleVersionCommand extends AbstractCommand
 
     private function getCompatiblesPhpVersions(): ?PhpVersionArray
     {
+        $phpVersions = $this->getInput()->getOption('php-versions');
+        if (is_string($phpVersions)) {
+            $return = new PhpVersionArray();
+            foreach (explode(',', $phpVersions) as $phpVersion) {
+                [$major, $minor] = explode('.', $phpVersion);
+                $return[] = new PhpVersion((int) $major, (int) $minor);
+            }
+
+            return $return;
+        }
+
         $composerConfiguration = $this->getComposerConfiguration();
         /** @var string|null $phpVersionConfiguration */
         $phpVersionConfiguration = $composerConfiguration['require']['php'] ?? null;
