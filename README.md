@@ -17,7 +17,7 @@ You will need [Docker ^18.06](https://docs.docker.com/install/) to make it work.
 
 ## Installation
 
-Everything you need to use benchmark kit is is [hpbenchkit.sh](phpbenchkit.sh).
+Everything you need to use benchmark kit is is [phpbenchkit.sh](phpbenchkit.sh).
 
 Install it as global bin and give it execute mode:
 ```bash
