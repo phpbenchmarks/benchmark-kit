@@ -16,7 +16,8 @@ final class PhpVersion
                 new static(7, 2),
                 new static(7, 3),
                 new static(7, 4),
-                new static(8, 0)
+                new static(8, 0),
+                new static(8, 1)
             ]
         );
     }
