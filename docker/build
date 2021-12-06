@@ -6,7 +6,7 @@ readonly ROOT_DIRECTORY=$(realpath $(dirname $(realpath $0))/..)
 readonly VERSION_PATH="${ROOT_DIRECTORY}/src/Version.php"
 readonly IMAGE_NAME="phpbenchmarks/benchmark-kit"
 readonly LOG_FILE="/tmp/benchmark-kit_build.log"
-readonly DOCKER_COMPOSER_CMD="docker run -it --user $(id -u):$(id -g) -v ${ROOT_DIRECTORY}:/app composer:1.10"
+readonly DOCKER_COMPOSER_CMD="docker run -it --user $(id -u):$(id -g) -v ${ROOT_DIRECTORY}:/app composer:1.10.17"
 
 echo "Fetch Benchmark kit version."
 readonly DOCKER_VERSION_CMD="docker run --rm -v ${ROOT_DIRECTORY}/src/Version.php:/app/src/Version.php php:7.4-cli-alpine3.10 php -r"
