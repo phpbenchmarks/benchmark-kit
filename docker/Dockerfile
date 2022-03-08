@@ -3,7 +3,7 @@
 FROM ubuntu:18.04
 
 # Everything is not compatible with Composer 2
-COPY --from=composer:1.10.17 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:1.10.19 /usr/bin/composer /usr/local/bin/composer
 
 RUN \
     # Update and instal some dependencies

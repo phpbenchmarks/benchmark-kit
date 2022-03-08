@@ -35,13 +35,25 @@ final class ConfigureBenchmarkCommand extends AbstractCommand
         foreach ($this->configurePhpBenchmarksConfigParameters as $name => $description) {
             $this->addOption($name, null, InputOption::VALUE_REQUIRED, $description);
         }
+        $this->addOption(
+            'php-versions',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'PHP version separated by "," (exemple: 7.1,7.2)'
+        );
     }
 
     protected function doExecute(): int
     {
+        $phpCompatibleVersionsParams = [];
+        $phpVersions = $this->getInput()->getOption('php-versions');
+        if (is_string($phpVersions)) {
+            $phpCompatibleVersionsParams['--php-versions'] = $phpVersions;
+        }
+
         $this
             ->runConfigurePhpBenchmarksConfigCommand()
-            ->runCommand(ConfigurePhpCompatibleVersionCommand::getDefaultName())
+            ->runCommand(ConfigurePhpCompatibleVersionCommand::getDefaultName(), $phpCompatibleVersionsParams)
             ->runCommand(ConfigureInitBenchmarkCommand::getDefaultName())
             ->runCommand(ConfigureNginxVhostCommand::getDefaultName())
             ->runCommand(ConfigureResponseBodyCommand::getDefaultName())
